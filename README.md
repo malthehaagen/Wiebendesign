@@ -1,5 +1,19 @@
 # Standberegner — Wieben Design (prototype)
 
+> ## ⚠️ Dette repo skal forblive privat
+>
+> `tilbudsark.xlsx` indeholder Wieben Designs **kostpriser** — 145 varelinjer med
+> kostpris i kolonnerne P–S, hvorfra dækningsbidraget kan regnes ud linje for
+> linje. `assets/pricing.js` indeholder desuden hele lejeprislisten.
+>
+> Gør ikke repoet offentligt, og fork ikke til en offentlig konto. Skal
+> prototypen deles eksternt, så del en kørende demo — ikke kildekoden.
+>
+> **Bemærk også:** `pricing.js` sendes til browseren, når siden kører. En
+> offentligt tilgængelig demo udstiller derfor prislisten, selvom repoet er
+> privat. Før modulet lægges på wiebendesign.dk, bør priserne flyttes bag et
+> backend-kald, så kun det beregnede resultat når frem til kunden.
+
 Et interaktivt modul til wiebendesign.dk, hvor kunden former sin messestand, får
 faglige indsigter undervejs og ender med en sammensat pakke, en pris og en plan
 frem mod messedagen.
