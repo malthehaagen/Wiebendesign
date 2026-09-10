@@ -13,7 +13,7 @@
   var s = {
     trin: 0,
     profil: { formaal: null, erfaring: null, ambition: null, pladspris: null },
-    messe: { by: 'Herning', dato: '', km: 130, bro: false, ukendt: false },
+    messe: { land: 'dk', by: 'Herning', dato: '', km: 130, bro: false, ukendt: false },
     stand: {
       m2: 24, aabneSider: 1, vaegtype: 'print', vaeghoejde: 3,
       grafik: 'fuld', gulv: 'taeppe', haevet: false, belysning: 'forstaerket', rig: false
@@ -318,8 +318,9 @@
       blok.appendChild(c);
       v.appendChild(blok);
     });
+    /* Kun spørgsmålene skal besvares — pladsprisen er valgfri */
     document.getElementById('videre-profil').disabled =
-      !Object.keys(s.profil).every(function (k) { return s.profil[k]; });
+      !C.profilSpoergsmaal.every(function (sp) { return s.profil[sp.id]; });
   }
 
   function visAnbefaling() {
@@ -330,28 +331,44 @@
       '<p class="anb-sub">' + esc(a.stoerrelse) + ' ' + esc(a.niveau) + '</p>';
   }
 
-  function findBy(navn) {
-    var n = String(navn || '').trim().toLowerCase();
-    if (!n) return null;
-    var traef = C.byer.filter(function (b) { return b.navn.toLowerCase() === n; })[0];
-    if (traef) return traef;
-    return C.byer.filter(function (b) { return b.navn.toLowerCase().indexOf(n) === 0; })[0] || null;
+  function land(id) {
+    return C.lande.filter(function (l) { return l.id === (id || s.messe.land); })[0] || C.lande[0];
+  }
+  function by(navn) {
+    return land().byer.filter(function (b) { return b.navn === (navn || s.messe.by); })[0] || null;
   }
 
-  function visByer() {
-    var liste = document.getElementById('byliste');
-    if (!liste.options.length) {
-      C.byer.forEach(function (b) {
+  function visSted() {
+    var lv = document.getElementById('land');
+    if (!lv.options.length) {
+      C.lande.forEach(function (l) {
         var o = document.createElement('option');
-        o.value = b.navn;
-        liste.appendChild(o);
+        o.value = l.id; o.textContent = l.navn;
+        lv.appendChild(o);
       });
     }
-    var manuel = document.getElementById('km-manuel');
-    manuel.hidden = !s.messe.ukendt;
+    lv.value = s.messe.land;
+
+    var bv = document.getElementById('by');
+    var l = land();
+    bv.innerHTML = '';
+    l.byer.forEach(function (b) {
+      var o = document.createElement('option');
+      o.value = b.navn; o.textContent = b.navn;
+      bv.appendChild(o);
+    });
+    var anden = document.createElement('option');
+    anden.value = '__anden__';
+    anden.textContent = l.byer.length ? C.andenBy : 'Angiv afstanden herunder';
+    bv.appendChild(anden);
+    bv.value = s.messe.ukendt ? '__anden__' : s.messe.by;
+    bv.disabled = !l.byer.length;
+
+    document.getElementById('km-manuel').hidden = !s.messe.ukendt;
+
     var h = document.getElementById('by-hjaelp');
-    if (s.messe.ukendt) {
-      h.textContent = 'Vi kender ikke byen. Skriv cirka hvor langt der er fra Støvring, så regner vi transporten ud fra det.';
+    if (s.messe.ukendt && !s.messe.km) {
+      h.textContent = 'Skriv cirka hvor langt der er fra vores værksted i Støvring, så regner vi transporten ud fra det.';
       return;
     }
     var langt = s.messe.km > P.montage.egenkoerselMaxKm;
@@ -583,7 +600,8 @@
 
     document.getElementById('opsummering').innerHTML =
       '<dl class="ops-grid">' +
-      linje('Messeby', (s.messe.by || '—') + (s.messe.dato ? ' · ' + new Date(s.messe.dato).toLocaleDateString('da-DK') : '')) +
+      linje('Sted', (s.messe.by || land().navn) + (s.messe.by ? ', ' + land().navn : '') +
+        (s.messe.dato ? ' · ' + new Date(s.messe.dato).toLocaleDateString('da-DK') : '')) +
       linje('Formål', (C.profilSpoergsmaal[0].valg.filter(function (x) { return x.id === s.profil.formaal; })[0] || {}).titel || '—') +
       linje('Areal', s.stand.m2 + ' m²') +
       linje('Åbne sider', s.stand.aabneSider) +
@@ -639,7 +657,7 @@
     visTrin();
     visProfil();
     visAnbefaling();
-    visByer();
+    visSted();
     visAabneSider();
     visVaegtyper();
     visValg();
@@ -688,12 +706,29 @@
       if (g && !g.disabled) gaaTil(Number(g.dataset.goto));
     });
 
-    document.getElementById('by').addEventListener('input', function (e) {
-      var navn = e.target.value;
-      s.messe.by = navn;
-      var b = findBy(navn);
-      if (b) { s.messe.km = b.km; s.messe.bro = b.bro; s.messe.ukendt = false; }
-      else { s.messe.ukendt = navn.trim().length > 1; }
+    document.getElementById('land').addEventListener('change', function (e) {
+      s.messe.land = e.target.value;
+      var l = land();
+      if (l.byer.length) {
+        s.messe.by = l.byer[0].navn;
+        s.messe.km = l.byer[0].km;
+        s.messe.bro = l.byer[0].bro;
+        s.messe.ukendt = false;
+      } else {
+        s.messe.by = ''; s.messe.bro = false; s.messe.ukendt = true; s.messe.km = 0;
+        document.getElementById('km').value = '';
+      }
+      opdater();
+    });
+    document.getElementById('by').addEventListener('change', function (e) {
+      if (e.target.value === '__anden__') {
+        s.messe.ukendt = true; s.messe.by = ''; s.messe.bro = false;
+      } else {
+        var b = by(e.target.value);
+        s.messe.by = e.target.value;
+        s.messe.ukendt = false;
+        if (b) { s.messe.km = b.km; s.messe.bro = b.bro; }
+      }
       opdater();
     });
     document.getElementById('km').addEventListener('input', function (e) {
@@ -754,8 +789,7 @@
   document.getElementById('personer').value = s.team.personer;
   document.getElementById('dage').value = s.team.dage;
   document.getElementById('messedato').value = s.messe.dato || '';
-  document.getElementById('by').value = s.messe.by || '';
-  document.getElementById('km').value = s.messe.ukendt ? s.messe.km : '';
+  document.getElementById('km').value = s.messe.ukendt && s.messe.km ? s.messe.km : '';
   document.getElementById('pladspris').value = s.profil.pladspris || '';
   gaaTil(0);
 })();

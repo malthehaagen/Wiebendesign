@@ -6,52 +6,70 @@
 
 window.WD_INDHOLD = {
 
-  /* ---------------- Byer ----------------
-     Omtrentlig køreafstand fra Støvring, tur/retur beregnes i app.js.
+  /* ---------------- Lande og byer ----------------
+     Kun de messebyer, Wieben Design realistisk kører til. Listen er bevidst
+     kort — den udvides, efterhånden som der er brug for det.
+     km = omtrentlig køreafstand fra Støvring, én vej.
      bro = broafgift over Storebælt eller Øresund.
-     Tallene er cirkatal til et estimat — ikke ruteberegning.          */
-  byer: [
-    { navn: 'Aalborg',      km: 25,   bro: false },
-    { navn: 'Viborg',       km: 60,   bro: false },
-    { navn: 'Randers',      km: 80,   bro: false },
-    { navn: 'Silkeborg',    km: 95,   bro: false },
-    { navn: 'Aarhus',       km: 105,  bro: false },
-    { navn: 'Herning',      km: 130,  bro: false },
-    { navn: 'Horsens',      km: 140,  bro: false },
-    { navn: 'Vejle',        km: 165,  bro: false },
-    { navn: 'Billund',      km: 165,  bro: false },
-    { navn: 'Fredericia',   km: 185,  bro: false },
-    { navn: 'Kolding',      km: 195,  bro: false },
-    { navn: 'Esbjerg',      km: 215,  bro: false },
-    { navn: 'Odense',       km: 250,  bro: false },
-    { navn: 'Sønderborg',   km: 275,  bro: false },
-    { navn: 'Roskilde',     km: 380,  bro: true  },
-    { navn: 'København',    km: 400,  bro: true  },
-    { navn: 'Hamborg',      km: 380,  bro: false },
-    { navn: 'Malmø',        km: 430,  bro: true  },
-    { navn: 'Bremen',       km: 490,  bro: false },
-    { navn: 'Göteborg',     km: 560,  bro: true  },
-    { navn: 'Hannover',     km: 620,  bro: false },
-    { navn: 'Berlin',       km: 640,  bro: false },
-    { navn: 'Amsterdam',    km: 700,  bro: false },
-    { navn: 'Düsseldorf',   km: 720,  bro: false },
-    { navn: 'Utrecht',      km: 730,  bro: false },
-    { navn: 'Köln',         km: 750,  bro: false },
-    { navn: 'Oslo',         km: 860,  bro: true  },
-    { navn: 'Frankfurt',    km: 900,  bro: false },
-    { navn: 'Bruxelles',    km: 900,  bro: false },
-    { navn: 'Stockholm',    km: 900,  bro: true  },
-    { navn: 'Praha',        km: 1000, bro: false },
-    { navn: 'London',       km: 1100, bro: false },
-    { navn: 'Warszawa',     km: 1100, bro: false },
-    { navn: 'München',      km: 1150, bro: false },
-    { navn: 'Paris',        km: 1200, bro: false },
-    { navn: 'Zürich',       km: 1250, bro: false },
-    { navn: 'Wien',         km: 1300, bro: false },
-    { navn: 'Milano',       km: 1550, bro: false },
-    { navn: 'Barcelona',    km: 2300, bro: false },
-    { navn: 'Madrid',       km: 2500, bro: false }
+     Tallene er cirkatal til et estimat, ikke ruteberegning.            */
+  lande: [
+    { id: 'dk', navn: 'Danmark', byer: [
+      { navn: 'Aalborg',     km: 25,  bro: false },
+      { navn: 'Aarhus',      km: 105, bro: false },
+      { navn: 'Herning',     km: 130, bro: false },
+      { navn: 'Fredericia',  km: 185, bro: false },
+      { navn: 'Odense',      km: 250, bro: false },
+      { navn: 'Roskilde',    km: 380, bro: true  },
+      { navn: 'København',   km: 400, bro: true  }
+    ]},
+    { id: 'de', navn: 'Tyskland', byer: [
+      { navn: 'Hamborg',     km: 380,  bro: false },
+      { navn: 'Bremen',      km: 490,  bro: false },
+      { navn: 'Hannover',    km: 620,  bro: false },
+      { navn: 'Berlin',      km: 640,  bro: false },
+      { navn: 'Düsseldorf',  km: 720,  bro: false },
+      { navn: 'Köln',        km: 750,  bro: false },
+      { navn: 'Frankfurt',   km: 900,  bro: false },
+      { navn: 'Nürnberg',    km: 1000, bro: false },
+      { navn: 'München',     km: 1150, bro: false }
+    ]},
+    { id: 'se', navn: 'Sverige', byer: [
+      { navn: 'Malmø',       km: 430, bro: true },
+      { navn: 'Göteborg',    km: 560, bro: true },
+      { navn: 'Jönköping',   km: 640, bro: true },
+      { navn: 'Stockholm',   km: 900, bro: true }
+    ]},
+    { id: 'no', navn: 'Norge', byer: [
+      { navn: 'Oslo',        km: 860, bro: true },
+      { navn: 'Lillestrøm',  km: 880, bro: true }
+    ]},
+    { id: 'nl', navn: 'Holland', byer: [
+      { navn: 'Amsterdam',   km: 700, bro: false },
+      { navn: 'Utrecht',     km: 730, bro: false },
+      { navn: 'Rotterdam',   km: 780, bro: false }
+    ]},
+    { id: 'be', navn: 'Belgien', byer: [
+      { navn: 'Kortrijk',    km: 880, bro: false },
+      { navn: 'Bruxelles',   km: 900, bro: false }
+    ]},
+    { id: 'gb', navn: 'Storbritannien', byer: [
+      { navn: 'London',      km: 1100, bro: false },
+      { navn: 'Birmingham',  km: 1250, bro: false }
+    ]},
+    { id: 'fr', navn: 'Frankrig', byer: [
+      { navn: 'Paris',       km: 1200, bro: false },
+      { navn: 'Lyon',        km: 1550, bro: false }
+    ]},
+    { id: 'it', navn: 'Italien', byer: [
+      { navn: 'Milano',      km: 1550, bro: false },
+      { navn: 'Verona',      km: 1650, bro: false },
+      { navn: 'Bologna',     km: 1750, bro: false }
+    ]},
+    { id: 'andet', navn: 'Et andet land', byer: [] }
   ],
+
+  /* Vises som sidste valg under hvert land */
+  andenBy: 'En anden by',
 
   /* ---------------- Trin 1: Messeprofil ---------------- */
   profilSpoergsmaal: [

@@ -68,16 +68,28 @@
     <div id="anbefaling" class="anbefaling"></div>
 
     <div class="field">
-      <label class="field-label" for="by">Hvor holdes messen?</label>
-      <div class="field-row">
-        <input type="text" id="by" class="select" list="byliste" placeholder="Skriv en by — f.eks. Herning" autocomplete="off">
-        <input type="date" id="messedato" class="select" aria-label="Messens startdato">
+      <span class="field-label">Hvor holdes messen?</span>
+      <div class="stedvalg">
+        <div class="stedvalg-kol">
+          <label for="land">Land</label>
+          <select id="land" class="select"></select>
+        </div>
+        <div class="stedvalg-kol">
+          <label for="by">By</label>
+          <select id="by" class="select"></select>
+        </div>
+        <div class="stedvalg-kol">
+          <label for="messedato">Første messedag</label>
+          <input type="date" id="messedato" class="select">
+        </div>
       </div>
-      <datalist id="byliste"></datalist>
       <p class="field-hjaelp" id="by-hjaelp"></p>
-      <div class="field-row" id="km-manuel" hidden>
-        <label class="field-label" for="km">Cirka hvor langt er der til Støvring?</label>
-        <input type="number" id="km" class="select" min="0" step="10" placeholder="km hver vej" inputmode="numeric">
+      <div class="stedvalg-kol km-manuel" id="km-manuel" hidden>
+        <label for="km">Cirka hvor langt er der fra Støvring?</label>
+        <div class="field-row">
+          <input type="number" id="km" class="select" min="0" step="10" placeholder="F.eks. 700" inputmode="numeric">
+          <span class="enhed">km hver vej</span>
+        </div>
       </div>
     </div>
 
