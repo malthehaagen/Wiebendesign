@@ -1,18 +1,19 @@
 # Standberegner — Wieben Design (prototype)
 
-> ## ⚠️ Dette repo skal forblive privat
+> ## Om prisdata i dette repo
 >
-> `tilbudsark.xlsx` indeholder Wieben Designs **kostpriser** — 145 varelinjer med
-> kostpris i kolonnerne P–S, hvorfra dækningsbidraget kan regnes ud linje for
-> linje. `assets/pricing.js` indeholder desuden hele lejeprislisten.
+> Beregningen bygger på Wieben Designs egne salgs- og lejepriser, som ligger i
+> `assets/pricing.js` og i fuld længde i [`docs/prisgrundlag.md`](docs/prisgrundlag.md).
 >
-> Gør ikke repoet offentligt, og fork ikke til en offentlig konto. Skal
-> prototypen deles eksternt, så del en kørende demo — ikke kildekoden.
+> Wieben Designs **kostpriser er ikke i repoet** — hverken i filerne eller i
+> git-historikken. Det samme gælder kundespecifikt inventar bygget til navngivne
+> kunder. Det oprindelige tilbudsark er skrevet ud af historikken.
 >
-> **Bemærk også:** `pricing.js` sendes til browseren, når siden kører. En
-> offentligt tilgængelig demo udstiller derfor prislisten, selvom repoet er
-> privat. Før modulet lægges på wiebendesign.dk, bør priserne flyttes bag et
-> backend-kald, så kun det beregnede resultat når frem til kunden.
+> Tilbage står de priser, en kunde alligevel møder i et tilbud. Vær opmærksom på,
+> at listen dermed er offentligt læsbar for konkurrenter, og at `pricing.js`
+> sendes til browseren, når siden kører. Skal modulet i produktion på
+> wiebendesign.dk, bør priserne flyttes bag et backend-kald, så kun det
+> beregnede resultat når frem til kunden.
 
 Et interaktivt modul til wiebendesign.dk, hvor kunden former sin messestand, får
 faglige indsigter undervejs og ender med en sammensat pakke, en pris og en plan
@@ -54,11 +55,12 @@ assets/logo.png       Wieben Designs logo
 
 ## Priserne
 
-Beregningen bygger på **Wieben Designs eget tilbudsark** (`tilbudsark.xlsx`,
-arket "TILBUD", kolonnen *Leje/stk*). Alle beløb er **lejepris for hele messen**
-i DKK ekskl. moms — samme grundlag, som tilbudsarket regner på.
+Beregningen bygger på **Wieben Designs egne priser**, udtrukket af firmaets
+tilbudsark og gengivet i [`docs/prisgrundlag.md`](docs/prisgrundlag.md) —
+326 varelinjer i kolonnen *Leje*. Alle beløb er **lejepris for hele messen**
+i DKK ekskl. moms, samme grundlag som tilbuddene regner på.
 
-Aflæst direkte fra arket:
+Aflæst direkte fra prisgrundlaget:
 
 - Projektstyring i staffel efter m² (6.000 → 14.000 kr.)
 - b62-rammer og PVG-vægplader pr. løbende meter i 2 / 2,5 / 3 meters højde

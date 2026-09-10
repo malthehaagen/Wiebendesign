@@ -1,9 +1,10 @@
 /* =====================================================================
    PRISKONFIGURATION — Wieben Design standberegner
    ---------------------------------------------------------------------
-   KILDE: tilbudsark.xlsx (arket "TILBUD"), kolonnen "Leje/stk".
+   KILDE: docs/prisgrundlag.md — Wieben Designs egne salgs- og lejepriser,
+   kolonnen "Leje".
    Alle beløb er LEJEPRIS PR. MESSE i DKK ekskl. moms — altså det samme
-   grundlag, som tilbudsarket regner på.
+   grundlag, som tilbuddene regner på.
 
    Enkelte satser er afledt frem for aflæst; de er markeret med AFLEDT
    og bør bekræftes af Wieben Design.
@@ -15,13 +16,13 @@ window.WD_PRIS = {
     valuta: 'DKK',
     enhed: 'ekskl. moms',
     grundlag: 'Lejepris pr. messe',
-    kilde: 'tilbudsark.xlsx',
+    kilde: 'docs/prisgrundlag.md',
     opdateret: '2026-09-10',
     afrunding: 250
   },
 
   /* -------------------------------------------------------------------
-     PROJEKTSTYRING — tegning, møde, bestillinger (tilbudsark række 5-10)
+     PROJEKTSTYRING — tegning, møde, bestillinger
      ------------------------------------------------------------------- */
   projektstyring: [
     { tilM2: 20,    pris: 6000 },
@@ -56,7 +57,7 @@ window.WD_PRIS = {
   grafikdaekning: { ingen: 0, delvis: 0.45, fuld: 1 },
 
   /* -------------------------------------------------------------------
-     GULV — kr. pr. m² (tilbudsark, afsnittet "Gulvbelægning")
+     GULV — kr. pr. m² (prisgrundlaget, afsnittet "Gulvbelægning")
      ------------------------------------------------------------------- */
   gulv: {
     ingen:  0,
@@ -67,7 +68,7 @@ window.WD_PRIS = {
   haevetGulv: 95 + 75, /* Primo PX hævet gulv + spånpladegulv, pr. m²    */
 
   /* -------------------------------------------------------------------
-     BELYSNING — kr. pr. spot og dækning (tilbudsark, "Belysning")
+     BELYSNING — kr. pr. spot og dækning (prisgrundlaget, "Belysning")
      ------------------------------------------------------------------- */
   belysning: {
     standard:    { prSpot: 75,  m2PrSpot: 5 },   /* Sam Light, b62 spot   */
@@ -82,7 +83,7 @@ window.WD_PRIS = {
   rig: { trussPrLbm: 130, frisehoejde: 1 },
 
   /* -------------------------------------------------------------------
-     KATALOG — leje pr. messe, direkte fra tilbudsarket
+     KATALOG — leje pr. messe, direkte fra prisgrundlaget
      ------------------------------------------------------------------- */
   katalog: {
     diske: [
@@ -137,7 +138,7 @@ window.WD_PRIS = {
 
   /* -------------------------------------------------------------------
      OPSÆTNING, NEDTAGNING OG TRANSPORT
-     Satser fra tilbudsarkets afsnit "Opsætning" og "Nedtagning".
+     Satser fra prisgrundlagets afsnit "Opsætning" og "Nedtagning".
      Timetallene er AFLEDTE normtal og den største usikkerhed i estimatet.
      ------------------------------------------------------------------- */
   montage: {
@@ -169,7 +170,7 @@ window.WD_PRIS = {
 
   /* -------------------------------------------------------------------
      MESSECENTERETS EGNE PRISER — betales direkte til arrangøren.
-     IKKE fra Wieben Designs tilbudsark. Brancheestimat, som varierer
+     IKKE fra Wieben Designs prisgrundlag. Brancheestimat, som varierer
      fra messe til messe.
      ------------------------------------------------------------------- */
   messecenter: {
