@@ -46,6 +46,16 @@
     <h2 class="step-title">Jeres messeprofil</h2>
     <p class="step-intro">Standen er et middel. Vi starter med målet.</p>
     <div id="profil"></div>
+
+    <div class="field valgfri">
+      <label class="field-label" for="pladspris">Kender I prisen på selve standpladsen? <span class="valgfri-mrk">Valgfrit</span></label>
+      <p class="grp-hjaelp">Messearrangøren opkræver selv leje for kvadratmeterne. Kender I beløbet, regner vi med det i stedet for vores skøn — ellers gætter vi kvalificeret.</p>
+      <div class="field-row">
+        <input type="number" id="pladspris" class="select" min="0" step="500" placeholder="F.eks. 28.000" inputmode="numeric">
+        <span class="enhed">kr. ekskl. moms</span>
+      </div>
+    </div>
+
     <div class="nav-row">
       <button class="btn" data-goto="0">Tilbage</button>
       <button class="btn btn-primary" data-goto="2" id="videre-profil">Videre</button>
@@ -58,12 +68,17 @@
     <div id="anbefaling" class="anbefaling"></div>
 
     <div class="field">
-      <label class="field-label" for="messe">Hvilken messe?</label>
+      <label class="field-label" for="by">Hvor holdes messen?</label>
       <div class="field-row">
-        <select id="messe" class="select"></select>
+        <input type="text" id="by" class="select" list="byliste" placeholder="Skriv en by — f.eks. Herning" autocomplete="off">
         <input type="date" id="messedato" class="select" aria-label="Messens startdato">
       </div>
-      <p class="field-hjaelp" id="messe-hjaelp"></p>
+      <datalist id="byliste"></datalist>
+      <p class="field-hjaelp" id="by-hjaelp"></p>
+      <div class="field-row" id="km-manuel" hidden>
+        <label class="field-label" for="km">Cirka hvor langt er der til Støvring?</label>
+        <input type="number" id="km" class="select" min="0" step="10" placeholder="km hver vej" inputmode="numeric">
+      </div>
     </div>
 
     <h3 class="grp-title">Størrelse</h3>
@@ -75,7 +90,7 @@
         <p class="field-hjaelp" id="m2-hjaelp"></p>
       </div>
       <div class="slider-box">
-        <label for="personer">Personer på standen</label>
+        <label for="personer">Jeres egne folk på standen</label>
         <input type="range" id="personer" min="1" max="20" step="1" value="3">
         <output id="personer-ud">3 personer</output>
         <p class="field-hjaelp" id="personer-hjaelp"></p>
@@ -125,7 +140,8 @@
   <!-- ============ TRIN 3: INVENTAR ============ -->
   <section class="step" data-step="3" hidden>
     <h2 class="step-title">Inventar og udstyr</h2>
-    <p class="step-intro">Alt herunder er leje for hele messen, leveret direkte på standen. Priserne er vores egne.</p>
+    <p class="step-intro">Alt herunder er leje for hele messen, leveret direkte på standen.</p>
+    <p class="forbehold">Vælg frit — vi retter til sammen bagefter. Ti stole passer ikke nødvendigvis til standen, når den er tegnet, og så finder vi ud af det i fællesskab.</p>
     <div id="forslag" class="forslag"></div>
     <div id="katalog"></div>
     <div id="indsigter-3" class="indsigter"></div>
@@ -138,7 +154,8 @@
   <!-- ============ TRIN 4: MESSEKLAR ============ -->
   <section class="step" data-step="4" hidden>
     <h2 class="step-title">Messeklar</h2>
-    <p class="step-intro">Det samlede billede — også de poster, der ikke står på vores faktura.</p>
+    <p class="step-intro">Det samlede billede — også det, messearrangøren opkræver ved siden af.</p>
+    <p class="forbehold">Alt herunder er et skøn. Også vores egne tal: den endelige pris afhænger af, hvordan standen faktisk kommer til at se ud, og hvor lang tid den tager at bygge. Beregningen er et sted at starte samtalen fra — ikke et tilbud.</p>
     <div id="budget3" class="budget3"></div>
     <div id="samlet" class="samlet"></div>
     <h3 class="grp-title">Tidslinje frem mod messen</h3>

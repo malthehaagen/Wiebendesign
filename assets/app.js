@@ -8,20 +8,19 @@
   var P = window.WD_PRIS;
   var C = window.WD_INDHOLD;
   var TRIN = ['Start', 'Profil', 'Standen', 'Inventar', 'Messeklar', 'Oplæg'];
-  var GEM = 'wd-standberegner-v2';
+  var GEM = 'wd-standberegner-v3';
 
   var s = {
     trin: 0,
-    profil: { formaal: null, erfaring: null, ambition: null },
-    messe: { id: 'agromek', lokation: 'dk', dato: '', km: 130, bro: false },
+    profil: { formaal: null, erfaring: null, ambition: null, pladspris: null },
+    messe: { by: 'Herning', dato: '', km: 130, bro: false, ukendt: false },
     stand: {
       m2: 24, aabneSider: 1, vaegtype: 'print', vaeghoejde: 3,
       grafik: 'fuld', gulv: 'taeppe', haevet: false, belysning: 'forstaerket', rig: false
     },
     kurv: {},
     kurvRoert: false,
-    team: { personer: 3, dage: 3 },
-    egne: { dagsats: P.egne.dagsatsStandard }
+    team: { personer: 3, dage: 3 }
   };
 
   /* ---------- Intervalregning ---------- */
@@ -124,6 +123,12 @@
     return ud;
   }
 
+  /* El er obligatorisk — kunden vælger den ikke, vi vælger tavlen (3.b) */
+  function elTavle() {
+    var stort = P.elTavle.stortForbrug.some(function (id) { return s.kurv[id]; });
+    return stort ? P.elTavle.stor : P.elTavle.lille;
+  }
+
   function projektstyring() {
     return P.projektstyring.filter(function (t) { return s.stand.m2 <= t.tilM2; })[0].pris;
   }
@@ -136,13 +141,9 @@
     var vaerksted = iv.tal(Math.max(4, m2 * m.vaerkstedPrM2));
     var timer = iv.sum([op, ned, vaerksted]);
     var linjer = [{ navn: 'Opbygning, nedtagning og pakning', pris: iv.gang(timer, m.timepris),
-                    note: Math.round(timer[0]) + '–' + Math.round(timer[1]) + ' mandtimer, ' + montoerer + ' montører' }];
+                    note: 'anslået ' + Math.round(timer[0]) + '–' + Math.round(timer[1]) + ' mandtimer med ' + montoerer + ' montører' }];
 
-    if (s.messe.lokation === 'oversoeisk') {
-      linjer.push({ navn: 'Oversøisk fragt', pris: m.oversoeiskFragt.slice(), note: 'efter aftale med speditør' });
-      linjer.push({ navn: 'Fly, montører', pris: iv.tal(m.flybillet * montoerer) });
-      linjer.push({ navn: 'Ophold og fortæring', pris: iv.tal(m.overnatning * montoerer * 5 + m.fortaering * montoerer * 6) });
-    } else if (km > m.egenkoerselMaxKm) {
+    if (km > m.egenkoerselMaxKm) {
       linjer.push({ navn: 'Fragt tur/retur', pris: [km * m.fragtPrKm[0], km * m.fragtPrKm[1]], note: km + ' km med speditør' });
       linjer.push({ navn: 'Fly, montører', pris: iv.tal(m.flybillet * montoerer) });
       linjer.push({ navn: 'Ophold og fortæring', pris: iv.tal(m.overnatning * montoerer * 4 + m.fortaering * montoerer * 5) });
@@ -162,6 +163,14 @@
     return linjer;
   }
 
+  /* Det viste beløb er midtpunktet ± meta.spaend. Enkeltposterne er faste
+     lejepriser, men montagetimer og standens endelige opbygning flytter sig,
+     indtil der ligger en tegning — prisen er et udgangspunkt, ikke et tilbud. */
+  function spaend(a) {
+    var midt = (a[0] + a[1]) / 2, p = P.meta.spaend;
+    return [midt * (1 - p), midt * (1 + p)];
+  }
+
   function beregn() {
     var v = vaegpris();
     var inv = inventarLinjer();
@@ -171,17 +180,19 @@
       { navn: 'Projektstyring', pris: iv.tal(projektstyring()), note: 'tegning, møder og bestillinger' },
     ];
     if (v.konstruktion) materiel.push({
-      navn: (s.stand.vaegtype === 'pixlip' ? 'Pixlip lysvæg' : 'beMatrix vægge'), pris: iv.tal(v.konstruktion),
-      note: dec(Math.round(geometri().vaegLbm * 10) / 10) + ' lbm i ' + String(s.stand.vaeghoejde).replace('.', ',') + ' m'
+      navn: (s.stand.vaegtype === 'pixlip' ? 'Lysvægge' : 'Vægge'), pris: iv.tal(v.konstruktion),
+      note: dec(Math.round(geometri().vaegLbm * 10) / 10) + ' meter væg i ' + String(s.stand.vaeghoejde).replace('.', ',') + ' meters højde'
     });
-    if (v.print) materiel.push({ navn: 'Print og grafik', pris: iv.tal(v.print),
-      note: Math.round(geometri().vaegAreal * P.grafikdaekning[s.stand.grafik]) + ' m² print' });
+    if (v.print) materiel.push({ navn: 'Tryk på væggene', pris: iv.tal(v.print),
+      note: Math.round(geometri().vaegAreal * P.grafikdaekning[s.stand.grafik]) + ' m² tryk' });
     if (gulvpris()) materiel.push({ navn: 'Gulv' + (s.stand.haevet ? ', hævet' : ''), pris: iv.tal(gulvpris()), note: s.stand.m2 + ' m²' });
     materiel.push({ navn: 'Belysning', pris: iv.tal(belysningspris()),
       note: Math.ceil(s.stand.m2 / P.belysning[s.stand.belysning].m2PrSpot) + ' spots' });
     if (rigpris()) materiel.push({ navn: 'Truss-rig med frise', pris: iv.tal(rigpris()) });
     if (invSum) materiel.push({ navn: 'Inventar og udstyr', pris: iv.tal(invSum),
       note: inv.length + (inv.length === 1 ? ' post' : ' poster') });
+    var tavle = elTavle();
+    materiel.push({ navn: 'Strøm på standen', pris: iv.tal(tavle.leje), note: tavle.navn + ' — altid med' });
 
     var mont = montage();
     var wiebenLinjer = materiel.concat(mont);
@@ -190,32 +201,25 @@
     /* Messecenteret */
     var m2 = s.stand.m2;
     var trin = P.messecenter.standlejeTrin.filter(function (t) { return m2 <= t.tilM2; })[0];
-    var leje = iv.gang(iv.gang(trin.perM2, m2), 1 + P.messecenter.aabenSideTillaegPct[s.stand.aabneSider]);
+    var oplyst = s.profil.pladspris > 0;
+    var leje = oplyst ? iv.tal(s.profil.pladspris)
+      : iv.gang(iv.gang(trin.perM2, m2), 1 + P.messecenter.aabenSideTillaegPct[s.stand.aabneSider]);
     var mcLinjer = [
-      { navn: 'Standleje, ' + m2 + ' m²', pris: leje },
+      { navn: 'Standleje, ' + m2 + ' m²', pris: leje, note: oplyst ? 'jeres eget tal' : 'anslået' },
       { navn: 'Tilmeldingsgebyr', pris: P.messecenter.tilmeldingsgebyr.slice() },
       { navn: 'El, vand og internet', pris: P.messecenter.forsyning.slice() }
     ];
     var messecenter = iv.sum(mcLinjer.map(function (l) { return l.pris; }));
 
-    /* Kundens egne — ren illustration */
-    var pd = s.team.personer * s.team.dage;
-    var egneLinjer = [
-      { navn: 'Bemanding, ' + pd + ' persondage', pris: iv.tal(pd * s.egne.dagsats) },
-      { navn: 'Rejse og ophold', pris: iv.tal(pd * P.egne.rejseOphold[s.messe.lokation]) },
-      { navn: 'Invitationer og materialer', pris: P.egne.markedsfoering.slice() }
-    ];
-    var egne = iv.sum(egneLinjer.map(function (l) { return l.pris; }));
-
     var leads = iv.gang(P.leads.prM2PrDag.slice(), m2 * s.team.dage);
+    var vist = spaend(wieben);
 
     return {
-      wiebenLinjer: wiebenLinjer, wieben: wieben,
+      wiebenLinjer: wiebenLinjer, wieben: wieben, vist: vist,
       mcLinjer: mcLinjer, messecenter: messecenter,
-      egneLinjer: egneLinjer, egne: egne,
-      total: iv.sum([wieben, messecenter, egne]),
+      total: iv.add(vist, messecenter),
       leads: [Math.round(leads[0]), Math.round(leads[1])],
-      prLead: [wieben[0] / Math.max(1, Math.round(leads[1])), wieben[1] / Math.max(1, Math.round(leads[0]))]
+      prLead: [vist[0] / Math.max(1, Math.round(leads[1])), vist[1] / Math.max(1, Math.round(leads[0]))]
     };
   }
 
@@ -326,23 +330,34 @@
       '<p class="anb-sub">' + esc(a.stoerrelse) + ' ' + esc(a.niveau) + '</p>';
   }
 
-  function visMesser() {
-    var sel = document.getElementById('messe');
-    if (!sel.options.length) {
-      C.messer.forEach(function (m) {
+  function findBy(navn) {
+    var n = String(navn || '').trim().toLowerCase();
+    if (!n) return null;
+    var traef = C.byer.filter(function (b) { return b.navn.toLowerCase() === n; })[0];
+    if (traef) return traef;
+    return C.byer.filter(function (b) { return b.navn.toLowerCase().indexOf(n) === 0; })[0] || null;
+  }
+
+  function visByer() {
+    var liste = document.getElementById('byliste');
+    if (!liste.options.length) {
+      C.byer.forEach(function (b) {
         var o = document.createElement('option');
-        o.value = m.id; o.textContent = m.navn + ' — ' + m.sted;
-        sel.appendChild(o);
+        o.value = b.navn;
+        liste.appendChild(o);
       });
     }
-    sel.value = s.messe.id;
-    var m = C.messer.filter(function (x) { return x.id === s.messe.id; })[0];
-    document.getElementById('messe-hjaelp').textContent = {
-      dk: 'Vi kører selv ud fra Støvring — ca. ' + m.km + ' km hver vej.',
-      norden: 'Norden. Materiellet sendes med speditør, og montørerne flyver.',
-      eu: 'Europa. Materiellet sendes med speditør, og montørerne flyver.',
-      oversoeisk: 'Oversøisk. Vi har lager i USA og har bygget på 72 destinationer på 5 kontinenter — fragten aftales konkret.'
-    }[m.lokation];
+    var manuel = document.getElementById('km-manuel');
+    manuel.hidden = !s.messe.ukendt;
+    var h = document.getElementById('by-hjaelp');
+    if (s.messe.ukendt) {
+      h.textContent = 'Vi kender ikke byen. Skriv cirka hvor langt der er fra Støvring, så regner vi transporten ud fra det.';
+      return;
+    }
+    var langt = s.messe.km > P.montage.egenkoerselMaxKm;
+    h.textContent = 'Ca. ' + nf.format(s.messe.km) + ' km fra vores værksted i Støvring. ' +
+      (langt ? 'På den afstand sender vi standen med speditør og flyver montørerne derned.'
+             : 'Vi kører selv derned med standen.' + (s.messe.bro ? ' Broafgift er regnet med.' : ''));
   }
 
   function visAabneSider() {
@@ -358,7 +373,7 @@
     });
     var g = geometri();
     document.getElementById('vaeg-hjaelp').textContent =
-      'Det giver ca. ' + dec(Math.round(g.vaegLbm * 10) / 10) + ' løbende meter væg — ' +
+      'Det giver ca. ' + dec(Math.round(g.vaegLbm * 10) / 10) + ' meter væg — ' +
       Math.round(g.vaegAreal) + ' m² vægflade i ' + String(s.stand.vaeghoejde).replace('.', ',') + ' meters højde.' +
       (g.lukkede ? '' : ' En fritliggende stand har ingen nabovægge, så vi regner med en fritstående vægblok til depot, grafik og teknik.');
   }
@@ -374,7 +389,8 @@
       s.stand.vaegtype = gemt;
       v.appendChild(kort({
         svg: C.svg[id], titel: t.titel, tekst: t.tekst, valgt: s.stand.vaegtype === id,
-        meta: '<span class="card-pris">' + fmtKort(iv.tal(pris.konstruktion + pris.print)) + ' kr.</span> for jeres stand',
+        meta: '<span class="card-pris">' + fmtKort(iv.tal(pris.konstruktion + pris.print)) + ' kr.</span> for jeres stand' +
+              '<span class="card-teknik">' + esc(t.teknik) + '</span>',
         klik: function () { s.stand.vaegtype = id; opdater(); }
       }));
     });
@@ -514,36 +530,27 @@
     }
 
     v.appendChild(kolonne({
-      titel: 'Wieben Design leverer', hvem: 'Faktureres af os — beregnet på vores egne lejepriser',
-      linjer: r.wiebenLinjer, sum: r.wieben,
-      fod: 'Spændet skyldes montagetimerne, som først kan fastlægges på en godkendt tegning.'
+      titel: 'Det koster hos os', hvem: 'Leje af standen for hele messen, ekskl. moms', badge: 'Estimat',
+      linjer: r.wiebenLinjer, sum: r.vist,
+      fod: 'Enkeltposterne er vores egne lejepriser, men montagetimerne og standens endelige opbygning kan flytte sig. Derfor viser vi totalen som et spænd på ±' +
+        Math.round(P.meta.spaend * 100) + ' %.'
     }));
 
     v.appendChild(kolonne({
-      titel: 'Messecenteret opkræver', hvem: 'Betales direkte til arrangøren', badge: 'Anslået',
+      titel: 'Det koster hos messearrangøren', hvem: 'Betales direkte til dem, der holder messen',
+      badge: s.profil.pladspris > 0 ? 'Delvis jeres tal' : 'Anslået',
       linjer: r.mcLinjer, sum: r.messecenter,
-      fod: 'Arrangørernes priser svinger fra messe til messe. Tallene her er markedsniveau, ikke et tilbud.'
-    }));
-
-    var indstil = el('<div class="dagsats"></div>');
-    indstil.appendChild(el('<label for="dagsats">Jeres interne dagsats pr. person</label>'));
-    var inp = el('<input type="number" id="dagsats" min="0" step="100" value="' + s.egne.dagsats + '">');
-    inp.onchange = function () { s.egne.dagsats = Math.max(0, Number(inp.value) || 0); opdater(); };
-    indstil.appendChild(inp);
-    indstil.appendChild(el('<span>kr.</span>'));
-
-    v.appendChild(kolonne({
-      titel: 'I står selv for', hvem: 'Vores gæt, ikke jeres tal', badge: 'Groft estimat',
-      klasse: 'gaet', linjer: r.egneLinjer, sum: r.egne, ekstra: indstil,
-      fod: 'Vi kender ikke jeres lønninger, rejsepolitik eller markedsføringsbudget. Posterne står med, så I ikke glemmer dem — ret dagsatsen til jeres egen, og betragt resten som en huskeliste frem for et beløb.'
+      fod: s.profil.pladspris > 0
+        ? 'Standlejen er det beløb, I selv har oplyst. Gebyr og forsyninger er stadig anslået — arrangørernes priser svinger fra messe til messe.'
+        : 'Arrangørernes priser svinger fra messe til messe. Kender I den rigtige pris på pladsen, kan I skrive den ind på første trin, så regner vi med den i stedet.'
     }));
 
     document.getElementById('samlet').innerHTML =
-      '<h3>Hele messen: ' + fmtKort(r.total) + ' kr.</h3>' +
-      '<p>Heraf ' + fmtKort(r.wieben) + ' kr. til os. Med ' + s.stand.m2 + ' m² og ' + s.team.dage +
+      '<h3>Cirka ' + fmtKort(r.total) + ' kr. i alt</h3>' +
+      '<p>Heraf ' + fmtKort(r.vist) + ' kr. til os. Med ' + s.stand.m2 + ' m² og ' + s.team.dage +
       ' messedage er et realistisk mål ' + r.leads[0] + '–' + r.leads[1] + ' kvalificerede leads — ' +
       fmtKort(r.prLead) + ' kr. pr. lead i standomkostning.</p>' +
-      '<p class="disclaimer">Beregnet på Wieben Designs egne lejepriser. Tallene for messecenteret og jeres egne omkostninger er skøn.</p>';
+      '<p class="disclaimer">Hele beregningen er et skøn. Vi lægger os først fast på en pris, når vi har set, hvad standen skal kunne — og så er der som regel noget, der skal justeres undervejs.</p>';
   }
 
   function visTidslinje() {
@@ -570,19 +577,18 @@
 
   function visOpsummering() {
     var r = beregn();
-    var m = C.messer.filter(function (x) { return x.id === s.messe.id; })[0];
     var inv = inventarLinjer();
     var g = geometri();
     function linje(k, v) { return '<div class="ops-linje"><dt>' + esc(k) + '</dt><dd>' + esc(v) + '</dd></div>'; }
 
     document.getElementById('opsummering').innerHTML =
       '<dl class="ops-grid">' +
-      linje('Messe', m.navn + (s.messe.dato ? ' · ' + new Date(s.messe.dato).toLocaleDateString('da-DK') : '')) +
+      linje('Messeby', (s.messe.by || '—') + (s.messe.dato ? ' · ' + new Date(s.messe.dato).toLocaleDateString('da-DK') : '')) +
       linje('Formål', (C.profilSpoergsmaal[0].valg.filter(function (x) { return x.id === s.profil.formaal; })[0] || {}).titel || '—') +
       linje('Areal', s.stand.m2 + ' m²') +
       linje('Åbne sider', s.stand.aabneSider) +
-      linje('Vægge', C.vaegtyper[s.stand.vaegtype].titel + ', ' + dec(Math.round(g.vaegLbm * 10) / 10) + ' lbm i ' + String(s.stand.vaeghoejde).replace('.', ',') + ' m') +
-      linje('Grafik', C.grafikdaekning[s.stand.grafik].titel) +
+      linje('Vægge', C.vaegtyper[s.stand.vaegtype].titel + ', ' + dec(Math.round(g.vaegLbm * 10) / 10) + ' meter i ' + String(s.stand.vaeghoejde).replace('.', ',') + ' m højde') +
+      linje('Tryk på væggene', C.grafikdaekning[s.stand.grafik].titel) +
       linje('Gulv', C.gulv[s.stand.gulv].titel + (s.stand.haevet ? ', hævet' : '')) +
       linje('Belysning', C.belysning[s.stand.belysning].titel + (s.stand.rig ? ' · truss-rig' : '')) +
       linje('Bemanding', s.team.personer + ' personer i ' + s.team.dage + ' dage') +
@@ -591,9 +597,10 @@
       '<div class="ops-inventar"><dt>Inventar</dt><dd>' +
       esc(inv.length ? inv.map(function (l) { return l.antal + ' × ' + l.navn; }).join(' · ') : 'Ingen poster') +
       '</dd></div>' +
-      '<div class="ops-pris"><span>Estimat, Wieben Design — leje for hele messen, ekskl. moms</span>' +
-      '<strong>' + fmt(r.wieben) + '</strong>' +
-      '<span>Messecenteret opkræver anslået ' + fmtKort(r.messecenter) + ' kr. oveni. Jeres egne interne omkostninger er ikke medregnet her.</span></div>';
+      '<div class="ops-pris"><span>Estimat hos os — leje for hele messen, ekskl. moms</span>' +
+      '<strong>' + fmt(r.vist) + '</strong>' +
+      '<span>Messearrangøren opkræver ' + fmtKort(r.messecenter) + ' kr. oveni for selve pladsen.</span></div>' +
+      '<p class="forbehold">Det er et skøn, ikke et tilbud. Når vi har set standen tegnet, er der typisk noget der skal justeres — måske passer ti stole ikke til pladsen, måske skal væggen stå et andet sted. Det finder vi ud af sammen.</p>';
   }
 
   function visPrisbar() {
@@ -601,14 +608,15 @@
     bar.hidden = s.trin < 2;
     if (bar.hidden) return;
     var r = beregn();
-    document.getElementById('prisbar-belob').textContent = fmt(r.wieben).replace(' kr.', '');
+    document.getElementById('prisbar-belob').textContent = fmt(r.vist).replace(' kr.', '');
     var h = '<ul>';
     r.wiebenLinjer.forEach(function (l) {
       h += '<li><span>' + esc(l.navn) + (l.note ? '<em>' + esc(l.note) + '</em>' : '') +
         '</span><span>' + fmtKort(l.pris) + '</span></li>';
     });
-    h += '<li class="sum"><span>Wieben Design i alt</span><span>' + fmtKort(r.wieben) + ' kr.</span></li></ul>' +
-      '<p class="disclaimer">Leje for hele messen, ekskl. moms, beregnet på Wieben Designs egne priser. Messecenterets standleje og jeres egne omkostninger ligger uden for beløbet — se trin 4.</p>';
+    h += '<li class="sum"><span>I alt, afrundet til et spænd</span><span>' + fmtKort(r.vist) + ' kr.</span></li></ul>' +
+      '<p class="disclaimer">Leje for hele messen, ekskl. moms. Posterne er vores egne priser, men totalen vises som et spænd på ±' +
+      Math.round(P.meta.spaend * 100) + ' %, fordi montagetimer og den endelige opbygning først ligger fast på en godkendt tegning. Messearrangørens pris på pladsen ligger uden for beløbet — se trin 4.</p>';
     document.getElementById('prisbar-detalje').innerHTML = h;
   }
 
@@ -625,12 +633,13 @@
       'Ca. ' + sider + ' × ' + Math.max(2, Math.round(s.stand.m2 / sider)) + ' meter · plads til omkring ' +
       Math.max(1, Math.round(s.stand.m2 / 8)) + ' samtidige samtaler.';
     document.getElementById('personer-hjaelp').textContent =
-      'Vi anbefaler ' + Math.max(2, Math.ceil(s.stand.m2 / P.leads.m2PrPerson)) + ' personer på ' + s.stand.m2 + ' m² i åbningstiden.';
+      'Jeres egne medarbejdere — det påvirker ikke prisen hos os. Vi bruger tallet til at rådgive: på ' +
+      s.stand.m2 + ' m² anbefaler vi ' + Math.max(2, Math.ceil(s.stand.m2 / P.leads.m2PrPerson)) + ' personer i åbningstiden.';
 
     visTrin();
     visProfil();
     visAnbefaling();
-    visMesser();
+    visByer();
     visAabneSider();
     visVaegtyper();
     visValg();
@@ -658,7 +667,7 @@
     try {
       localStorage.setItem(GEM, JSON.stringify({
         profil: s.profil, messe: s.messe, stand: s.stand,
-        kurv: s.kurv, kurvRoert: s.kurvRoert, team: s.team, egne: s.egne
+        kurv: s.kurv, kurvRoert: s.kurvRoert, team: s.team
       }));
     } catch (e) { /* privat browsing */ }
   }
@@ -668,7 +677,7 @@
       var raa = localStorage.getItem(GEM);
       if (!raa) return;
       var g = JSON.parse(raa);
-      ['profil', 'messe', 'stand', 'kurv', 'team', 'egne'].forEach(function (k) { if (g[k]) s[k] = g[k]; });
+      ['profil', 'messe', 'stand', 'kurv', 'team'].forEach(function (k) { if (g[k]) s[k] = g[k]; });
       if (g.kurvRoert) s.kurvRoert = true;
     } catch (e) { /* ignorer ugyldigt gemt data */ }
   }
@@ -679,11 +688,22 @@
       if (g && !g.disabled) gaaTil(Number(g.dataset.goto));
     });
 
-    document.getElementById('messe').addEventListener('change', function (e) {
-      var m = C.messer.filter(function (x) { return x.id === e.target.value; })[0];
-      s.messe = { id: m.id, lokation: m.lokation, dato: s.messe.dato, km: m.km, bro: m.bro };
-      s.team.dage = m.dage;
-      document.getElementById('dage').value = m.dage;
+    document.getElementById('by').addEventListener('input', function (e) {
+      var navn = e.target.value;
+      s.messe.by = navn;
+      var b = findBy(navn);
+      if (b) { s.messe.km = b.km; s.messe.bro = b.bro; s.messe.ukendt = false; }
+      else { s.messe.ukendt = navn.trim().length > 1; }
+      opdater();
+    });
+    document.getElementById('km').addEventListener('input', function (e) {
+      var km = Math.max(0, Number(e.target.value) || 0);
+      if (km) { s.messe.km = km; s.messe.bro = false; }
+      opdater();
+    });
+    document.getElementById('pladspris').addEventListener('input', function (e) {
+      var v = Number(e.target.value);
+      s.profil.pladspris = v > 0 ? v : null;
       opdater();
     });
     document.getElementById('messedato').addEventListener('change', function (e) {
@@ -734,5 +754,8 @@
   document.getElementById('personer').value = s.team.personer;
   document.getElementById('dage').value = s.team.dage;
   document.getElementById('messedato').value = s.messe.dato || '';
+  document.getElementById('by').value = s.messe.by || '';
+  document.getElementById('km').value = s.messe.ukendt ? s.messe.km : '';
+  document.getElementById('pladspris').value = s.profil.pladspris || '';
   gaaTil(0);
 })();

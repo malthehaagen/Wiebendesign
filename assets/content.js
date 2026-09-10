@@ -6,19 +6,51 @@
 
 window.WD_INDHOLD = {
 
-  /* ---------------- Messer ----------------
-     km = afstand fra Støvring, bro = broafgift over Storebælt   */
-  messer: [
-    { id: 'agromek',   navn: 'Agromek',              sted: 'MCH Herning',            lokation: 'dk',         dage: 4, km: 130, bro: false },
-    { id: 'formland',  navn: 'Formland',             sted: 'MCH Herning',            lokation: 'dk',         dage: 4, km: 130, bro: false },
-    { id: 'foodexpo',  navn: 'Foodexpo',             sted: 'MCH Herning',            lokation: 'dk',         dage: 3, km: 130, bro: false },
-    { id: 'transport', navn: 'Transportmessen',      sted: 'MCH Herning',            lokation: 'dk',         dage: 3, km: 130, bro: false },
-    { id: 'hi',        navn: 'HI Tech & Industry',   sted: 'Odense Congress Center', lokation: 'dk',         dage: 3, km: 250, bro: false },
-    { id: 'bella',     navn: 'Messe i Bella Center', sted: 'København',              lokation: 'dk',         dage: 3, km: 400, bro: true },
-    { id: 'norden',    navn: 'Messe i Norden',       sted: 'Sverige, Norge, Finland',lokation: 'norden',     dage: 3, km: 650, bro: true },
-    { id: 'eu',        navn: 'Messe i Europa',       sted: 'Tyskland, Holland, Italien …', lokation: 'eu',   dage: 4, km: 950, bro: false },
-    { id: 'oversoeisk',navn: 'Messe uden for Europa',sted: 'USA, Asien, Mellemøsten',lokation: 'oversoeisk', dage: 4, km: 0,   bro: false },
-    { id: 'anden',     navn: 'En anden messe',       sted: 'Fortæl os hvilken',      lokation: 'dk',         dage: 3, km: 200, bro: false }
+  /* ---------------- Byer ----------------
+     Omtrentlig køreafstand fra Støvring, tur/retur beregnes i app.js.
+     bro = broafgift over Storebælt eller Øresund.
+     Tallene er cirkatal til et estimat — ikke ruteberegning.          */
+  byer: [
+    { navn: 'Aalborg',      km: 25,   bro: false },
+    { navn: 'Viborg',       km: 60,   bro: false },
+    { navn: 'Randers',      km: 80,   bro: false },
+    { navn: 'Silkeborg',    km: 95,   bro: false },
+    { navn: 'Aarhus',       km: 105,  bro: false },
+    { navn: 'Herning',      km: 130,  bro: false },
+    { navn: 'Horsens',      km: 140,  bro: false },
+    { navn: 'Vejle',        km: 165,  bro: false },
+    { navn: 'Billund',      km: 165,  bro: false },
+    { navn: 'Fredericia',   km: 185,  bro: false },
+    { navn: 'Kolding',      km: 195,  bro: false },
+    { navn: 'Esbjerg',      km: 215,  bro: false },
+    { navn: 'Odense',       km: 250,  bro: false },
+    { navn: 'Sønderborg',   km: 275,  bro: false },
+    { navn: 'Roskilde',     km: 380,  bro: true  },
+    { navn: 'København',    km: 400,  bro: true  },
+    { navn: 'Hamborg',      km: 380,  bro: false },
+    { navn: 'Malmø',        km: 430,  bro: true  },
+    { navn: 'Bremen',       km: 490,  bro: false },
+    { navn: 'Göteborg',     km: 560,  bro: true  },
+    { navn: 'Hannover',     km: 620,  bro: false },
+    { navn: 'Berlin',       km: 640,  bro: false },
+    { navn: 'Amsterdam',    km: 700,  bro: false },
+    { navn: 'Düsseldorf',   km: 720,  bro: false },
+    { navn: 'Utrecht',      km: 730,  bro: false },
+    { navn: 'Köln',         km: 750,  bro: false },
+    { navn: 'Oslo',         km: 860,  bro: true  },
+    { navn: 'Frankfurt',    km: 900,  bro: false },
+    { navn: 'Bruxelles',    km: 900,  bro: false },
+    { navn: 'Stockholm',    km: 900,  bro: true  },
+    { navn: 'Praha',        km: 1000, bro: false },
+    { navn: 'London',       km: 1100, bro: false },
+    { navn: 'Warszawa',     km: 1100, bro: false },
+    { navn: 'München',      km: 1150, bro: false },
+    { navn: 'Paris',        km: 1200, bro: false },
+    { navn: 'Zürich',       km: 1250, bro: false },
+    { navn: 'Wien',         km: 1300, bro: false },
+    { navn: 'Milano',       km: 1550, bro: false },
+    { navn: 'Barcelona',    km: 2300, bro: false },
+    { navn: 'Madrid',       km: 2500, bro: false }
   ],
 
   /* ---------------- Trin 1: Messeprofil ---------------- */
@@ -65,24 +97,24 @@ window.WD_INDHOLD = {
 
   /* ---------------- Vægge, gulv, lys ---------------- */
   vaegtyper: {
-    print:  { titel: 'Print på beMatrix',   tekst: 'Rammesystem med printede bannere. Jeres standardløsning — robust, hurtig at rejse og let at ændre.' },
-    pixlip: { titel: 'Pixlip backlit',      tekst: 'Baggrundsbelyst lysvæg. Markant dyrere, men ingen anden væg trækker blikket på samme måde.' }
+    print:  { titel: 'Almindelige vægge',  tekst: 'Hvide vægge, hvor jeres billeder og budskaber printes direkte på. Det, de fleste stande er bygget af.', teknik: 'beMatrix rammesystem' },
+    pixlip: { titel: 'Lysvægge',           tekst: 'Væggene lyser indefra, så billederne står som på en skærm. Dyrere, men ingen anden væg trækker blikket på samme måde.', teknik: 'Pixlip backlit' }
   },
   grafikdaekning: {
-    ingen:  { titel: 'Ingen print',   tekst: 'Rene hvide vægge.' },
-    delvis: { titel: 'Delvis',        tekst: 'Print på de vigtigste flader, ca. 45 % af vægarealet.' },
-    fuld:   { titel: 'Fuld dækning',  tekst: 'Print på alle vægflader.' }
+    ingen:  { titel: 'Ingenting',              tekst: 'Rene hvide vægge uden tryk.' },
+    delvis: { titel: 'De vigtigste flader',    tekst: 'Tryk der hvor folk kigger — cirka halvdelen af væggene.' },
+    fuld:   { titel: 'Det hele',               tekst: 'Tryk på alle vægflader.' }
   },
   gulv: {
     ingen:  { titel: 'Hallens gulv',  tekst: 'Ingen belægning.' },
-    taeppe: { titel: 'Tæppefliser',   tekst: 'Heuga 530XL, antracitgrå, med blødt undergulv.' },
-    vinyl:  { titel: 'Vinyl',         tekst: 'Hvid Armstrong-vinyl. Skarpt, lyst udtryk.' },
+    taeppe: { titel: 'Tæppe',         tekst: 'Antracitgråt tæppe med blødt underlag. Det mest almindelige valg.' },
+    vinyl:  { titel: 'Vinyl',         tekst: 'Hvidt, glat gulv. Skarpt og lyst.' },
     trae:   { titel: 'Trægulv',       tekst: 'Naturtræ. Det varmeste udtryk — og det dyreste.' }
   },
   belysning: {
-    standard:    { titel: 'Standard', tekst: 'b62-spots på væggene. Nok til at standen er oplyst.' },
-    forstaerket: { titel: 'Forstærket', tekst: 'NOVI-spots, tættere placeret. Mærkbart lysere end nabostandene.' },
-    pro:         { titel: 'Pro',      tekst: 'ERON Pro 200W floodlights. Til høje vægge og store flader.' }
+    standard:    { titel: 'Almindeligt',  tekst: 'Spots på væggene. Nok til at standen er ordentligt oplyst.' },
+    forstaerket: { titel: 'Ekstra lys',   tekst: 'Flere og kraftigere spots. Mærkbart lysere end nabostandene.' },
+    pro:         { titel: 'Kraftigt lys', tekst: 'Store projektører til høje vægge og store flader.' }
   },
 
   /* ---------------- Katalog: navne og beskrivelser ---------------- */
@@ -90,52 +122,48 @@ window.WD_INDHOLD = {
     { id: 'diske',   titel: 'Diske, depot og opbevaring' },
     { id: 'moebler', titel: 'Møbler' },
     { id: 'teknik',  titel: 'Skærme og teknik' },
-    { id: 'kaffe',   titel: 'Kaffe og køkken' },
-    { id: 'el',      titel: 'El' }
+    { id: 'kaffe',   titel: 'Kaffe og køkken' }
   ],
   varer: {
-    expo_bar:    { navn: 'Expo Disk, barmodul',      besk: '1000 mm',                    ikon: 'disk' },
-    expo_skab:   { navn: 'Expo Disk, skab m/lås',    besk: '1000 mm, aflåst',            ikon: 'disk' },
-    expo_hylde:  { navn: 'Expo Disk, hyldemodul',    besk: '1000 mm',                    ikon: 'disk' },
-    izi_disk:    { navn: 'IZI Disk',                 besk: '0,5 × 1 meter',              ikon: 'disk' },
-    ubord:       { navn: 'IZI U-bord',               besk: 'beMatrix',                   ikon: 'bord' },
-    vitrine:     { navn: 'Vitrineskab med lys',      besk: '50 × 50 × 200 cm',           ikon: 'vitrine' },
-    abc_reol:    { navn: 'ABC-reol til depot',       besk: 'stige, dybde 30–50 cm',      ikon: 'reol' },
-    depot_bord:  { navn: 'Bordplade til depot',      besk: '1 meter',                    ikon: 'bord' },
+    expo_bar:    { navn: 'Bardisk',                  besk: 'i barhøjde, 1 meter bred',          ikon: 'disk' },
+    expo_skab:   { navn: 'Disk med aflåst skab',     besk: '1 meter bred — tasker og værdier',  ikon: 'disk' },
+    expo_hylde:  { navn: 'Disk med hylder',          besk: '1 meter bred',                      ikon: 'disk' },
+    izi_disk:    { navn: 'Infodisk',                 besk: 'til at tage imod ved',              ikon: 'disk' },
+    ubord:       { navn: 'U-formet bord',            besk: 'plads til flere rundt om',          ikon: 'bord' },
+    vitrine:     { navn: 'Glasmontre med lys',       besk: '50 × 50 cm, 2 meter høj',           ikon: 'vitrine' },
+    abc_reol:    { navn: 'Reol til depotet',         besk: 'til kasser og materialer',          ikon: 'reol' },
+    depot_bord:  { navn: 'Arbejdsbord til depotet',  besk: '1 meter',                           ikon: 'bord' },
 
-    staabord:    { navn: 'Ståbord',                  besk: 'krydsfod, Ø 70 cm',          ikon: 'bord' },
-    cafebord:    { navn: 'Cafébord, siddehøjde',     besk: 'krydsfod, Ø 80 cm',          ikon: 'bord' },
-    barstol:     { navn: 'Barstol',                  besk: 'hvid eller sort',            ikon: 'stol' },
-    skalstol:    { navn: 'Skalstol, SNOW',           besk: 'hvid, uden armlæn',          ikon: 'stol' },
-    stol_arm:    { navn: 'Stol med armlæn',          besk: 'Vico Duo, lyst træ',         ikon: 'stol' },
-    loungestol:  { navn: 'Loungestol',               besk: 'Rennes',                     ikon: 'lounge' },
-    loungebord:  { navn: 'Loungebord',               besk: 'sort eller hvidt',           ikon: 'bord' },
-    sofa:        { navn: 'Sofa',                     besk: '2-personers',                ikon: 'lounge' },
-    brochure:    { navn: 'Brochureholder',           besk: 'ZigZag, gulvmodel',          ikon: 'brochure' },
-    stumtjener:  { navn: 'Stumtjener med bøjler',    besk: 'sort',                       ikon: 'knage' },
-    affald:      { navn: 'Affaldsstativ',            besk: 'h. 90 cm, inkl. poser',      ikon: 'affald' },
+    staabord:    { navn: 'Ståbord',                  besk: 'rundt, 70 cm',                      ikon: 'bord' },
+    cafebord:    { navn: 'Cafébord i siddehøjde',    besk: 'rundt, 80 cm',                      ikon: 'bord' },
+    barstol:     { navn: 'Barstol',                  besk: 'til ståbordene',                    ikon: 'stol' },
+    skalstol:    { navn: 'Stol uden armlæn',         besk: 'hvid',                              ikon: 'stol' },
+    stol_arm:    { navn: 'Stol med armlæn',          besk: 'lyst træ, polstret',                ikon: 'stol' },
+    loungestol:  { navn: 'Lænestol',                 besk: 'til møder der tager tid',           ikon: 'lounge' },
+    loungebord:  { navn: 'Sofabord',                 besk: 'sort eller hvidt',                  ikon: 'bord' },
+    sofa:        { navn: 'Sofa',                     besk: '2-personers',                       ikon: 'lounge' },
+    brochure:    { navn: 'Brochurestativ',           besk: 'står på gulvet',                    ikon: 'brochure' },
+    stumtjener:  { navn: 'Stativ til overtøj',       besk: 'med bøjler',                        ikon: 'knage' },
+    affald:      { navn: 'Skraldespand',             besk: '90 cm høj, poser med',              ikon: 'affald' },
 
-    mon32:       { navn: 'Skærm, 32"',               besk: 'inkl. ophæng',               ikon: 'skaerm' },
-    mon43:       { navn: 'Skærm, 40–43"',            besk: 'inkl. ophæng',               ikon: 'skaerm' },
-    mon55:       { navn: 'Skærm, 55"',               besk: 'inkl. ophæng',               ikon: 'skaerm' },
-    mon65:       { navn: 'Skærm, 65"',               besk: 'inkl. ophæng',               ikon: 'skaerm' },
-    mon75:       { navn: 'Skærm, 75"',               besk: 'inkl. ophæng',               ikon: 'skaerm' },
-    stander:     { navn: 'Gulvstander til skærm',    besk: 'Expand',                     ikon: 'skaerm' },
-    afspiller:   { navn: 'Afspiller-pc',             besk: 'til video og demo',          ikon: 'teknik' },
-    ledskin:     { navn: 'LEDskin-flise',            besk: '50 × 50 cm, pitch 2,5',      ikon: 'led' },
-    novastar:    { navn: 'LEDskin-styring',          besk: 'Novastar MTCL 600',          ikon: 'teknik' },
+    mon32:       { navn: 'Skærm, 32 tommer',         besk: 'ophæng med i prisen',               ikon: 'skaerm' },
+    mon43:       { navn: 'Skærm, 43 tommer',         besk: 'ophæng med i prisen',               ikon: 'skaerm' },
+    mon55:       { navn: 'Skærm, 55 tommer',         besk: 'ophæng med i prisen',               ikon: 'skaerm' },
+    mon65:       { navn: 'Skærm, 65 tommer',         besk: 'ophæng med i prisen',               ikon: 'skaerm' },
+    mon75:       { navn: 'Skærm, 75 tommer',         besk: 'ophæng med i prisen',               ikon: 'skaerm' },
+    stander:     { navn: 'Gulvstander til skærm',    besk: 'hvis skærmen ikke skal på væggen',  ikon: 'skaerm' },
+    afspiller:   { navn: 'Afspiller til skærmen',    besk: 'kører jeres video i sløjfe',        ikon: 'teknik' },
+    ledskin:     { navn: 'LED-væg, pr. flise',       besk: '50 × 50 cm — bygges som en mur',    ikon: 'led' },
+    novastar:    { navn: 'Styring til LED-væggen',   besk: 'én pr. LED-væg',                    ikon: 'teknik' },
 
-    nespresso_s: { navn: 'Nespresso, stor',          besk: 'Gemini CS 220 Pro',          ikon: 'kaffe' },
-    nespresso_l: { navn: 'Nespresso, lille',         besk: 'Zenius',                     ikon: 'kaffe' },
-    bonamat:     { navn: 'Kaffemaskine, Bonamat',    besk: 'Novo 2, 12 kopper',          ikon: 'kaffe' },
-    vandkoger:   { navn: 'Vandkoger',                besk: '10 kopper',                  ikon: 'kaffe' },
-    koeleskab_h: { navn: 'Køleskab, højt',           besk: 'h. 170 cm, glaslåge',        ikon: 'koel' },
-    koeleskab_l: { navn: 'Køleskab, lavt',           besk: '140 liter, glaslåge',        ikon: 'koel' },
-    vask:        { navn: 'Vaskesektion',             besk: 'bordmodul m. vask og afløb', ikon: 'koel' },
-    papkrus:     { navn: 'Papkrus',                  besk: '50 stk. á 25 cl',            ikon: 'kaffe' },
-
-    eltavle32:   { navn: 'Eltavle, 32A',             besk: '8 udtag',                    ikon: 'el' },
-    eltavle16:   { navn: 'Eltavle, 16A',             besk: '6 udtag',                    ikon: 'el' }
+    nespresso_s: { navn: 'Espressomaskine, stor',    besk: 'Nespresso — til travle stande',     ikon: 'kaffe' },
+    nespresso_l: { navn: 'Espressomaskine, lille',   besk: 'Nespresso',                         ikon: 'kaffe' },
+    bonamat:     { navn: 'Filterkaffemaskine',       besk: '12 kopper ad gangen',               ikon: 'kaffe' },
+    vandkoger:   { navn: 'Elkedel',                  besk: 'til te og instant',                 ikon: 'kaffe' },
+    koeleskab_h: { navn: 'Køleskab, højt',           besk: '170 cm med glaslåge',               ikon: 'koel' },
+    koeleskab_l: { navn: 'Køleskab, lavt',           besk: 'under disken, med glaslåge',        ikon: 'koel' },
+    vask:        { navn: 'Vask med afløb',           besk: 'indbygget i et bordmodul',          ikon: 'koel' },
+    papkrus:     { navn: 'Papkrus',                  besk: '50 stk.',                           ikon: 'kaffe' }
   },
 
   /* ---------------- Faglige indsigter ---------------- */
@@ -185,15 +213,10 @@ window.WD_INDHOLD = {
       titel: 'I er for få på standen',
       tekst: 'Regn med én person pr. ca. 5 m² i åbningstiden, og aldrig færre end to. En optaget sælger koster jer den næste gæst — og gæster går ikke ind på en tom stand.' },
 
-    { id: 'el', vaegt: 5,
-      naar: s => !s.kurv.eltavle16 && !s.kurv.eltavle32,
-      titel: 'Husk el-tavlen',
-      tekst: 'Skærme, spots, køleskab og kaffemaskine skal have strøm fra et sted. En eltavle koster 550–650 kr. og er den post, folk oftest opdager, når montøren står på standen.' },
-
     { id: 'pixlip', vaegt: 6,
       naar: s => s.profil.ambition === 'signatur' && s.stand.vaegtype === 'print',
-      titel: 'Der findes et niveau over print',
-      tekst: 'I har sat ambitionen til signatur. En Pixlip backlit lysvæg er baggrundsbelyst hele vejen igennem og ser ud som ingenting andet i hallen. Den koster mærkbart mere pr. meter — prøv at slå den til og se forskellen.' },
+      titel: 'Der findes et niveau over almindelige vægge',
+      tekst: 'I har sat ambitionen til signatur. Lysvægge lyser indefra, så billederne står som på en skærm hele vejen rundt. De koster mærkbart mere pr. meter — prøv at slå dem til og se forskellen.' },
 
     { id: 'opfoelgning', vaegt: 4,
       naar: () => true,

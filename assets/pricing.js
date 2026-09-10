@@ -18,7 +18,13 @@ window.WD_PRIS = {
     grundlag: 'Lejepris pr. messe',
     kilde: 'docs/prisgrundlag.md',
     opdateret: '2026-09-10',
-    afrunding: 250
+    afrunding: 250,
+
+    /* Spændet på det viste totalbeløb. Enkeltposterne er faste lejepriser,
+       men montagetimer, standens faktiske opbygning og kundens endelige valg
+       flytter sig, indtil der ligger en godkendt tegning. Totalen vises derfor
+       som midtpunktet ± dette. */
+    spaend: 0.20
   },
 
   /* -------------------------------------------------------------------
@@ -130,10 +136,17 @@ window.WD_PRIS = {
       { id: 'vask',        leje: 450 },
       { id: 'papkrus',     leje: 45 }
     ],
-    el: [
-      { id: 'eltavle32',   leje: 650 },
-      { id: 'eltavle16',   leje: 550 }
-    ]
+  },
+
+  /* -------------------------------------------------------------------
+     EL — obligatorisk, lægges automatisk i prisen. Kunden vælger den ikke
+     til eller fra; vi vælger tavlen ud fra, hvad der skal have strøm.
+     ------------------------------------------------------------------- */
+  elTavle: {
+    lille: { leje: 550, navn: 'El-tavle, 16A med 6 udtag' },
+    stor:  { leje: 650, navn: 'El-tavle, 32A med 8 udtag' },
+    /* Varer der udløser den store tavle */
+    stortForbrug: ['mon55', 'mon65', 'mon75', 'ledskin', 'koeleskab_h', 'koeleskab_l', 'nespresso_s', 'bonamat', 'vitrine']
   },
 
   /* -------------------------------------------------------------------
@@ -184,17 +197,6 @@ window.WD_PRIS = {
     tilmeldingsgebyr: [4000, 6000],
     forsyning:        [4500, 7500],   /* el, vand og internet hos arrangøren */
     aabenSideTillaegPct: { 1: 0, 2: 0.06, 3: 0.12, 4: 0.18 }
-  },
-
-  /* -------------------------------------------------------------------
-     KUNDENS EGNE OMKOSTNINGER — REN ILLUSTRATION
-     Wieben Design kender ikke kundens interne tal. Posterne står med for
-     at kunden ikke glemmer dem, og kan rettes direkte i beregneren.
-     ------------------------------------------------------------------- */
-  egne: {
-    dagsatsStandard:  3500,          /* kr. pr. person pr. dag, kan ændres    */
-    rejseOphold: { dk: 1500, norden: 3200, eu: 3900, oversoeisk: 10500 },
-    markedsfoering: [9000, 19000]
   },
 
   /* Nøgletal til forventningsafstemning */
