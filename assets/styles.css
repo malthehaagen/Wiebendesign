@@ -1,89 +1,93 @@
 /* =====================================================================
-   Wieben Design — Standberegner (prototype)
-   Farver og typografi styres af variablene herunder. Skift dem ud med
-   Wieben Designs rigtige brandfarver, når de foreligger.
+   Wieben Design — Standberegner
+   Farver og fonts følger Wieben Designs brandmanual:
+   Primary #3D8A95 (petroleumsblå) · Accent #1F4E59 (mørk grøn/blå)
+   Baggrund #F4F7F8 (lysegrå) · Overskrift Inter Tight 700 · Brød Noto Sans 400
    ===================================================================== */
 
 :root{
-  --ink:        #16181c;
-  --ink-2:      #40454e;
-  --ink-3:      #6b7280;
-  --linje:      #e2e5ea;
-  --linje-2:    #cfd4dc;
-  --flade:      #ffffff;
-  --flade-2:    #f6f7f9;
-  --flade-3:    #eef0f3;
-  --accent:     #b4451f;
-  --accent-dyb: #8d3416;
-  --accent-lys: #fdf1ec;
-  --groen:      #2f6d4f;
-  --groen-lys:  #eef5f1;
-  --radius:     10px;
-  --skygge:     0 1px 2px rgba(16,18,22,.06), 0 8px 24px rgba(16,18,22,.05);
-  --maxw:       1080px;
-  --font:       "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --primary:      #3D8A95;
+  --primary-dyb:  #33747d;
+  --primary-lys:  #eaf3f4;
+  --accent:       #1F4E59;
+  --accent-lys:   #e7eef0;
+  --ink:          #000000;
+  --ink-2:        #33393d;
+  --ink-3:        #6a737a;
+  --linje:        #dfe6e8;
+  --linje-2:      #c6d1d4;
+  --flade:        #ffffff;
+  --flade-2:      #F4F7F8;
+  --flade-3:      #eaeff1;
+  --radius:       10px;
+  --skygge:       0 1px 2px rgba(31,78,89,.06), 0 8px 24px rgba(31,78,89,.06);
+  --maxw:         1080px;
+  --font-h:       "Inter Tight", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-t:       "Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{
-  margin:0; background:var(--flade-2); color:var(--ink);
-  font-family:var(--font); font-size:16px; line-height:1.55;
-  padding-bottom:96px;
+  margin:0; background:var(--flade-2); color:var(--ink-2);
+  font-family:var(--font-t); font-size:16px; line-height:1.55;
+  padding-bottom:100px;
 }
 img{max-width:100%}
-h1,h2,h3{line-height:1.2; margin:0 0 .4em; letter-spacing:-.015em}
-h1{font-size:clamp(1.75rem,4vw,2.6rem)}
-h2{font-size:clamp(1.35rem,3vw,1.9rem)}
+h1,h2,h3,h4{font-family:var(--font-h); font-weight:700; color:var(--ink); line-height:1.18; margin:0 0 .4em; letter-spacing:-.01em}
+h1{font-size:clamp(1.8rem,4vw,2.7rem)}
+h2{font-size:clamp(1.4rem,3vw,2rem)}
 h3{font-size:1.05rem}
 p{margin:0 0 1em}
 .wrap{max-width:var(--maxw); margin:0 auto; padding-inline:20px}
 
 /* ---------------- Header ---------------- */
-.top{background:var(--ink); color:#fff}
-.top-inner{display:flex; align-items:center; justify-content:space-between; gap:16px; padding-block:16px; flex-wrap:wrap}
-.brand{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap}
-.brand-name{font-weight:700; letter-spacing:.02em; font-size:1.05rem}
-.brand-sub{color:#a8adb8; font-size:.9rem; border-left:1px solid #3a3f48; padding-left:10px}
-.top-note{margin:0; color:#8f95a1; font-size:.8rem}
+.top{background:var(--flade); border-bottom:1px solid var(--linje)}
+.top-inner{display:flex; align-items:center; justify-content:space-between; gap:16px; padding-block:14px; flex-wrap:wrap}
+.brand{display:flex; align-items:center; gap:14px; flex-wrap:wrap}
+.logo{height:34px; width:auto; display:block}
+.brand-sub{font-family:var(--font-h); font-weight:600; color:var(--ink-3); font-size:.92rem; border-left:1px solid var(--linje-2); padding-left:14px}
+.top-note{margin:0; color:var(--ink-3); font-size:.78rem; letter-spacing:.06em; text-transform:uppercase}
 
 /* ---------------- Trinvisning ---------------- */
 .steps{background:var(--flade); border-bottom:1px solid var(--linje); overflow-x:auto}
 .steps ol{display:flex; gap:4px; list-style:none; margin:0 auto; padding:0 20px; max-width:var(--maxw); min-width:max-content}
 .steps li{padding:12px 14px; font-size:.82rem; color:var(--ink-3); white-space:nowrap; border-bottom:2px solid transparent}
-.steps li.aktiv{color:var(--ink); font-weight:600; border-bottom-color:var(--accent)}
+.steps li.aktiv{color:var(--ink); font-weight:600; border-bottom-color:var(--primary)}
 .steps li.gjort{color:var(--ink-2)}
 .steps li.klikbar{cursor:pointer}
-.steps li.klikbar:hover{color:var(--accent)}
+.steps li.klikbar:hover{color:var(--primary)}
 
 /* ---------------- Trin ---------------- */
 .step{padding-block:36px 24px}
 .step-title{margin-bottom:.15em}
-.step-intro{color:var(--ink-3); max-width:60ch; margin-bottom:28px}
-.grp-title{margin:32px 0 12px; font-size:.8rem; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-3)}
+.step-intro{color:var(--ink-3); max-width:62ch; margin-bottom:28px}
+.grp-title{margin:34px 0 12px; font-family:var(--font-t); font-weight:600; font-size:.78rem; text-transform:uppercase; letter-spacing:.1em; color:var(--ink-3)}
+.grp-hjaelp{font-size:.86rem; color:var(--ink-3); margin:-6px 0 14px; max-width:62ch}
 
 /* ---------------- Hero ---------------- */
 .hero{padding-block:24px 8px; max-width:62ch}
-.eyebrow{color:var(--accent); font-size:.8rem; font-weight:600; letter-spacing:.09em; text-transform:uppercase; margin-bottom:.8em}
+.eyebrow{color:var(--primary); font-size:.78rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; margin-bottom:.9em}
 .lead{font-size:1.1rem; color:var(--ink-2)}
 .hero-list{list-style:none; padding:0; margin:24px 0 32px; border-top:1px solid var(--linje)}
 .hero-list li{padding:12px 0; border-bottom:1px solid var(--linje); color:var(--ink-2); font-size:.95rem}
 
 /* ---------------- Knapper ---------------- */
 .btn{
-  font:inherit; font-weight:600; font-size:.92rem; cursor:pointer;
+  font-family:var(--font-t); font-weight:600; font-size:.92rem; cursor:pointer;
   padding:11px 18px; border-radius:var(--radius);
   border:1px solid var(--linje-2); background:var(--flade); color:var(--ink);
   transition:background .15s, border-color .15s, color .15s;
 }
-.btn:hover{border-color:var(--ink-3)}
-.btn-primary{background:var(--accent); border-color:var(--accent); color:#fff}
-.btn-primary:hover{background:var(--accent-dyb); border-color:var(--accent-dyb)}
+.btn:hover{border-color:var(--primary); color:var(--primary)}
+.btn-primary{background:var(--primary); border-color:var(--primary); color:#fff}
+.btn-primary:hover{background:var(--primary-dyb); border-color:var(--primary-dyb); color:#fff}
 .btn-lg{padding:14px 26px; font-size:1rem}
-.btn-ghost{background:transparent; border-color:#4a505b; color:#fff}
-.btn-ghost:hover{background:#2a2e35; border-color:#6a707b}
-.btn:disabled{opacity:.45; cursor:not-allowed}
-.nav-row{display:flex; gap:10px; margin-top:32px; padding-top:24px; border-top:1px solid var(--linje); flex-wrap:wrap}
+.btn-ghost{background:transparent; border-color:rgba(255,255,255,.35); color:#fff}
+.btn-ghost:hover{background:rgba(255,255,255,.1); border-color:#fff; color:#fff}
+.btn:disabled{opacity:.4; cursor:not-allowed}
+.btn:disabled:hover{border-color:var(--linje-2); color:var(--ink)}
+.nav-row{display:flex; gap:10px; margin-top:34px; padding-top:24px; border-top:1px solid var(--linje); flex-wrap:wrap}
 
 /* ---------------- Kort ---------------- */
 .cards{display:grid; gap:12px; margin-bottom:8px}
@@ -91,134 +95,178 @@ p{margin:0 0 1em}
 .cards-3{grid-template-columns:repeat(3,1fr)}
 .cards-4{grid-template-columns:repeat(4,1fr)}
 @media (max-width:820px){ .cards-3,.cards-4{grid-template-columns:repeat(2,1fr)} }
-@media (max-width:480px){ .cards-2,.cards-3,.cards-4{grid-template-columns:1fr} }
+@media (max-width:520px){ .cards-2,.cards-3,.cards-4{grid-template-columns:1fr} }
 
 .card{
-  position:relative; text-align:left; font:inherit; cursor:pointer;
+  position:relative; text-align:left; font-family:var(--font-t); cursor:pointer;
   background:var(--flade); border:1px solid var(--linje); border-radius:var(--radius);
   padding:16px; display:flex; flex-direction:column; gap:6px;
-  transition:border-color .15s, box-shadow .15s, transform .1s;
+  transition:border-color .15s, box-shadow .15s;
 }
 .card:hover{border-color:var(--linje-2); box-shadow:var(--skygge)}
-.card.valgt{border-color:var(--accent); box-shadow:0 0 0 1px var(--accent)}
+.card.valgt{border-color:var(--primary); box-shadow:0 0 0 1px var(--primary)}
 .card.valgt::after{
   content:"✓"; position:absolute; top:10px; right:12px;
-  width:20px; height:20px; border-radius:50%; background:var(--accent); color:#fff;
+  width:20px; height:20px; border-radius:50%; background:var(--primary); color:#fff;
   font-size:.72rem; display:grid; place-items:center;
 }
-.card-titel{font-weight:650; font-size:.98rem}
+.card-titel{font-family:var(--font-h); font-weight:600; font-size:1rem; color:var(--ink)}
 .card-tekst{font-size:.86rem; color:var(--ink-3); line-height:1.45}
 .card-meta{margin-top:auto; padding-top:8px; font-size:.78rem; color:var(--ink-3); border-top:1px solid var(--flade-3)}
-.card-pris{font-size:.8rem; color:var(--accent); font-weight:600}
+.card-pris{color:var(--accent); font-weight:600}
 
 /* Illustrationer */
 .ill{background:var(--flade-3); border-radius:6px; margin-bottom:4px; aspect-ratio:100/70; overflow:hidden}
 .ill svg{width:100%; height:100%; display:block}
 .ill .hal{fill:none; stroke:var(--linje-2); stroke-width:1.5; stroke-dasharray:3 3}
-.ill .stand{fill:#fff; stroke:var(--ink-2); stroke-width:2}
-.ill .nabo{fill:var(--linje); stroke:none}
-.ill .aaben{stroke:var(--accent); stroke-width:3; fill:none; stroke-linecap:round}
-.card.valgt .ill{background:var(--accent-lys)}
+.ill .stand{fill:#fff; stroke:var(--accent); stroke-width:2}
+.ill .nabo{fill:var(--linje); stroke:var(--linje); stroke-width:1.5}
+.ill .aaben{stroke:var(--primary); stroke-width:3; fill:none; stroke-linecap:round}
+.ill .glo{fill:var(--primary-lys); stroke:none}
+.card.valgt .ill{background:var(--primary-lys)}
 
 /* ---------------- Felter ---------------- */
 .field{margin-bottom:20px}
-.field-label{display:block; font-weight:600; font-size:.9rem; margin-bottom:8px}
+.field-label{display:block; font-weight:600; font-size:.9rem; margin-bottom:8px; color:var(--ink)}
 .field-row{display:flex; gap:10px; flex-wrap:wrap}
 .select{
   font:inherit; font-size:.95rem; padding:11px 12px; border-radius:var(--radius);
   border:1px solid var(--linje-2); background:var(--flade); color:var(--ink); flex:1 1 220px; min-width:0;
 }
-.field-hjaelp{font-size:.82rem; color:var(--ink-3); margin:8px 0 0}
+.field-hjaelp{font-size:.84rem; color:var(--ink-3); margin:10px 0 0}
 
 .sliders{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
 @media (max-width:760px){ .sliders{grid-template-columns:1fr} }
 .slider-box{background:var(--flade); border:1px solid var(--linje); border-radius:var(--radius); padding:16px}
-.slider-solo{max-width:420px; margin-bottom:24px}
-.slider-box label{display:block; font-weight:600; font-size:.88rem; margin-bottom:10px}
-.slider-box input[type=range]{width:100%; accent-color:var(--accent)}
-.slider-box output{display:block; margin-top:6px; font-size:1.15rem; font-weight:650}
+.slider-box label{display:block; font-weight:600; font-size:.88rem; margin-bottom:10px; color:var(--ink)}
+.slider-box input[type=range]{width:100%; accent-color:var(--primary)}
+.slider-box output{display:block; margin-top:6px; font-family:var(--font-h); font-size:1.2rem; font-weight:700; color:var(--ink)}
+
+/* Segmenterede valg */
+.valgrow{display:grid; grid-template-columns:auto 1fr; gap:24px; margin-top:16px; align-items:start}
+@media (max-width:640px){ .valgrow{grid-template-columns:1fr} }
+.seg{display:inline-flex; border:1px solid var(--linje-2); border-radius:var(--radius); overflow:hidden; background:var(--flade)}
+.seg-btn{
+  font:inherit; font-size:.9rem; font-weight:600; cursor:pointer; padding:10px 16px;
+  border:none; background:transparent; color:var(--ink-2); border-right:1px solid var(--linje);
+}
+.seg-btn:last-child{border-right:none}
+.seg-btn:hover{background:var(--flade-3)}
+.seg-btn.valgt{background:var(--primary); color:#fff}
+
+/* Afkrydsning */
+.tjek{display:flex; gap:10px; align-items:flex-start; margin-top:12px; font-size:.9rem; cursor:pointer; color:var(--ink-2)}
+.tjek input{margin-top:3px; accent-color:var(--primary); width:17px; height:17px; flex:none}
+.tjek em{font-style:normal; color:var(--accent); font-weight:600}
+
+/* ---------------- Vareliste ---------------- */
+.forslag{
+  display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  background:var(--primary-lys); border:1px solid #cfe2e5; border-radius:var(--radius); padding:16px 18px; margin-bottom:8px;
+}
+.forslag-tekst{display:flex; flex-direction:column; gap:2px}
+.forslag-tekst strong{font-family:var(--font-h); color:var(--ink)}
+.forslag-tekst span{font-size:.87rem; color:var(--ink-2)}
+
+.varer{display:grid; grid-template-columns:repeat(2,1fr); gap:10px}
+@media (max-width:720px){ .varer{grid-template-columns:1fr} }
+.vare{
+  display:flex; align-items:center; gap:12px;
+  background:var(--flade); border:1px solid var(--linje); border-radius:var(--radius); padding:10px 12px;
+}
+.vare.valgt{border-color:var(--primary); background:#fbfdfd}
+.vare-ill{flex:none; width:52px; height:38px; background:var(--flade-3); border-radius:5px; overflow:hidden}
+.vare.valgt .vare-ill{background:var(--primary-lys)}
+.vare-ill svg{width:100%; height:100%; display:block}
+.vare-ill .stand{fill:#fff; stroke:var(--accent); stroke-width:3}
+.vare-ill .nabo{fill:none; stroke:var(--linje-2); stroke-width:3}
+.vare-ill .aaben{stroke:var(--primary); stroke-width:4; fill:none; stroke-linecap:round}
+.vare-ill .glo{fill:var(--primary-lys); stroke:none}
+.vare-tekst{flex:1 1 auto; min-width:0; display:flex; flex-direction:column; line-height:1.3}
+.vare-tekst strong{font-size:.9rem; font-weight:600; color:var(--ink)}
+.vare-tekst em{font-style:normal; font-size:.78rem; color:var(--ink-3)}
+.vare-pris{flex:none; font-size:.85rem; font-weight:600; color:var(--accent); white-space:nowrap}
+.stepper{flex:none; display:flex; align-items:center; gap:2px; border:1px solid var(--linje-2); border-radius:8px; overflow:hidden}
+.stepper button{
+  font:inherit; font-size:1.05rem; line-height:1; width:30px; height:30px; cursor:pointer;
+  border:none; background:var(--flade); color:var(--ink-2);
+}
+.stepper button:hover:not(:disabled){background:var(--primary); color:#fff}
+.stepper button:disabled{opacity:.3; cursor:not-allowed}
+.stepper .antal{min-width:24px; text-align:center; font-size:.88rem; font-weight:600; color:var(--ink)}
 
 /* ---------------- Indsigter ---------------- */
-.indsigter{display:grid; gap:10px; margin-top:28px}
-.indsigt{
-  background:var(--accent-lys); border:1px solid #f0d9cf; border-left:3px solid var(--accent);
-  border-radius:var(--radius); padding:14px 16px;
-}
-.indsigt h4{margin:0 0 4px; font-size:.93rem}
+.indsigter{display:grid; gap:10px; margin-top:30px}
+.indsigt{background:var(--accent-lys); border:1px solid #d5e1e4; border-left:3px solid var(--primary); border-radius:var(--radius); padding:14px 16px}
+.indsigt h4{margin:0 0 4px; font-size:.95rem}
 .indsigt p{margin:0; font-size:.88rem; color:var(--ink-2); line-height:1.5}
-.indsigt-mrk{display:block; font-size:.7rem; text-transform:uppercase; letter-spacing:.09em; color:var(--accent); font-weight:700; margin-bottom:6px}
+.indsigt-mrk{display:block; font-size:.68rem; text-transform:uppercase; letter-spacing:.1em; color:var(--primary-dyb); font-weight:700; margin-bottom:6px}
 
 /* ---------------- Anbefaling ---------------- */
-.anbefaling{
-  background:var(--ink); color:#fff; border-radius:var(--radius);
-  padding:20px 22px; margin-bottom:28px;
-}
-.anbefaling h3{color:#fff; margin-bottom:6px}
-.anbefaling p{margin:0; color:#c3c8d1; font-size:.92rem}
-.anbefaling .mrk{display:block; font-size:.7rem; text-transform:uppercase; letter-spacing:.1em; color:#8f95a1; margin-bottom:8px}
-
-/* ---------------- TCO ---------------- */
-.tco{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:12px}
-@media (max-width:820px){ .tco{grid-template-columns:1fr} }
-.tco-kort{background:var(--flade); border:1px solid var(--linje); border-radius:var(--radius); padding:18px; display:flex; flex-direction:column}
-.tco-kort.bedst{border-color:var(--groen); box-shadow:0 0 0 1px var(--groen)}
-.tco-badge{display:inline-block; align-self:flex-start; background:var(--groen-lys); color:var(--groen); font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; padding:3px 8px; border-radius:99px; margin-bottom:10px}
-.tco-navn{font-weight:650; margin-bottom:12px}
-.tco-tal{font-size:1.45rem; font-weight:700; letter-spacing:-.02em}
-.tco-under{font-size:.82rem; color:var(--ink-3); margin-bottom:14px}
-.tco-linjer{list-style:none; padding:0; margin:auto 0 0; font-size:.84rem; color:var(--ink-2)}
-.tco-linjer li{display:flex; justify-content:space-between; gap:10px; padding:6px 0; border-top:1px solid var(--flade-3)}
-.tco-udeladt{font-size:.84rem; color:var(--ink-3); margin-top:14px}
-.tco-note{font-size:.8rem; color:var(--ink-3); margin-top:12px; padding-top:10px; border-top:1px solid var(--flade-3)}
-
-.grn{background:var(--groen-lys); border:1px solid #d3e5db; border-radius:var(--radius); padding:20px 22px; margin-top:20px}
-.grn h3{color:var(--groen)}
-.grn-tal{display:flex; gap:32px; flex-wrap:wrap; margin-top:14px}
-.grn-tal div strong{display:block; font-size:1.5rem; letter-spacing:-.02em}
-.grn-tal div span{font-size:.82rem; color:var(--ink-3)}
+.anbefaling{background:var(--accent); color:#fff; border-radius:var(--radius); padding:20px 22px; margin-bottom:30px}
+.anbefaling p{margin:0; color:#dbe6e9; font-size:.95rem}
+.anbefaling .anb-sub{margin-top:10px; color:#a9c0c6; font-size:.87rem}
+.anbefaling .mrk{display:block; font-family:var(--font-h); font-weight:600; font-size:.7rem; text-transform:uppercase; letter-spacing:.12em; color:var(--primary); margin-bottom:10px}
 
 /* ---------------- Budget i tre kolonner ---------------- */
-.budget3{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
+.budget3{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; align-items:start}
 @media (max-width:900px){ .budget3{grid-template-columns:1fr} }
-.bkol{background:var(--flade); border:1px solid var(--linje); border-radius:var(--radius); padding:18px; display:flex; flex-direction:column}
+.bkol{background:var(--flade); border:1px solid var(--linje); border-radius:var(--radius); padding:18px; display:flex; flex-direction:column; height:100%}
 .bkol h3{margin-bottom:2px}
 .bkol-hvem{font-size:.78rem; color:var(--ink-3); margin-bottom:14px}
-.bkol ul{list-style:none; padding:0; margin:0 0 14px; font-size:.86rem}
-.bkol li{display:flex; justify-content:space-between; gap:12px; padding:7px 0; border-bottom:1px solid var(--flade-3)}
-.bkol li span:last-child{white-space:nowrap; color:var(--ink-2)}
-.bkol-sum{margin-top:auto; padding-top:12px; border-top:2px solid var(--ink); font-weight:700; display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap}
-.bkol.fremhaev{background:var(--ink); color:#fff; border-color:var(--ink)}
-.bkol.fremhaev h3, .bkol.fremhaev .bkol-sum{color:#fff}
-.bkol.fremhaev .bkol-hvem{color:#a8adb8}
-.bkol.fremhaev li{border-bottom-color:#31363e}
-.bkol.fremhaev li span:last-child{color:#e6e8ec}
-.bkol.fremhaev .bkol-sum{border-top-color:#4a505b}
+.bkol-badge{
+  align-self:flex-start; font-size:.66rem; font-weight:700; text-transform:uppercase; letter-spacing:.09em;
+  background:var(--flade-3); color:var(--ink-3); padding:3px 8px; border-radius:99px; margin-bottom:10px;
+}
+.bkol ul{list-style:none; padding:0; margin:0 0 12px; font-size:.86rem}
+.bkol li{display:flex; justify-content:space-between; gap:12px; padding:8px 0; border-bottom:1px solid var(--flade-3)}
+.bkol li span:first-child{display:flex; flex-direction:column}
+.bkol li em{font-style:normal; font-size:.74rem; color:var(--ink-3)}
+.bkol li span:last-child{white-space:nowrap; color:var(--ink)}
+.bkol-sum{margin-top:auto; padding-top:12px; border-top:2px solid var(--accent); font-family:var(--font-h); font-weight:700; color:var(--ink); display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap}
+.bkol-fod{font-size:.76rem; color:var(--ink-3); margin:12px 0 0; line-height:1.45}
+
+/* Kolonnen med rene gæt */
+.bkol.gaet{background:repeating-linear-gradient(135deg,#fff,#fff 10px,#fbfcfc 10px,#fbfcfc 20px); border-style:dashed; border-color:var(--linje-2)}
+.bkol.gaet .bkol-badge{background:#fdf0e3; color:#9a5b16}
+.bkol.gaet .bkol-sum{border-top-color:var(--linje-2); color:var(--ink-2)}
+.dagsats{display:flex; align-items:center; gap:8px; font-size:.8rem; color:var(--ink-3); margin-bottom:12px; flex-wrap:wrap}
+.dagsats label{flex:1 1 100%}
+.dagsats input{font:inherit; width:100px; padding:7px 9px; border:1px solid var(--linje-2); border-radius:8px; background:var(--flade)}
+
+.samlet{background:var(--primary-lys); border:1px solid #cfe2e5; border-radius:var(--radius); padding:20px 22px; margin-top:16px}
+.samlet h3{font-size:1.25rem}
+.samlet p{margin:0 0 .6em; font-size:.92rem; color:var(--ink-2)}
+.samlet .disclaimer{margin:0}
 
 /* ---------------- Tidslinje ---------------- */
-.tidslinje{border-left:2px solid var(--linje); margin-left:8px; padding-left:0}
+.tidslinje{border-left:2px solid var(--linje); margin-left:8px}
 .tl-punkt{position:relative; padding:0 0 20px 26px}
 .tl-punkt::before{content:""; position:absolute; left:-7px; top:5px; width:12px; height:12px; border-radius:50%; background:var(--flade); border:2px solid var(--linje-2)}
-.tl-punkt.naer::before{background:var(--accent); border-color:var(--accent)}
-.tl-dato{font-size:.78rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--accent)}
-.tl-titel{font-weight:650; font-size:.95rem}
+.tl-punkt.naer::before{background:var(--primary); border-color:var(--primary)}
+.tl-dato{font-size:.76rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--primary-dyb)}
+.tl-titel{font-family:var(--font-h); font-weight:600; font-size:.98rem; color:var(--ink)}
 .tl-tekst{font-size:.86rem; color:var(--ink-3); margin:2px 0 0}
 
 /* ---------------- Opsummering ---------------- */
 .opsummering{background:var(--flade); border:1px solid var(--linje); border-radius:var(--radius); padding:22px; margin-bottom:24px}
-.ops-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:0 28px}
+.ops-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:0 28px; margin:0}
 @media (max-width:640px){ .ops-grid{grid-template-columns:1fr} }
 .ops-linje{display:flex; justify-content:space-between; gap:14px; padding:9px 0; border-bottom:1px solid var(--flade-3); font-size:.9rem}
 .ops-linje dt{color:var(--ink-3)}
-.ops-linje dd{margin:0; font-weight:600; text-align:right}
-.ops-pris{margin-top:22px; padding-top:18px; border-top:2px solid var(--ink)}
-.ops-pris strong{font-size:1.7rem; letter-spacing:-.02em; display:block}
+.ops-linje dd{margin:0; font-weight:600; text-align:right; color:var(--ink)}
+.ops-inventar{padding:14px 0 0; font-size:.88rem}
+.ops-inventar dt{color:var(--ink-3); margin-bottom:4px}
+.ops-inventar dd{margin:0; color:var(--ink-2)}
+.ops-pris{margin-top:22px; padding-top:18px; border-top:2px solid var(--accent)}
+.ops-pris strong{font-family:var(--font-h); font-size:1.8rem; letter-spacing:-.02em; display:block; color:var(--ink); margin:4px 0}
 .ops-pris span{font-size:.85rem; color:var(--ink-3)}
 
 /* ---------------- Kontakt ---------------- */
 .kontakt{background:var(--flade); border:1px solid var(--linje); border-radius:var(--radius); padding:22px}
 .form-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:16px 0}
 @media (max-width:640px){ .form-grid{grid-template-columns:1fr} }
-.form-grid label{display:flex; flex-direction:column; gap:6px; font-size:.85rem; font-weight:600}
+.form-grid label{display:flex; flex-direction:column; gap:6px; font-size:.85rem; font-weight:600; color:var(--ink)}
 .form-grid .full{grid-column:1/-1}
 .form-grid input, .form-grid textarea{
   font:inherit; font-size:.95rem; font-weight:400; padding:10px 12px;
@@ -226,31 +274,35 @@ p{margin:0 0 1em}
 }
 .form-row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
 .disclaimer{font-size:.78rem; color:var(--ink-3); margin:14px 0 0}
-.kvittering{background:var(--groen-lys); border:1px solid #d3e5db; border-radius:var(--radius); padding:20px; color:var(--groen); font-weight:600}
+.kvittering{background:var(--primary-lys); border:1px solid #cfe2e5; border-radius:var(--radius); padding:20px; color:var(--accent); font-weight:600}
 
 /* ---------------- Prisbjælke ---------------- */
-.prisbar{
-  position:fixed; left:0; right:0; bottom:0; z-index:20;
-  background:var(--ink); color:#fff; box-shadow:0 -6px 24px rgba(16,18,22,.16);
-}
+.prisbar{position:fixed; left:0; right:0; bottom:0; z-index:20; background:var(--accent); color:#fff; box-shadow:0 -6px 24px rgba(31,78,89,.2)}
 .prisbar-inner{display:flex; align-items:center; justify-content:space-between; gap:14px; padding-block:12px; flex-wrap:wrap}
-.prisbar-label{display:block; font-size:.72rem; text-transform:uppercase; letter-spacing:.09em; color:#8f95a1}
-.prisbar-tal strong{font-size:1.3rem; letter-spacing:-.02em}
-.prisbar-note{font-size:.78rem; color:#8f95a1; margin-left:6px}
-.prisbar-detalje{max-height:44vh; overflow:auto; border-top:1px solid #31363e; padding-block:14px 18px}
+.prisbar-label{display:block; font-size:.7rem; text-transform:uppercase; letter-spacing:.1em; color:#a9c0c6}
+.prisbar-tal strong{font-family:var(--font-h); font-size:1.35rem; letter-spacing:-.02em}
+.prisbar-note{font-size:.78rem; color:#a9c0c6; margin-left:6px}
+.prisbar-detalje{max-height:46vh; overflow:auto; border-top:1px solid rgba(255,255,255,.15); padding-block:14px 18px}
 .prisbar-detalje ul{list-style:none; padding:0; margin:0; font-size:.86rem}
-.prisbar-detalje li{display:flex; justify-content:space-between; gap:14px; padding:7px 0; border-bottom:1px solid #2a2e35; color:#c3c8d1}
+.prisbar-detalje li{display:flex; justify-content:space-between; gap:14px; padding:8px 0; border-bottom:1px solid rgba(255,255,255,.1); color:#dbe6e9}
+.prisbar-detalje li span:first-child{display:flex; flex-direction:column}
+.prisbar-detalje li em{font-style:normal; font-size:.74rem; color:#a9c0c6}
 .prisbar-detalje li span:last-child{white-space:nowrap; color:#fff}
-.prisbar-detalje li.sum{border-bottom:none; border-top:2px solid #4a505b; margin-top:6px; padding-top:10px; font-weight:700; color:#fff}
-.prisbar-detalje .disclaimer{color:#8f95a1}
+.prisbar-detalje li.sum{border-bottom:none; border-top:2px solid rgba(255,255,255,.3); margin-top:6px; padding-top:10px; font-weight:700; color:#fff}
+.prisbar-detalje .disclaimer{color:#a9c0c6}
+
+/* ---------------- Bund ---------------- */
+.bund{border-top:1px solid var(--linje); padding-block:24px 32px; font-size:.85rem; color:var(--ink-3)}
+.bund p{margin:0 0 .4em}
+.bund strong{color:var(--ink-2)}
 
 /* ---------------- Print ---------------- */
 @media print{
   body{background:#fff; padding:0}
-  .top, .steps, .prisbar, .nav-row, .kontakt, .btn{display:none !important}
+  .top, .steps, .prisbar, .nav-row, .kontakt, .btn, .stepper{display:none !important}
   .step[hidden]{display:block !important}
   .step{page-break-inside:avoid; padding-block:12px}
-  .anbefaling, .bkol.fremhaev{background:#fff !important; color:#000 !important; border:1px solid #999}
-  .anbefaling p, .bkol.fremhaev .bkol-hvem{color:#333 !important}
-  .anbefaling h3, .bkol.fremhaev h3, .bkol.fremhaev .bkol-sum{color:#000 !important}
+  .anbefaling{background:#fff !important; color:#000 !important; border:1px solid #999}
+  .anbefaling p, .anbefaling .anb-sub{color:#333 !important}
+  .anbefaling .mrk{color:#000 !important}
 }

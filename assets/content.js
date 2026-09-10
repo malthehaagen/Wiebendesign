@@ -6,59 +6,47 @@
 
 window.WD_INDHOLD = {
 
-  /* ---------------- Messer ---------------- */
+  /* ---------------- Messer ----------------
+     km = afstand fra Støvring, bro = broafgift over Storebælt   */
   messer: [
-    { id: 'agromek',   navn: 'Agromek',                sted: 'MCH Herning',        lokation: 'dk', dage: 4 },
-    { id: 'formland',  navn: 'Formland',               sted: 'MCH Herning',        lokation: 'dk', dage: 4 },
-    { id: 'foodexpo',  navn: 'Foodexpo',               sted: 'MCH Herning',        lokation: 'dk', dage: 3 },
-    { id: 'transport', navn: 'Transportmessen',        sted: 'MCH Herning',        lokation: 'dk', dage: 3 },
-    { id: 'hi',        navn: 'HI Tech & Industry',     sted: 'Odense Congress Center', lokation: 'dk', dage: 3 },
-    { id: 'ferie',     navn: 'Ferie for Alle',         sted: 'MCH Herning',        lokation: 'dk', dage: 3 },
-    { id: 'bella',     navn: 'Messe i Bella Center',   sted: 'København',          lokation: 'dk', dage: 3 },
-    { id: 'norden',    navn: 'Messe i Norden',         sted: 'Sverige/Norge/Finland', lokation: 'norden', dage: 3 },
-    { id: 'eu',        navn: 'Messe i Europa',         sted: 'Tyskland, Holland, Italien …', lokation: 'eu', dage: 4 },
-    { id: 'oversoeisk',navn: 'Messe uden for Europa',  sted: 'USA, Asien, Mellemøsten', lokation: 'oversoeisk', dage: 4 },
-    { id: 'anden',     navn: 'En anden messe',         sted: 'Fortæl os hvilken',  lokation: 'dk', dage: 3 }
+    { id: 'agromek',   navn: 'Agromek',              sted: 'MCH Herning',            lokation: 'dk',         dage: 4, km: 130, bro: false },
+    { id: 'formland',  navn: 'Formland',             sted: 'MCH Herning',            lokation: 'dk',         dage: 4, km: 130, bro: false },
+    { id: 'foodexpo',  navn: 'Foodexpo',             sted: 'MCH Herning',            lokation: 'dk',         dage: 3, km: 130, bro: false },
+    { id: 'transport', navn: 'Transportmessen',      sted: 'MCH Herning',            lokation: 'dk',         dage: 3, km: 130, bro: false },
+    { id: 'hi',        navn: 'HI Tech & Industry',   sted: 'Odense Congress Center', lokation: 'dk',         dage: 3, km: 250, bro: false },
+    { id: 'bella',     navn: 'Messe i Bella Center', sted: 'København',              lokation: 'dk',         dage: 3, km: 400, bro: true },
+    { id: 'norden',    navn: 'Messe i Norden',       sted: 'Sverige, Norge, Finland',lokation: 'norden',     dage: 3, km: 650, bro: true },
+    { id: 'eu',        navn: 'Messe i Europa',       sted: 'Tyskland, Holland, Italien …', lokation: 'eu',   dage: 4, km: 950, bro: false },
+    { id: 'oversoeisk',navn: 'Messe uden for Europa',sted: 'USA, Asien, Mellemøsten',lokation: 'oversoeisk', dage: 4, km: 0,   bro: false },
+    { id: 'anden',     navn: 'En anden messe',       sted: 'Fortæl os hvilken',      lokation: 'dk',         dage: 3, km: 200, bro: false }
   ],
 
-  /* ---------------- Trin 1: Messe-DNA ---------------- */
+  /* ---------------- Trin 1: Messeprofil ---------------- */
   profilSpoergsmaal: [
     {
       id: 'formaal',
       spoergsmaal: 'Hvad skal messen først og fremmest give jer?',
-      hjaelp: 'Formålet afgør, hvordan standen skal bygges — ikke omvendt.',
+      hjaelp: 'Formålet afgør, hvordan standen skal indrettes — ikke omvendt.',
       valg: [
-        { id: 'leads',      titel: 'Kvalificerede leads',      tekst: 'I skal hjem med konkrete emner i pipeline.' },
-        { id: 'brand',      titel: 'Synlighed og brand',        tekst: 'I skal ses, huskes og tages alvorligt i branchen.' },
-        { id: 'lancering',  titel: 'Produktlancering',          tekst: 'Ét produkt skal have hele opmærksomheden.' },
+        { id: 'leads',      titel: 'Kvalificerede leads',          tekst: 'I skal hjem med konkrete emner i pipeline.' },
+        { id: 'brand',      titel: 'Synlighed og brand',           tekst: 'I skal ses, huskes og tages alvorligt i branchen.' },
+        { id: 'lancering',  titel: 'Produktlancering',             tekst: 'Ét produkt skal have hele opmærksomheden.' },
         { id: 'relationer', titel: 'Pleje af eksisterende kunder', tekst: 'Møder, aftaler og fortrolige samtaler.' }
       ]
     },
     {
-      id: 'frekvens',
-      spoergsmaal: 'Hvor mange messer er I på om året?',
-      hjaelp: 'Antallet afgør, om det kan betale sig at eje en stand, der kan genbruges.',
+      id: 'erfaring',
+      spoergsmaal: 'Hvor godt kender I messeformatet?',
       valg: [
-        { id: '1',    titel: 'Én messe',        tekst: 'Ét stort årligt højdepunkt.' },
-        { id: '2-3',  titel: '2–3 messer',      tekst: 'Fast messeprogram i Danmark eller Norden.' },
-        { id: '4+',   titel: '4 eller flere',   tekst: 'Messer er en kernekanal for jer.' },
-        { id: 'foerste', titel: 'Det er vores første', tekst: 'I skal prøve formatet af.' }
-      ]
-    },
-    {
-      id: 'nuvaerende',
-      spoergsmaal: 'Hvad har I i dag?',
-      valg: [
-        { id: 'intet',    titel: 'Ingenting',              tekst: 'Vi starter fra bunden.' },
-        { id: 'rollups',  titel: 'Roll-ups og et bord',    tekst: 'Vi har klaret os med det basale.' },
-        { id: 'stand',    titel: 'En stand vi genbruger',  tekst: 'Den trænger til fornyelse.' },
-        { id: 'leje',     titel: 'Vi lejer os frem',       tekst: 'Ny løsning hver gang.' }
+        { id: 'foerste',  titel: 'Det er vores første',   tekst: 'Vi skal have hjælp til det hele.' },
+        { id: 'enkelte',  titel: 'Vi har prøvet det',     tekst: 'Et par messer, men ingen fast rutine.' },
+        { id: 'rutine',   titel: 'Vi har fast rutine',    tekst: 'Messer er en kernekanal for os.' }
       ]
     },
     {
       id: 'ambition',
       spoergsmaal: 'Hvor højt skal ambitionsniveauet ligge?',
-      hjaelp: 'Det påvirker materialevalg, finish og detaljeringsgrad — ikke om standen virker.',
+      hjaelp: 'Det påvirker grafik, lys og materialer — ikke om standen virker.',
       valg: [
         { id: 'basis',    titel: 'Basis',    tekst: 'Ordentligt, rent og funktionelt. Pengene skal bruges rigtigt.' },
         { id: 'plus',     titel: 'Plus',     tekst: 'Standen skal skille sig ud på gangen.' },
@@ -67,156 +55,192 @@ window.WD_INDHOLD = {
     }
   ],
 
-  /* ---------------- Standtyper ---------------- */
-  standtyper: {
-    portable: {
-      navn: 'Portabel stand',
-      kort: 'Let, transportabel løsning til mindre messer og konferencer',
-      tekst: 'Pakkes ned i kasser, sættes op af to personer på en time og kan sendes med almindelig fragt. Ideel til mindre konferencer, roadshows og som supplement til en større stand.',
-      passer: 'Op til ca. 12 m² · flere små arrangementer om året'
-    },
-    system: {
-      navn: 'Systemstand (beMatrix)',
-      kort: 'Modulært rammesystem der genbruges messe efter messe',
-      tekst: 'Bygget på beMatrix — et modulært aluminiumsystem i 100 % genanvendelige materialer. Wieben Design er hovedforhandler af beMatrix i Danmark. Rammerne bliver, grafikken skifter: standen kan skifte udtryk og størrelse fra messe til messe uden at blive bygget forfra.',
-      passer: '9–400 m² · 2 messer om året eller flere'
-    },
-    specialbyg: {
-      navn: 'Specialbygget stand',
-      kort: 'Bygget fra bunden — kun fantasien sætter grænsen',
-      tekst: 'Hver detalje er jeres. Skæve vinkler, særlige materialer, indbygget teknik, dobbelthøjde. Det er her, standen bliver til arkitektur og ikke bare et rum med vægge.',
-      passer: 'Fra 20 m² · når standen skal bære en position i markedet'
-    }
-  },
-
   /* ---------------- Åbne sider ---------------- */
-  aabenhed: {
-    raekke:  { navn: 'Rækkestand', tekst: '1 åben side. Naboer på begge sider og bagvæg.' },
-    hjoerne: { navn: 'Hjørnestand', tekst: '2 åbne sider. Ligger for enden af en række.' },
-    gavl:    { navn: 'Gavlstand',  tekst: '3 åbne sider. Kun én nabo.' },
-    oe:      { navn: 'Ø-stand',    tekst: '4 åbne sider. Fritliggende i hallen.' }
+  aabneSider: {
+    1: { titel: '1 åben side',  tekst: 'Naboer på begge sider og bagvæg. Tre sider skal bygges.' },
+    2: { titel: '2 åbne sider', tekst: 'Typisk for enden af en række. To sider skal bygges.' },
+    3: { titel: '3 åbne sider', tekst: 'Kun én nabo. Én side skal bygges.' },
+    4: { titel: '4 åbne sider', tekst: 'Fritliggende i hallen. Ingen vægge mod naboer.' }
   },
 
-  /* ---------------- Tilvalg ---------------- */
-  tilvalg: {
-    moederum:      { navn: 'Lukket mødeområde',     tekst: 'Sted at lukke aftaler uden at halve hallen lytter med.' },
-    bardisk:       { navn: 'Bar- eller infodisk',   tekst: 'Naturligt mødested og arbejdsplads for jeres folk.' },
-    lager:         { navn: 'Aflåst lagerrum',       tekst: 'Kasser, jakker, brochurer og tasker ude af syne.' },
-    produktdisplay:{ navn: 'Produktdisplay og podier', tekst: 'Produkterne løftet op i øjenhøjde og belyst.' },
-    storskaerm:    { navn: 'Storskærm med ophæng',  tekst: 'Video og demo der kan ses fra gangen.' },
-    lysplan:       { navn: 'Professionelt lysplan', tekst: 'Målrettet spotbelysning i stedet for hallens grålys.' },
-    gulv:          { navn: 'Gulv',                  tekst: 'Tæppe, vinyl eller plank — og skjult kabelføring.' },
-    grafik:        { navn: 'Storformatgrafik',      tekst: 'Print og opsætning fra vores egen grafiske afdeling.' },
-    hems:          { navn: 'Anden etage',           tekst: 'Møderum ovenpå og dobbelt synlighed i hallen.' },
-    moebler:       { navn: 'Møbler (leje)',         tekst: 'Leveret direkte på standen fra vores udlejning.' },
-    beplantning:   { navn: 'Beplantning',           tekst: 'Det billigste greb der får en stand til at virke færdig.' },
-    servering:     { navn: 'Kaffe og servering',    tekst: 'Den mest undervurderede grund til at folk bliver stående.' }
+  /* ---------------- Vægge, gulv, lys ---------------- */
+  vaegtyper: {
+    print:  { titel: 'Print på beMatrix',   tekst: 'Rammesystem med printede bannere. Jeres standardløsning — robust, hurtig at rejse og let at ændre.' },
+    pixlip: { titel: 'Pixlip backlit',      tekst: 'Baggrundsbelyst lysvæg. Markant dyrere, men ingen anden væg trækker blikket på samme måde.' }
+  },
+  grafikdaekning: {
+    ingen:  { titel: 'Ingen print',   tekst: 'Rene hvide vægge.' },
+    delvis: { titel: 'Delvis',        tekst: 'Print på de vigtigste flader, ca. 45 % af vægarealet.' },
+    fuld:   { titel: 'Fuld dækning',  tekst: 'Print på alle vægflader.' }
+  },
+  gulv: {
+    ingen:  { titel: 'Hallens gulv',  tekst: 'Ingen belægning.' },
+    taeppe: { titel: 'Tæppefliser',   tekst: 'Heuga 530XL, antracitgrå, med blødt undergulv.' },
+    vinyl:  { titel: 'Vinyl',         tekst: 'Hvid Armstrong-vinyl. Skarpt, lyst udtryk.' },
+    trae:   { titel: 'Trægulv',       tekst: 'Naturtræ. Det varmeste udtryk — og det dyreste.' }
+  },
+  belysning: {
+    standard:    { titel: 'Standard', tekst: 'b62-spots på væggene. Nok til at standen er oplyst.' },
+    forstaerket: { titel: 'Forstærket', tekst: 'NOVI-spots, tættere placeret. Mærkbart lysere end nabostandene.' },
+    pro:         { titel: 'Pro',      tekst: 'ERON Pro 200W floodlights. Til høje vægge og store flader.' }
   },
 
-  /* ---------------- Faglige indsigter ----------------
-     Vises løbende, når kundens valg aktiverer dem.
-     vaegt: højere tal vises først.                     */
+  /* ---------------- Katalog: navne og beskrivelser ---------------- */
+  katalogGrupper: [
+    { id: 'diske',   titel: 'Diske, depot og opbevaring' },
+    { id: 'moebler', titel: 'Møbler' },
+    { id: 'teknik',  titel: 'Skærme og teknik' },
+    { id: 'kaffe',   titel: 'Kaffe og køkken' },
+    { id: 'el',      titel: 'El' }
+  ],
+  varer: {
+    expo_bar:    { navn: 'Expo Disk, barmodul',      besk: '1000 mm',                    ikon: 'disk' },
+    expo_skab:   { navn: 'Expo Disk, skab m/lås',    besk: '1000 mm, aflåst',            ikon: 'disk' },
+    expo_hylde:  { navn: 'Expo Disk, hyldemodul',    besk: '1000 mm',                    ikon: 'disk' },
+    izi_disk:    { navn: 'IZI Disk',                 besk: '0,5 × 1 meter',              ikon: 'disk' },
+    ubord:       { navn: 'IZI U-bord',               besk: 'beMatrix',                   ikon: 'bord' },
+    vitrine:     { navn: 'Vitrineskab med lys',      besk: '50 × 50 × 200 cm',           ikon: 'vitrine' },
+    abc_reol:    { navn: 'ABC-reol til depot',       besk: 'stige, dybde 30–50 cm',      ikon: 'reol' },
+    depot_bord:  { navn: 'Bordplade til depot',      besk: '1 meter',                    ikon: 'bord' },
+
+    staabord:    { navn: 'Ståbord',                  besk: 'krydsfod, Ø 70 cm',          ikon: 'bord' },
+    cafebord:    { navn: 'Cafébord, siddehøjde',     besk: 'krydsfod, Ø 80 cm',          ikon: 'bord' },
+    barstol:     { navn: 'Barstol',                  besk: 'hvid eller sort',            ikon: 'stol' },
+    skalstol:    { navn: 'Skalstol, SNOW',           besk: 'hvid, uden armlæn',          ikon: 'stol' },
+    stol_arm:    { navn: 'Stol med armlæn',          besk: 'Vico Duo, lyst træ',         ikon: 'stol' },
+    loungestol:  { navn: 'Loungestol',               besk: 'Rennes',                     ikon: 'lounge' },
+    loungebord:  { navn: 'Loungebord',               besk: 'sort eller hvidt',           ikon: 'bord' },
+    sofa:        { navn: 'Sofa',                     besk: '2-personers',                ikon: 'lounge' },
+    brochure:    { navn: 'Brochureholder',           besk: 'ZigZag, gulvmodel',          ikon: 'brochure' },
+    stumtjener:  { navn: 'Stumtjener med bøjler',    besk: 'sort',                       ikon: 'knage' },
+    affald:      { navn: 'Affaldsstativ',            besk: 'h. 90 cm, inkl. poser',      ikon: 'affald' },
+
+    mon32:       { navn: 'Skærm, 32"',               besk: 'inkl. ophæng',               ikon: 'skaerm' },
+    mon43:       { navn: 'Skærm, 40–43"',            besk: 'inkl. ophæng',               ikon: 'skaerm' },
+    mon55:       { navn: 'Skærm, 55"',               besk: 'inkl. ophæng',               ikon: 'skaerm' },
+    mon65:       { navn: 'Skærm, 65"',               besk: 'inkl. ophæng',               ikon: 'skaerm' },
+    mon75:       { navn: 'Skærm, 75"',               besk: 'inkl. ophæng',               ikon: 'skaerm' },
+    stander:     { navn: 'Gulvstander til skærm',    besk: 'Expand',                     ikon: 'skaerm' },
+    afspiller:   { navn: 'Afspiller-pc',             besk: 'til video og demo',          ikon: 'teknik' },
+    ledskin:     { navn: 'LEDskin-flise',            besk: '50 × 50 cm, pitch 2,5',      ikon: 'led' },
+    novastar:    { navn: 'LEDskin-styring',          besk: 'Novastar MTCL 600',          ikon: 'teknik' },
+
+    nespresso_s: { navn: 'Nespresso, stor',          besk: 'Gemini CS 220 Pro',          ikon: 'kaffe' },
+    nespresso_l: { navn: 'Nespresso, lille',         besk: 'Zenius',                     ikon: 'kaffe' },
+    bonamat:     { navn: 'Kaffemaskine, Bonamat',    besk: 'Novo 2, 12 kopper',          ikon: 'kaffe' },
+    vandkoger:   { navn: 'Vandkoger',                besk: '10 kopper',                  ikon: 'kaffe' },
+    koeleskab_h: { navn: 'Køleskab, højt',           besk: 'h. 170 cm, glaslåge',        ikon: 'koel' },
+    koeleskab_l: { navn: 'Køleskab, lavt',           besk: '140 liter, glaslåge',        ikon: 'koel' },
+    vask:        { navn: 'Vaskesektion',             besk: 'bordmodul m. vask og afløb', ikon: 'koel' },
+    papkrus:     { navn: 'Papkrus',                  besk: '50 stk. á 25 cl',            ikon: 'kaffe' },
+
+    eltavle32:   { navn: 'Eltavle, 32A',             besk: '8 udtag',                    ikon: 'el' },
+    eltavle16:   { navn: 'Eltavle, 16A',             besk: '6 udtag',                    ikon: 'el' }
+  },
+
+  /* ---------------- Faglige indsigter ---------------- */
   indsigter: [
-    { id: 'lager', vaegt: 9,
-      naar: s => s.stand.m2 >= 15 && !s.tilvalg.has('lager'),
+    { id: 'depot', vaegt: 9,
+      naar: s => s.stand.m2 >= 15 && !s.kurv.abc_reol && !s.kurv.expo_skab,
       titel: 'Hvor skal kasserne stå?',
-      tekst: 'Afsæt 15–20 % af arealet til lukket lager. Uden det ender emballage, jakker og brochurekasser bag disken — og det er det første, gæsten ser.' },
+      tekst: 'Afsæt 15–20 % af arealet til aflåst depot. Uden det ender emballage, jakker og brochurekasser bag disken — og det er det første, gæsten ser. En ABC-reol og en bordplade koster under 700 kr. for hele messen.' },
 
-    { id: 'aabenhed', vaegt: 8,
-      naar: s => s.stand.aabenhed === 'raekke' && s.stand.m2 >= 20,
-      titel: 'Spørg efter en hjørneplads',
-      tekst: 'En rækkestand har én åben side. Et hjørne har to og fanger trafik fra begge retninger. Merprisen hos messecenteret er typisk 5–10 % — det er sjældent den dyreste kvadratmeter, I køber.' },
+    { id: 'aabneSider', vaegt: 8,
+      naar: s => s.stand.aabneSider === 1 && s.stand.m2 >= 20,
+      titel: 'Spørg efter en ekstra åben side',
+      tekst: 'Med én åben side skal I bygge tre vægge — og gæsten kan kun komme ind ét sted. To åbne sider fanger trafik fra begge retninger og sparer jer en hel vægflade. Merprisen hos arrangøren er typisk 5–10 %.' },
 
     { id: 'treSekunder', vaegt: 10,
-      naar: s => !s.tilvalg.has('grafik'),
+      naar: s => s.stand.grafik === 'ingen',
       titel: '3-sekundersreglen',
-      tekst: 'En gæst går forbi jeres stand på tre sekunder. På den tid skal hun kunne se hvem I er, og hvilket problem I løser — på fem meters afstand. Det er en grafikopgave, ikke en tekstopgave.' },
+      tekst: 'En gæst går forbi jeres stand på tre sekunder. På den tid skal hun kunne se hvem I er, og hvilket problem I løser — på fem meters afstand. Rene vægge svarer til at møde op uden skilt.' },
 
     { id: 'lys', vaegt: 7,
-      naar: s => !s.tilvalg.has('lysplan'),
+      naar: s => s.stand.belysning === 'standard',
       titel: 'Lys er den billigste opgradering',
-      tekst: 'Messehaller er mørkere, end folk husker. Målrettet spotbelysning løfter en almindelig stand mere end dyre materialer — og den koster en brøkdel.' },
+      tekst: 'Messehaller er mørkere, end folk husker. Går I fra standard- til forstærket lys, koster det typisk et par tusind kroner for hele messen — og det løfter standen mere end noget andet beløb i samme størrelse.' },
 
-    { id: 'hoejde', vaegt: 6,
-      naar: s => s.stand.m2 >= 30,
-      titel: 'Byg opad, ikke kun udad',
-      tekst: 'Fra 30 m² bliver hængende eller høj branding afgørende. Det er det, der gør jer synlige fra den anden ende af hallen — tjek messecenterets højdegrænse tidligt, den er ofte 3–6 meter.' },
+    { id: 'kaffe', vaegt: 8,
+      naar: s => !s.kurv.nespresso_s && !s.kurv.nespresso_l && !s.kurv.bonamat && s.stand.m2 >= 15,
+      titel: 'Kaffe holder folk stående',
+      tekst: 'Den simpleste måde at forlænge en samtale fra 40 sekunder til fire minutter. Fire minutter er forskellen på en hilsen og et lead. En Nespresso koster 500 kr. for hele messen.' },
+
+    { id: 'siddeplads', vaegt: 7,
+      naar: s => s.profil.formaal === 'relationer' && !s.kurv.cafebord && !s.kurv.loungestol && !s.kurv.sofa,
+      titel: 'Møder kræver et sted at sidde',
+      tekst: 'I vil pleje kunderelationer. Den samtale foregår ikke ved et ståbord to meter fra jeres konkurrent. Et loungehjørne eller et siddebord med fire stole er ikke luksus — det er formålet med at være der.' },
+
+    { id: 'lancering', vaegt: 7,
+      naar: s => s.profil.formaal === 'lancering' && !s.kurv.vitrine && !s.kurv.mon55 && !s.kurv.mon65 && !s.kurv.mon75,
+      titel: 'Ét produkt, ét brændpunkt',
+      tekst: 'Ved en lancering skal alt andet træde tilbage. Et belyst vitrineskab eller én stor skærm midt i standen slår ti produkter på hylder — hver gang.' },
+
+    { id: 'skaerm', vaegt: 6,
+      naar: s => s.stand.m2 >= 24 && !s.kurv.mon43 && !s.kurv.mon55 && !s.kurv.mon65 && !s.kurv.mon75 && !s.kurv.ledskin,
+      titel: 'Bevægelse fanger øjet',
+      tekst: 'Fra ca. 24 m² kan standen bære en stor skærm. Bevægelse er det eneste, der trækker blikket på lang afstand i en messehal — og en 55-tommer koster 2.750 kr. for hele messen.' },
 
     { id: 'bemanding', vaegt: 8,
       naar: s => s.team.personer * WD_PRIS.leads.m2PrPerson < s.stand.m2,
       titel: 'I er for få på standen',
       tekst: 'Regn med én person pr. ca. 5 m² i åbningstiden, og aldrig færre end to. En optaget sælger koster jer den næste gæst — og gæster går ikke ind på en tom stand.' },
 
-    { id: 'moede', vaegt: 7,
-      naar: s => s.profil.formaal === 'relationer' && !s.tilvalg.has('moederum'),
-      titel: 'Fortrolighed kræver vægge',
-      tekst: 'I vil pleje kunderelationer. Den samtale foregår ikke ved en ståbord to meter fra jeres konkurrent. Et lukket mødeområde er ikke luksus, det er formålet.' },
+    { id: 'el', vaegt: 5,
+      naar: s => !s.kurv.eltavle16 && !s.kurv.eltavle32,
+      titel: 'Husk el-tavlen',
+      tekst: 'Skærme, spots, køleskab og kaffemaskine skal have strøm fra et sted. En eltavle koster 550–650 kr. og er den post, folk oftest opdager, når montøren står på standen.' },
 
-    { id: 'lancering', vaegt: 7,
-      naar: s => s.profil.formaal === 'lancering' && !s.tilvalg.has('produktdisplay'),
-      titel: 'Ét produkt, ét brændpunkt',
-      tekst: 'Ved en lancering skal alt andet træde tilbage. Ét belyst podie midt i standen slår ti produkter på hylder — hver gang.' },
+    { id: 'pixlip', vaegt: 6,
+      naar: s => s.profil.ambition === 'signatur' && s.stand.vaegtype === 'print',
+      titel: 'Der findes et niveau over print',
+      tekst: 'I har sat ambitionen til signatur. En Pixlip backlit lysvæg er baggrundsbelyst hele vejen igennem og ser ud som ingenting andet i hallen. Den koster mærkbart mere pr. meter — prøv at slå den til og se forskellen.' },
 
-    { id: 'genbrug', vaegt: 9,
-      naar: s => (s.profil.frekvens === '2-3' || s.profil.frekvens === '4+') && s.stand.type === 'specialbyg',
-      titel: 'I bygger den samme stand flere gange',
-      tekst: 'Med flere messer om året betaler et modulært system sig typisk hjem efter anden eller tredje messe. Se sammenligningen i næste trin, før I beslutter jer.' },
-
-    { id: 'opfoelgning', vaegt: 6,
+    { id: 'opfoelgning', vaegt: 4,
       naar: () => true,
       titel: 'Messen vindes ugen efter',
-      tekst: 'Hovedparten af messeleads lukkes efter messen — men kun hvis de bliver fulgt op hurtigt. Aftal opfølgningsprocessen, før I kører til Herning, ikke efter.' },
-
-    { id: 'servering', vaegt: 5,
-      naar: s => !s.tilvalg.has('servering') && s.stand.m2 >= 20,
-      titel: 'Kaffe holder folk stående',
-      tekst: 'Den simpleste måde at forlænge en samtale fra 40 sekunder til fire minutter. Fire minutter er forskellen på en hilsen og et lead.' },
-
-    { id: 'gulv', vaegt: 4,
-      naar: s => !s.tilvalg.has('gulv'),
-      titel: 'Gulvet markerer grænsen',
-      tekst: 'Et eget gulv fortæller ubevidst gæsten, hvor jeres rum begynder. Det er også der, kablerne skal skjules — beslut det tidligt, ikke på opbygningsdagen.' }
+      tekst: 'Hovedparten af messeleads lukkes efter messen — men kun hvis de bliver fulgt op hurtigt. Aftal opfølgningsprocessen, før I kører til messen, ikke efter.' }
   ],
 
   /* ---------------- Tidslinje (uger før messen) ---------------- */
   tidslinje: [
     { uger: 32, titel: 'Book plads og placering',      tekst: 'De gode hjørne- og ø-pladser bliver taget først. Meld jer til, så snart standplanen åbner.' },
-    { uger: 20, titel: 'Koncept og designoplæg',       tekst: 'Formål, budskab og standtype på plads. Her træffes de valg, der binder resten.' },
-    { uger: 14, titel: 'Godkendelse af 3D',            tekst: 'Endelig godkendelse af tegninger. Herefter går standen i produktion.' },
+    { uger: 20, titel: 'Koncept og designoplæg',       tekst: 'Formål, budskab og indretning på plads. Her træffes de valg, der binder resten.' },
+    { uger: 14, titel: 'Godkendelse af tegning',       tekst: 'Endelig godkendelse af 3D og plantegning. Herefter reserveres materiellet.' },
     { uger: 10, titel: 'Bestil el, vand og internet',  tekst: 'Bestilles hos messecenteret — sent bestilt bliver dyrere bestilt.' },
-    { uger: 6,  titel: 'Deadline for grafikfiler',     tekst: 'Storformatprint skal produceres og monteres. Efter denne dato bliver ændringer dyre.' },
-    { uger: 4,  titel: 'Møbler og udstyr bestilt',     tekst: 'Møbelleje, skærme og planter reserveres til levering direkte på standen.' },
+    { uger: 6,  titel: 'Deadline for grafikfiler',     tekst: 'Print skal produceres og monteres. Efter denne dato bliver ændringer dyre.' },
+    { uger: 4,  titel: 'Møbler og udstyr låst',        tekst: 'Møbelleje, skærme og kaffeløsning reserveres til levering direkte på standen.' },
     { uger: 3,  titel: 'Bemanding og leadproces',      tekst: 'Hvem står hvornår? Hvordan registreres et lead? Hvem følger op — og hvornår?' },
     { uger: 2,  titel: 'Kundeinvitationer sendt',      tekst: 'De vigtigste møder bookes før messen. Standen er rammen, ikke rekrutteringen.' },
-    { uger: 1,  titel: 'Transport afgår',              tekst: 'Standen kører afsted. Vi håndterer levering, indbæring og opbygning.' },
+    { uger: 1,  titel: 'Pakning på værkstedet',        tekst: 'Standen pakkes og køres afsted. Vi håndterer levering, indbæring og opbygning.' },
     { uger: 0,  titel: 'Opbygning og messe',           tekst: 'Vi bygger typisk op 1–2 dage før åbning og tager ned umiddelbart efter lukning.' },
-    { uger: -1, titel: 'Opfølgning på leads',          tekst: 'Alle leads kontaktet inden for fem hverdage. Standen står på lager til næste gang.' }
+    { uger: -1, titel: 'Opfølgning på leads',          tekst: 'Alle leads kontaktet inden for fem hverdage.' }
   ],
 
   /* ---------------- Illustrationer ----------------
-     Placeholder-illustrationer. Erstat med rigtige fotos ved at sætte
-     'foto' på det enkelte valg i app.js — se README.md.            */
+     Placeholdere. Erstattes med fotos — se README.md.  */
   svg: {
-    raekke:  '<svg viewBox="0 0 100 70"><rect class="hal" x="6" y="6" width="88" height="58"/><rect class="stand" x="28" y="16" width="44" height="38"/><line class="aaben" x1="28" y1="54" x2="72" y2="54"/><rect class="nabo" x="10" y="16" width="16" height="38"/><rect class="nabo" x="74" y="16" width="16" height="38"/></svg>',
-    hjoerne: '<svg viewBox="0 0 100 70"><rect class="hal" x="6" y="6" width="88" height="58"/><rect class="stand" x="46" y="16" width="44" height="38"/><line class="aaben" x1="46" y1="54" x2="90" y2="54"/><line class="aaben" x1="46" y1="16" x2="46" y2="54"/><rect class="nabo" x="10" y="16" width="28" height="38"/></svg>',
-    gavl:    '<svg viewBox="0 0 100 70"><rect class="hal" x="6" y="6" width="88" height="58"/><rect class="stand" x="30" y="16" width="44" height="38"/><line class="aaben" x1="30" y1="54" x2="74" y2="54"/><line class="aaben" x1="30" y1="16" x2="30" y2="54"/><line class="aaben" x1="74" y1="16" x2="74" y2="54"/><rect class="nabo" x="30" y="8" width="44" height="6"/></svg>',
-    oe:      '<svg viewBox="0 0 100 70"><rect class="hal" x="6" y="6" width="88" height="58"/><rect class="stand" x="30" y="18" width="40" height="34"/><line class="aaben" x1="30" y1="52" x2="70" y2="52"/><line class="aaben" x1="30" y1="18" x2="70" y2="18"/><line class="aaben" x1="30" y1="18" x2="30" y2="52"/><line class="aaben" x1="70" y1="18" x2="70" y2="52"/></svg>',
+    sider1: '<svg viewBox="0 0 100 70"><rect class="hal" x="6" y="6" width="88" height="58"/><rect class="stand" x="28" y="16" width="44" height="38"/><line class="aaben" x1="28" y1="54" x2="72" y2="54"/><rect class="nabo" x="10" y="16" width="16" height="38"/><rect class="nabo" x="74" y="16" width="16" height="38"/></svg>',
+    sider2: '<svg viewBox="0 0 100 70"><rect class="hal" x="6" y="6" width="88" height="58"/><rect class="stand" x="46" y="16" width="44" height="38"/><line class="aaben" x1="46" y1="54" x2="90" y2="54"/><line class="aaben" x1="46" y1="16" x2="46" y2="54"/><rect class="nabo" x="10" y="16" width="28" height="38"/></svg>',
+    sider3: '<svg viewBox="0 0 100 70"><rect class="hal" x="6" y="6" width="88" height="58"/><rect class="stand" x="30" y="16" width="44" height="38"/><line class="aaben" x1="30" y1="54" x2="74" y2="54"/><line class="aaben" x1="30" y1="16" x2="30" y2="54"/><line class="aaben" x1="74" y1="16" x2="74" y2="54"/><rect class="nabo" x="30" y="8" width="44" height="6"/></svg>',
+    sider4: '<svg viewBox="0 0 100 70"><rect class="hal" x="6" y="6" width="88" height="58"/><rect class="stand" x="30" y="18" width="40" height="34"/><line class="aaben" x1="30" y1="52" x2="70" y2="52"/><line class="aaben" x1="30" y1="18" x2="70" y2="18"/><line class="aaben" x1="30" y1="18" x2="30" y2="52"/><line class="aaben" x1="70" y1="18" x2="70" y2="52"/></svg>',
 
-    portable:  '<svg viewBox="0 0 100 70"><rect class="stand" x="30" y="14" width="40" height="34" rx="2"/><path class="aaben" d="M30 48 L22 58 M70 48 L78 58"/><rect class="nabo" x="40" y="52" width="20" height="10" rx="2"/></svg>',
-    system:    '<svg viewBox="0 0 100 70"><rect class="stand" x="16" y="14" width="28" height="20"/><rect class="stand" x="46" y="14" width="28" height="20"/><rect class="stand" x="16" y="36" width="28" height="20"/><rect class="stand" x="46" y="36" width="28" height="20"/><rect class="nabo" x="76" y="14" width="10" height="42"/></svg>',
-    specialbyg:'<svg viewBox="0 0 100 70"><path class="stand" d="M14 56 L30 18 L58 12 L82 30 L74 56 Z"/><line class="aaben" x1="30" y1="18" x2="74" y2="56"/><circle class="nabo" cx="58" cy="34" r="6"/></svg>',
+    print:  '<svg viewBox="0 0 100 70"><rect class="stand" x="18" y="12" width="64" height="40"/><line class="nabo" x1="50" y1="12" x2="50" y2="52"/><line class="aaben" x1="28" y1="26" x2="42" y2="26"/><line class="aaben" x1="28" y1="34" x2="38" y2="34"/><line class="nabo" x1="18" y1="58" x2="82" y2="58"/></svg>',
+    pixlip: '<svg viewBox="0 0 100 70"><rect class="glo" x="18" y="12" width="64" height="40"/><rect class="stand" x="18" y="12" width="64" height="40"/><line class="aaben" x1="28" y1="24" x2="72" y2="24"/><line class="aaben" x1="28" y1="34" x2="60" y2="34"/><line class="nabo" x1="18" y1="58" x2="82" y2="58"/></svg>',
 
-    moederum:      '<svg viewBox="0 0 100 70"><rect class="stand" x="20" y="16" width="60" height="38" rx="2"/><rect class="nabo" x="34" y="28" width="32" height="14" rx="2"/><line class="aaben" x1="50" y1="54" x2="50" y2="62"/></svg>',
-    bardisk:       '<svg viewBox="0 0 100 70"><path class="stand" d="M22 50 L22 34 Q22 28 30 28 L70 28 Q78 28 78 34 L78 50 Z"/><line class="aaben" x1="18" y1="50" x2="82" y2="50"/><circle class="nabo" cx="50" cy="18" r="5"/></svg>',
-    lager:         '<svg viewBox="0 0 100 70"><rect class="stand" x="26" y="16" width="48" height="40" rx="2"/><circle class="nabo" cx="64" cy="36" r="4"/><line class="aaben" x1="50" y1="16" x2="50" y2="56"/></svg>',
-    produktdisplay:'<svg viewBox="0 0 100 70"><rect class="nabo" x="22" y="40" width="18" height="16"/><rect class="stand" x="42" y="26" width="18" height="30"/><rect class="nabo" x="62" y="36" width="18" height="20"/><line class="aaben" x1="42" y1="14" x2="60" y2="14"/></svg>',
-    storskaerm:    '<svg viewBox="0 0 100 70"><rect class="stand" x="20" y="14" width="60" height="34" rx="2"/><line class="aaben" x1="50" y1="48" x2="50" y2="56"/><line class="aaben" x1="36" y1="56" x2="64" y2="56"/></svg>',
-    lysplan:       '<svg viewBox="0 0 100 70"><line class="aaben" x1="16" y1="16" x2="84" y2="16"/><circle class="stand" cx="32" cy="22" r="5"/><circle class="stand" cx="50" cy="22" r="5"/><circle class="stand" cx="68" cy="22" r="5"/><path class="nabo" d="M32 28 L22 56 L42 56 Z M50 28 L40 56 L60 56 Z M68 28 L58 56 L78 56 Z"/></svg>',
-    gulv:          '<svg viewBox="0 0 100 70"><rect class="stand" x="16" y="22" width="68" height="32" rx="2"/><line class="nabo" x1="16" y1="32" x2="84" y2="32"/><line class="nabo" x1="16" y1="42" x2="84" y2="42"/></svg>',
-    grafik:        '<svg viewBox="0 0 100 70"><rect class="stand" x="18" y="14" width="64" height="36" rx="2"/><line class="aaben" x1="28" y1="26" x2="62" y2="26"/><line class="aaben" x1="28" y1="36" x2="50" y2="36"/><line class="nabo" x1="18" y1="56" x2="82" y2="56"/></svg>',
-    hems:          '<svg viewBox="0 0 100 70"><rect class="stand" x="24" y="34" width="52" height="22"/><rect class="stand" x="24" y="14" width="52" height="18"/><line class="aaben" x1="76" y1="14" x2="88" y2="34"/></svg>',
-    moebler:       '<svg viewBox="0 0 100 70"><circle class="stand" cx="50" cy="34" r="12"/><rect class="nabo" x="18" y="28" width="14" height="14" rx="3"/><rect class="nabo" x="68" y="28" width="14" height="14" rx="3"/><line class="aaben" x1="16" y1="54" x2="84" y2="54"/></svg>',
-    beplantning:   '<svg viewBox="0 0 100 70"><path class="stand" d="M50 52 L50 26"/><path class="aaben" d="M50 32 Q34 24 36 40 Q46 42 50 32 Z M50 32 Q66 24 64 40 Q54 42 50 32 Z"/><rect class="nabo" x="42" y="52" width="16" height="10" rx="2"/></svg>',
-    servering:     '<svg viewBox="0 0 100 70"><path class="stand" d="M32 26 L68 26 L64 50 L36 50 Z"/><path class="aaben" d="M68 30 Q80 32 76 42 Q72 46 66 44"/><line class="nabo" x1="28" y1="56" x2="72" y2="56"/></svg>'
+    disk:     '<svg viewBox="0 0 100 70"><path class="stand" d="M22 52 L22 32 Q22 26 30 26 L70 26 Q78 26 78 32 L78 52 Z"/><line class="aaben" x1="18" y1="52" x2="82" y2="52"/></svg>',
+    bord:     '<svg viewBox="0 0 100 70"><ellipse class="stand" cx="50" cy="24" rx="26" ry="7"/><line class="aaben" x1="50" y1="26" x2="50" y2="50"/><line class="aaben" x1="38" y1="54" x2="62" y2="54"/></svg>',
+    stol:     '<svg viewBox="0 0 100 70"><path class="stand" d="M36 16 L64 16 L60 40 L40 40 Z"/><line class="aaben" x1="40" y1="40" x2="38" y2="56"/><line class="aaben" x1="60" y1="40" x2="62" y2="56"/></svg>',
+    lounge:   '<svg viewBox="0 0 100 70"><rect class="stand" x="22" y="26" width="56" height="20" rx="4"/><rect class="nabo" x="22" y="16" width="56" height="12" rx="4"/><line class="aaben" x1="28" y1="46" x2="28" y2="54"/><line class="aaben" x1="72" y1="46" x2="72" y2="54"/></svg>',
+    vitrine:  '<svg viewBox="0 0 100 70"><rect class="stand" x="34" y="10" width="32" height="50"/><line class="nabo" x1="34" y1="26" x2="66" y2="26"/><line class="nabo" x1="34" y1="42" x2="66" y2="42"/><line class="aaben" x1="38" y1="6" x2="62" y2="6"/></svg>',
+    reol:     '<svg viewBox="0 0 100 70"><rect class="stand" x="26" y="12" width="48" height="46"/><line class="nabo" x1="26" y1="27" x2="74" y2="27"/><line class="nabo" x1="26" y1="42" x2="74" y2="42"/></svg>',
+    brochure: '<svg viewBox="0 0 100 70"><path class="stand" d="M34 12 L66 12 L66 56 L34 56 Z"/><line class="aaben" x1="34" y1="24" x2="66" y2="24"/><line class="aaben" x1="34" y1="36" x2="66" y2="36"/></svg>',
+    knage:    '<svg viewBox="0 0 100 70"><line class="aaben" x1="50" y1="12" x2="50" y2="52"/><line class="aaben" x1="30" y1="20" x2="70" y2="20"/><path class="stand" d="M40 20 L40 30 M60 20 L60 30"/><line class="nabo" x1="38" y1="56" x2="62" y2="56"/></svg>',
+    affald:   '<svg viewBox="0 0 100 70"><path class="stand" d="M34 20 L66 20 L62 56 L38 56 Z"/><line class="aaben" x1="30" y1="16" x2="70" y2="16"/></svg>',
+    skaerm:   '<svg viewBox="0 0 100 70"><rect class="stand" x="18" y="14" width="64" height="36" rx="2"/><line class="aaben" x1="50" y1="50" x2="50" y2="58"/><line class="aaben" x1="36" y1="58" x2="64" y2="58"/></svg>',
+    teknik:   '<svg viewBox="0 0 100 70"><rect class="stand" x="26" y="22" width="48" height="28" rx="3"/><circle class="aaben" cx="38" cy="36" r="4"/><line class="nabo" x1="50" y1="30" x2="66" y2="30"/><line class="nabo" x1="50" y1="42" x2="66" y2="42"/></svg>',
+    led:      '<svg viewBox="0 0 100 70"><rect class="stand" x="22" y="14" width="26" height="20"/><rect class="stand" x="52" y="14" width="26" height="20"/><rect class="stand" x="22" y="38" width="26" height="20"/><rect class="glo" x="52" y="38" width="26" height="20"/><rect class="stand" x="52" y="38" width="26" height="20"/></svg>',
+    kaffe:    '<svg viewBox="0 0 100 70"><path class="stand" d="M32 24 L68 24 L64 50 L36 50 Z"/><path class="aaben" d="M68 28 Q80 30 76 40 Q72 44 66 42"/><line class="nabo" x1="28" y1="56" x2="72" y2="56"/></svg>',
+    koel:     '<svg viewBox="0 0 100 70"><rect class="stand" x="30" y="10" width="40" height="50" rx="3"/><line class="nabo" x1="30" y1="28" x2="70" y2="28"/><line class="aaben" x1="62" y1="18" x2="62" y2="24"/><line class="aaben" x1="62" y1="34" x2="62" y2="40"/></svg>',
+    el:       '<svg viewBox="0 0 100 70"><rect class="stand" x="28" y="14" width="44" height="42" rx="3"/><path class="aaben" d="M52 22 L42 38 L50 38 L46 50"/></svg>'
   }
 };

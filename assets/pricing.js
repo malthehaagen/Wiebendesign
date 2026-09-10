@@ -1,13 +1,12 @@
 /* =====================================================================
-   PRISKONFIGURATION — Wieben Design prisberegner (prototype)
+   PRISKONFIGURATION — Wieben Design standberegner
    ---------------------------------------------------------------------
-   ALLE TAL HERUNDER ER BRANCHEESTIMATER OG PLACEHOLDERE.
-   De er sat ud fra offentligt tilgaengelige markedspriser og skal
-   erstattes med Wieben Designs egne kalkulationstal foer lancering.
+   KILDE: tilbudsark.xlsx (arket "TILBUD"), kolonnen "Leje/stk".
+   Alle beløb er LEJEPRIS PR. MESSE i DKK ekskl. moms — altså det samme
+   grundlag, som tilbudsarket regner på.
 
-   Alle priser er i DKK ekskl. moms.
-   Alle priser angives som et interval: [minimum, maksimum].
-   Dette er den ENESTE fil, der skal rettes for at aendre priser.
+   Enkelte satser er afledt frem for aflæst; de er markeret med AFLEDT
+   og bør bekræftes af Wieben Design.
    ===================================================================== */
 
 window.WD_PRIS = {
@@ -15,159 +14,188 @@ window.WD_PRIS = {
   meta: {
     valuta: 'DKK',
     enhed: 'ekskl. moms',
+    grundlag: 'Lejepris pr. messe',
+    kilde: 'tilbudsark.xlsx',
     opdateret: '2026-09-10',
-    status: 'BRANCHEESTIMAT — skal erstattes med Wieben Designs egne tal',
-    /* Prisintervaller afrundes til naermeste X kr. i visningen */
-    afrunding: 500
+    afrunding: 250
   },
 
   /* -------------------------------------------------------------------
-     1. GRUNDPRIS PR. STANDTYPE
-     perM2: [min, max] kr. pr. m2 for selve standen (konstruktion + vaegge)
-     gulvpris: minimumsbeloeb — en lille stand kan ikke bygges billigere
-     maxM2:    oevre graense for hvornaar standtypen giver mening
+     PROJEKTSTYRING — tegning, møde, bestillinger (tilbudsark række 5-10)
      ------------------------------------------------------------------- */
-  standtyper: {
-    portable: {
-      perM2:    [1650, 2200],
-      gulvpris: [18000, 26000],
-      maxM2:    12
-    },
-    system: {
-      perM2:    [3500, 4400],
-      gulvpris: [43000, 55000],
-      maxM2:    400
-    },
-    specialbyg: {
-      perM2:    [6000, 7700],
-      gulvpris: [92000, 118000],
-      maxM2:    2000
-    }
-  },
+  projektstyring: [
+    { tilM2: 20,    pris: 6000 },
+    { tilM2: 50,    pris: 7000 },
+    { tilM2: 80,    pris: 8500 },
+    { tilM2: 110,   pris: 10000 },
+    { tilM2: 99999, pris: 14000 }
+  ],
 
   /* -------------------------------------------------------------------
-     2. FAKTORER
-     Aabne sider koster mere: flere synlige flader, mere grafik, mere
-     konstruktion. Ambitionsniveau skalerer materialevalg og finish.
+     VÆGGE — b62 rammer, PVC-plader og print
+     Priser pr. løbende meter væg i den valgte højde.
      ------------------------------------------------------------------- */
-  aabenhed: {
-    raekke:  1.00,   /* 1 aaben side  */
-    hjoerne: 1.07,   /* 2 aabne sider */
-    gavl:    1.14,   /* 3 aabne sider */
-    oe:      1.22    /* 4 aabne sider */
+  vaeg: {
+    hoejder: [
+      { m: 2,   frame: 237, pvc: 130 },
+      { m: 2.5, frame: 250, pvc: 156 },
+      { m: 3,   frame: 301, pvc: 182 }
+    ],
+    /* Print på banner, kr. pr. m² — AFLEDT af bannerpriserne i arket
+       (5.600 kr. for 12 m², 2.800 for 6 m², 1.400 for 3 m²) */
+    printPrM2: 465,
+    /* Pixlip backlit lysvæg: PX200-profil pr. lbm i 3 m + backlit-print
+       (PIXLIP Wall profil PX200, 3000 mm = 766 kr.; banner AFLEDT) */
+    pixlipPrLbm: 766,
+    pixlipPrintPrM2: 520,
+    /* Dør i væg: b62 Frame Door + PVC-sæt */
+    doer: 881 + 156
   },
 
-  ambition: {
-    basis:    0.85,
-    plus:     1.00,
-    signatur: 1.30
-  },
+  /* Grafikdækning af vægarealet */
+  grafikdaekning: { ingen: 0, delvis: 0.45, fuld: 1 },
 
   /* -------------------------------------------------------------------
-     3. TILVALG
-     type 'fast'  -> pris er et samlet beloeb
-     type 'perM2' -> pris ganges med standens areal
-     minM2        -> tilvalget vises foerst fra denne stoerrelse
+     GULV — kr. pr. m² (tilbudsark, afsnittet "Gulvbelægning")
      ------------------------------------------------------------------- */
-  tilvalg: {
-    moederum:      { type: 'fast',  pris: [16500, 22000], minM2: 15 },
-    bardisk:       { type: 'fast',  pris: [10500, 14500] },
-    lager:         { type: 'fast',  pris: [7500, 10500] },
-    produktdisplay:{ type: 'fast',  pris: [7000, 11500] },
-    storskaerm:    { type: 'fast',  pris: [8500, 12500] },
-    lysplan:       { type: 'perM2', pris: [430, 600] },
-    gulv:          { type: 'perM2', pris: [300, 480] },
-    grafik:        { type: 'perM2', pris: [1050, 1550] },
-    hems:          { type: 'fast',  pris: [78000, 118000], minM2: 36 },
-    moebler:       { type: 'fast',  pris: [7500, 12500] },
-    beplantning:   { type: 'fast',  pris: [2200, 3600] },
-    servering:     { type: 'fast',  pris: [3800, 6200] }
+  gulv: {
+    ingen:  0,
+    taeppe: 90 + 25,   /* Heuga 530XL + blødt undergulv */
+    vinyl:  150,       /* Hvid vinyl, Armstrong        */
+    trae:   250        /* Trægulv, naturtræ            */
   },
+  haevetGulv: 95 + 75, /* Primo PX hævet gulv + spånpladegulv, pr. m²    */
 
   /* -------------------------------------------------------------------
-     4. YDELSER
-     pct  -> procent af (grundpris + tilvalg)
-     min  -> minimumsbeloeb uanset standens stoerrelse
+     BELYSNING — kr. pr. spot og dækning (tilbudsark, "Belysning")
      ------------------------------------------------------------------- */
-  ydelser: {
-    design:        { pct: [0.055, 0.075], min: [11000, 15500] },   /* koncept, 3D, tegninger  */
-    projektledelse:{ pct: [0.065, 0.085], min: [8000, 11500] },   /* koordinering, messecenter */
-    montage:       { pct: [0.105, 0.14], min: [10500, 15000] }    /* opbygning og nedtagning */
-  },
-
-  /* Transport tur/retur inkl. haandtering */
-  transport: {
-    dk:         [7000, 10500],
-    norden:     [14500, 21000],
-    eu:         [19500, 28000],
-    oversoeisk: [56000, 82000]
-  },
-
-  /* Opbevaring mellem messer — pr. paabegyndt aar */
-  opbevaring: {
-    system:     [5000, 7500],
-    specialbyg: [8500, 12500],
-    portable:   [0, 0]
+  belysning: {
+    standard:    { prSpot: 75,  m2PrSpot: 5 },   /* Sam Light, b62 spot   */
+    forstaerket: { prSpot: 173, m2PrSpot: 4 },   /* NOVI 70 spots         */
+    pro:         { prSpot: 329, m2PrSpot: 3.5 }  /* ERON Pro 200W flood   */
   },
 
   /* -------------------------------------------------------------------
-     5. OMKOSTNINGER MESSECENTERET OPKRAEVER (ikke Wieben)
-     Standleje falder pr. m2 jo stoerre standen er.
+     RIG — truss og hængende frise, pr. løbende meter — AFLEDT af
+     truss-elementpriserne (TX Truss 25 cm, 2000 mm = 187 kr.)
+     ------------------------------------------------------------------- */
+  rig: { trussPrLbm: 130, frisehoejde: 1 },
+
+  /* -------------------------------------------------------------------
+     KATALOG — leje pr. messe, direkte fra tilbudsarket
+     ------------------------------------------------------------------- */
+  katalog: {
+    diske: [
+      { id: 'expo_bar',    leje: 1175 },
+      { id: 'expo_skab',   leje: 975 },
+      { id: 'expo_hylde',  leje: 725 },
+      { id: 'izi_disk',    leje: 1500 },
+      { id: 'ubord',       leje: 875 },
+      { id: 'vitrine',     leje: 2500 },
+      { id: 'abc_reol',    leje: 450 },
+      { id: 'depot_bord',  leje: 200 }
+    ],
+    moebler: [
+      { id: 'staabord',    leje: 325 },
+      { id: 'cafebord',    leje: 325 },
+      { id: 'barstol',     leje: 175 },
+      { id: 'skalstol',    leje: 150 },
+      { id: 'stol_arm',    leje: 350 },
+      { id: 'loungestol',  leje: 450 },
+      { id: 'loungebord',  leje: 450 },
+      { id: 'sofa',        leje: 950 },
+      { id: 'brochure',    leje: 475 },
+      { id: 'stumtjener',  leje: 175 },
+      { id: 'affald',      leje: 99 }
+    ],
+    teknik: [
+      { id: 'mon32',       leje: 950 },
+      { id: 'mon43',       leje: 1500 },
+      { id: 'mon55',       leje: 2750 },
+      { id: 'mon65',       leje: 3500 },
+      { id: 'mon75',       leje: 4500 },
+      { id: 'stander',     leje: 750 },
+      { id: 'afspiller',   leje: 950 },
+      { id: 'ledskin',     leje: 600 },
+      { id: 'novastar',    leje: 1200 }
+    ],
+    kaffe: [
+      { id: 'nespresso_s', leje: 1000 },
+      { id: 'nespresso_l', leje: 500 },
+      { id: 'bonamat',     leje: 350 },
+      { id: 'vandkoger',   leje: 150 },
+      { id: 'koeleskab_h', leje: 795 },
+      { id: 'koeleskab_l', leje: 450 },
+      { id: 'vask',        leje: 450 },
+      { id: 'papkrus',     leje: 45 }
+    ],
+    el: [
+      { id: 'eltavle32',   leje: 650 },
+      { id: 'eltavle16',   leje: 550 }
+    ]
+  },
+
+  /* -------------------------------------------------------------------
+     OPSÆTNING, NEDTAGNING OG TRANSPORT
+     Satser fra tilbudsarkets afsnit "Opsætning" og "Nedtagning".
+     Timetallene er AFLEDTE normtal og den største usikkerhed i estimatet.
+     ------------------------------------------------------------------- */
+  montage: {
+    timepris:        652,          /* Arbejds-, køre-, rejse- og værkstedstime */
+    overnatning:     900,          /* pr. mand pr. nat                          */
+    fortaering:      625,          /* pr. mand pr. dag                          */
+    forsikring:      1750,         /* forsikring af transporten                 */
+    lastbilPrKm:     6.75,
+    kmPengePrKm:     4,            /* montørløn, km-penge                       */
+    broafgift:       410,          /* pr. vej, Sjælland                         */
+    flybillet:       3900,
+    kmPrTime:        70,
+
+    /* AFLEDT: mandtimer til opbygning pr. m² — intervallet er beregningens
+       primære usikkerhed */
+    mandtimerPrM2:   [0.45, 0.65],
+    minMandtimer:    8,
+    nedtagningsandel: 0.4,         /* nedtagning som andel af opbygning         */
+    vaerkstedPrM2:   0.15,         /* pakning på værkstedet                     */
+    m2PrMontoer:     25,
+    minMontoerer:    2,
+
+    /* Egen lastbil op til denne afstand; længere ude bruger vi speditør
+       og fly til montørerne — AFLEDT arbejdsmodel */
+    egenkoerselMaxKm: 450,
+    fragtPrKm:        [12, 20],
+    oversoeiskFragt:  [45000, 85000]
+  },
+
+  /* -------------------------------------------------------------------
+     MESSECENTERETS EGNE PRISER — betales direkte til arrangøren.
+     IKKE fra Wieben Designs tilbudsark. Brancheestimat, som varierer
+     fra messe til messe.
      ------------------------------------------------------------------- */
   messecenter: {
     standlejeTrin: [
-      { tilM2: 36,   perM2: [545, 665] },
-      { tilM2: 100,  perM2: [455, 555] },
-      { tilM2: 300,  perM2: [370, 450] },
-      { tilM2: 600,  perM2: [305, 375] },
-      { tilM2: 99999,perM2: [245, 305] }
+      { tilM2: 36,    perM2: [545, 665] },
+      { tilM2: 100,   perM2: [455, 555] },
+      { tilM2: 300,   perM2: [370, 450] },
+      { tilM2: 600,   perM2: [305, 375] },
+      { tilM2: 99999, perM2: [245, 305] }
     ],
     tilmeldingsgebyr: [4000, 6000],
-    el:               [3000, 4600],
-    vand:             [2100, 3100],
-    /* Tillaeg pr. m2 for aabne sider ud over den foerste (hjoerne, gavl, oe) */
-    aabenSideTillaegPct: { raekke: 0, hjoerne: 0.06, gavl: 0.12, oe: 0.18 }
+    forsyning:        [4500, 7500],   /* el, vand og internet hos arrangøren */
+    aabenSideTillaegPct: { 1: 0, 2: 0.06, 3: 0.12, 4: 0.18 }
   },
 
   /* -------------------------------------------------------------------
-     6. OMKOSTNINGER KUNDEN SELV BAERER
+     KUNDENS EGNE OMKOSTNINGER — REN ILLUSTRATION
+     Wieben Design kender ikke kundens interne tal. Posterne står med for
+     at kunden ikke glemmer dem, og kan rettes direkte i beregneren.
      ------------------------------------------------------------------- */
   egne: {
-    bemandingPrPersonPrDag: [3100, 4100],   /* intern kostpris          */
-    rejseOphold: {
-      dk:         [1100, 1900],
-      norden:     [2700, 3800],
-      eu:         [3200, 4700],
-      oversoeisk: [8500, 12500]
-    },
-    markedsfoering: [9000, 19000]           /* invitationer, giveaways  */
+    dagsatsStandard:  3500,          /* kr. pr. person pr. dag, kan ændres    */
+    rejseOphold: { dk: 1500, norden: 3200, eu: 3900, oversoeisk: 10500 },
+    markedsfoering: [9000, 19000]
   },
 
-  /* -------------------------------------------------------------------
-     7. GENBRUG OG TCO
-     Hvad koster messe nr. 2, 3, 4 ... naar standen allerede findes?
-     Andel af den oprindelige grundpris.
-     ------------------------------------------------------------------- */
-  genbrug: {
-    specialbyg: { genbrugsandel: [0.80, 0.95], note: 'Bygges typisk forfra hver gang' },
-    system:     { genbrugsandel: [0.18, 0.30], note: 'Rammer genbruges — ny grafik og opbygning' },
-    portable:   { genbrugsandel: [0.06, 0.14], note: 'Genbruges naesten uaendret' }
-  },
-
-  /* Kasseret materiale pr. m2 pr. messe, kg — estimat */
-  materialeforbrug: {
-    specialbyg: 22,
-    system:     2.5,
-    portable:   0.8
-  },
-
-  /* -------------------------------------------------------------------
-     8. ROI-NOEGLETAL — bruges til at saette forventninger, ikke til at love
-     ------------------------------------------------------------------- */
-  leads: {
-    /* Kvalificerede leads pr. m2 pr. messedag, spaend */
-    prM2PrDag: [0.40, 0.72],
-    /* Bemandingsnorm: 1 person pr. X m2 */
-    m2PrPerson: 5
-  }
+  /* Nøgletal til forventningsafstemning */
+  leads: { prM2PrDag: [0.40, 0.72], m2PrPerson: 5 }
 };
