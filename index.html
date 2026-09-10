@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Standberegner — Wieben Design</title>
+<meta name="description" content="Form din messestand og få et prisestimat, en genbrugsberegning og en plan frem mod messedagen.">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap top-inner">
+    <div class="brand">
+      <span class="brand-name">Wieben Design</span>
+      <span class="brand-sub">Standberegner</span>
+    </div>
+    <p class="top-note">Prototype · priser er estimater</p>
+  </div>
+</header>
+
+<nav class="steps" id="steps" aria-label="Trin"></nav>
+
+<main class="wrap" id="main">
+
+  <!-- ============ TRIN 0: INTRO ============ -->
+  <section class="step" data-step="0">
+    <div class="hero">
+      <p class="eyebrow">30 års erfaring · 72 destinationer · 5 kontinenter</p>
+      <h1>Hvad skal jeres messestand kunne?</h1>
+      <p class="lead">Svar på nogle få spørgsmål om jeres messe og jeres mål. Undervejs får I vores erfaring med, hvad der virker på en stand — og til sidst en anbefalet løsning, et prisestimat og en plan frem mod messedagen.</p>
+      <ul class="hero-list">
+        <li><strong>4 minutter</strong> fra start til færdigt estimat</li>
+        <li><strong>Uforpligtende</strong> — I bestemmer selv, om vi skal tale sammen bagefter</li>
+        <li><strong>Hele billedet</strong> — også det, messecenteret opkræver, og det I selv skal bruge</li>
+      </ul>
+      <button class="btn btn-primary btn-lg" data-goto="1">Kom i gang</button>
+    </div>
+  </section>
+
+  <!-- ============ TRIN 1: PROFIL ============ -->
+  <section class="step" data-step="1" hidden>
+    <h2 class="step-title">Jeres messeprofil</h2>
+    <p class="step-intro">Standen er et middel. Vi starter med målet.</p>
+    <div id="profil"></div>
+    <div class="nav-row">
+      <button class="btn" data-goto="0">Tilbage</button>
+      <button class="btn btn-primary" data-next="1">Videre</button>
+    </div>
+  </section>
+
+  <!-- ============ TRIN 2: STANDEN ============ -->
+  <section class="step" data-step="2" hidden>
+    <h2 class="step-title">Standen</h2>
+    <div id="anbefaling" class="anbefaling"></div>
+
+    <div class="field">
+      <label class="field-label" for="messe">Hvilken messe?</label>
+      <div class="field-row">
+        <select id="messe" class="select"></select>
+        <input type="date" id="messedato" class="select" aria-label="Messens startdato">
+      </div>
+      <p class="field-hjaelp" id="messe-hjaelp"></p>
+    </div>
+
+    <h3 class="grp-title">Standtype</h3>
+    <div id="standtyper" class="cards cards-3"></div>
+
+    <h3 class="grp-title">Placering i hallen</h3>
+    <div id="aabenhed" class="cards cards-4"></div>
+
+    <h3 class="grp-title">Størrelse og bemanding</h3>
+    <div class="sliders">
+      <div class="slider-box">
+        <label for="m2">Areal</label>
+        <input type="range" id="m2" min="6" max="200" step="1" value="24">
+        <output id="m2-ud">24 m²</output>
+        <p class="field-hjaelp" id="m2-hjaelp"></p>
+      </div>
+      <div class="slider-box">
+        <label for="personer">Personer på standen</label>
+        <input type="range" id="personer" min="1" max="20" step="1" value="3">
+        <output id="personer-ud">3 personer</output>
+        <p class="field-hjaelp" id="personer-hjaelp"></p>
+      </div>
+      <div class="slider-box">
+        <label for="dage">Messedage</label>
+        <input type="range" id="dage" min="1" max="8" step="1" value="3">
+        <output id="dage-ud">3 dage</output>
+      </div>
+    </div>
+
+    <div id="indsigter-2" class="indsigter"></div>
+
+    <div class="nav-row">
+      <button class="btn" data-goto="1">Tilbage</button>
+      <button class="btn btn-primary" data-next="2">Videre til tilvalg</button>
+    </div>
+  </section>
+
+  <!-- ============ TRIN 3: TILVALG ============ -->
+  <section class="step" data-step="3" hidden>
+    <h2 class="step-title">Hvad skal standen indeholde?</h2>
+    <p class="step-intro">Vælg til og fra. Prisen og vores kommentarer opdaterer sig undervejs.</p>
+    <div id="tilvalg" class="cards cards-3 cards-valg"></div>
+    <div id="indsigter-3" class="indsigter"></div>
+    <div class="nav-row">
+      <button class="btn" data-goto="2">Tilbage</button>
+      <button class="btn btn-primary" data-next="3">Videre til genbrug</button>
+    </div>
+  </section>
+
+  <!-- ============ TRIN 4: GENBRUG / TCO ============ -->
+  <section class="step" data-step="4" hidden>
+    <h2 class="step-title">Hvad koster den næste messe?</h2>
+    <p class="step-intro">En stand er sjældent en engangsudgift. Her er, hvad de tre løsninger koster over flere messer.</p>
+
+    <div class="slider-box slider-solo">
+      <label for="antalMesser">Messer over de næste 3 år</label>
+      <input type="range" id="antalMesser" min="1" max="10" step="1" value="3">
+      <output id="antalMesser-ud">3 messer</output>
+    </div>
+
+    <div id="tco" class="tco"></div>
+    <div id="baeredygtighed" class="grn"></div>
+
+    <div class="nav-row">
+      <button class="btn" data-goto="3">Tilbage</button>
+      <button class="btn btn-primary" data-next="4">Videre til planen</button>
+    </div>
+  </section>
+
+  <!-- ============ TRIN 5: MESSEKLAR ============ -->
+  <section class="step" data-step="5" hidden>
+    <h2 class="step-title">Messeklar</h2>
+    <p class="step-intro">Det samlede billede — også de poster, der ikke står på vores faktura.</p>
+    <div id="budget3" class="budget3"></div>
+    <h3 class="grp-title">Tidslinje frem mod messen</h3>
+    <div id="tidslinje" class="tidslinje"></div>
+    <div class="nav-row">
+      <button class="btn" data-goto="4">Tilbage</button>
+      <button class="btn btn-primary" data-next="5">Se opsummering</button>
+    </div>
+  </section>
+
+  <!-- ============ TRIN 6: OPSUMMERING ============ -->
+  <section class="step" data-step="6" hidden>
+    <h2 class="step-title">Jeres oplæg</h2>
+    <div id="opsummering" class="opsummering"></div>
+
+    <form id="kontakt" class="kontakt" novalidate>
+      <h3>Skal vi regne på det for alvor?</h3>
+      <p>Send oplægget til os, så vender vi tilbage med et konkret tilbud og et 3D-oplæg på standen.</p>
+      <div class="form-grid">
+        <label>Navn<input type="text" name="navn" required></label>
+        <label>Virksomhed<input type="text" name="virksomhed" required></label>
+        <label>E-mail<input type="email" name="email" required></label>
+        <label>Telefon<input type="tel" name="telefon"></label>
+        <label class="full">Noget vi skal vide?<textarea name="besked" rows="3"></textarea></label>
+      </div>
+      <div class="form-row">
+        <button type="submit" class="btn btn-primary btn-lg">Send oplægget</button>
+        <button type="button" class="btn" id="print">Gem som PDF</button>
+        <button type="button" class="btn" id="nulstil">Start forfra</button>
+      </div>
+      <p class="disclaimer">Prototype — formularen sender ikke data nogen steder hen endnu.</p>
+    </form>
+
+    <div class="nav-row">
+      <button class="btn" data-goto="5">Tilbage</button>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ PRISBJÆLKE ============ -->
+<div class="prisbar" id="prisbar" hidden>
+  <div class="wrap prisbar-inner">
+    <div class="prisbar-tal">
+      <span class="prisbar-label">Estimat, Wieben Design</span>
+      <strong id="prisbar-belob">—</strong>
+      <span class="prisbar-note">kr. ekskl. moms</span>
+    </div>
+    <button class="btn btn-ghost" id="prisbar-toggle" aria-expanded="false">Se specifikation</button>
+  </div>
+  <div class="prisbar-detalje wrap" id="prisbar-detalje" hidden></div>
+</div>
+
+<footer class="bund">
+  <div class="wrap">
+    <p><strong>Wieben Design A/S</strong> · Porsborgparken 8B, 9530 Støvring · 70 23 11 11 · wd@wiebendesign.dk</p>
+    <p class="disclaimer">Alle beløb er uforpligtende estimater baseret på brancheerfaring og erstattes af et konkret tilbud.</p>
+  </div>
+</footer>
+
+<script src="assets/pricing.js"></script>
+<script src="assets/content.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
