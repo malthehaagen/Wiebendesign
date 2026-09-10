@@ -701,6 +701,13 @@
   }
 
   function bind() {
+    /* Et scroll hen over et fokuseret talfelt ændrer ellers værdien — så et
+       uskyldigt rul ned ad siden kan sætte en pris, brugeren aldrig skrev. */
+    document.addEventListener('wheel', function (e) {
+      var t = e.target;
+      if (t && t.tagName === 'INPUT' && t.type === 'number' && document.activeElement === t) t.blur();
+    }, { passive: true });
+
     document.addEventListener('click', function (e) {
       var g = e.target.closest('[data-goto]');
       if (g && !g.disabled) gaaTil(Number(g.dataset.goto));
