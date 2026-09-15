@@ -141,20 +141,80 @@ window.WD_PRIS = {
 
   /* -------------------------------------------------------------------
      OMRÅDER — de zoner kunden vælger i stedet for enkeltvarer.
-     Hvert område er en pakke af varer fra kataloget herover, plus evt.
-     vægge og dør. m2 er områdets omtrentlige pladsbehov på standen.
-     Zoneinddelingen følger branchens gængse model: velkomst, engagement,
-     samtale og depot, med servering og produktzone på større stande.
+     Hvert område har en eller flere størrelser. Hver størrelse er en
+     konkret pakke af varer fra kataloget herover, plus evt. indervægge
+     og dør, og et m2-tal for, hvor meget den fylder på standen.
+
+     prM2 bruges til områder, der bygges frem for at møbleres — så er
+     prisen kvadratmeter gange denne sats.
+     minStandM2 skjuler et område, indtil standen er stor nok til det.
      ------------------------------------------------------------------- */
   omraader: {
-    reception: { m2: 3, dele: { izi_disk: 1, brochure: 1 } },
-    staabord:  { m2: 3, dele: { staabord: 1, barstol: 2 } },
-    bar:       { m2: 5, dele: { expo_bar: 1, barstol: 2, nespresso_l: 1, koeleskab_l: 1, papkrus: 1 } },
-    lounge:    { m2: 6, dele: { sofa: 1, loungestol: 2, loungebord: 1 } },
-    moede:     { m2: 8, dele: { ubord: 1, stol_arm: 4 }, vaegLbm: 6, doere: 1 },
-    display:   { m2: 3, dele: { vitrine: 1 } },
-    media:     { m2: 3, dele: { mon55: 1, afspiller: 1 } },
-    depot:     { m2: 4, dele: { abc_reol: 1, depot_bord: 1, stumtjener: 1, affald: 1 }, vaegLbm: 5, doere: 1 }
+    /* --- Tag imod --- */
+    reception: { gruppe: 'modtag', varianter: [
+      { id: 'lille',  m2: 2, dele: { expo_hylde: 1 } },
+      { id: 'mellem', m2: 3, dele: { izi_disk: 1, brochure: 1 } },
+      { id: 'stor',   m2: 5, dele: { izi_disk: 1, expo_skab: 1, brochure: 2 } }
+    ]},
+    garderobe: { gruppe: 'modtag', varianter: [
+      { id: 'fast',   m2: 2, dele: { stumtjener: 2, affald: 1 } }
+    ]},
+
+    /* --- Tal sammen --- */
+    staabord: { gruppe: 'samtale', varianter: [
+      { id: 'lille',  m2: 3, dele: { staabord: 1, barstol: 2 } },
+      { id: 'mellem', m2: 5, dele: { staabord: 2, barstol: 4 } },
+      { id: 'stor',   m2: 8, dele: { staabord: 3, barstol: 6 } }
+    ]},
+    moedeAabent: { gruppe: 'samtale', varianter: [
+      { id: 'lille',  m2: 5, dele: { cafebord: 1, stol_arm: 4 } },
+      { id: 'stor',   m2: 8, dele: { ubord: 1, stol_arm: 6 } }
+    ]},
+    moede: { gruppe: 'samtale', varianter: [
+      { id: 'lille',  m2: 6,  vaegLbm: 5, doere: 1, dele: { cafebord: 1, stol_arm: 4 } },
+      { id: 'stor',   m2: 10, vaegLbm: 8, doere: 1, dele: { ubord: 1, stol_arm: 6, mon43: 1 } }
+    ]},
+    lounge: { gruppe: 'samtale', varianter: [
+      { id: 'lille',  m2: 4,  dele: { loungestol: 2, loungebord: 1 } },
+      { id: 'mellem', m2: 6,  dele: { sofa: 1, loungestol: 2, loungebord: 1 } },
+      { id: 'stor',   m2: 10, dele: { sofa: 2, loungestol: 4, loungebord: 2 } }
+    ]},
+
+    /* --- Vis frem --- */
+    platform: { gruppe: 'vis', varianter: [
+      { id: 'lille',  m2: 4,  prM2: 255 },
+      { id: 'mellem', m2: 9,  prM2: 255 },
+      { id: 'stor',   m2: 16, prM2: 255 }
+    ]},
+    montre: { gruppe: 'vis', varianter: [
+      { id: 'lille',  m2: 2, dele: { vitrine: 1 } },
+      { id: 'stor',   m2: 4, dele: { vitrine: 2 } }
+    ]},
+    reol: { gruppe: 'vis', varianter: [
+      { id: 'lille',  m2: 2, dele: { abc_reol: 2 } },
+      { id: 'stor',   m2: 4, dele: { abc_reol: 4 } }
+    ]},
+    media: { gruppe: 'vis', varianter: [
+      { id: 'lille',  m2: 2, dele: { mon43: 1, afspiller: 1 } },
+      { id: 'mellem', m2: 3, dele: { mon55: 1, afspiller: 1 } },
+      { id: 'stor',   m2: 4, dele: { mon75: 1, afspiller: 1, stander: 1 } }
+    ]},
+    scene: { gruppe: 'vis', minStandM2: 60, varianter: [
+      { id: 'fast',   m2: 12, dele: { mon65: 1, afspiller: 1, skalstol: 10 } }
+    ]},
+
+    /* --- Servering --- */
+    bar: { gruppe: 'servering', varianter: [
+      { id: 'lille',  m2: 3, dele: { expo_bar: 1, nespresso_l: 1, papkrus: 1 } },
+      { id: 'mellem', m2: 5, dele: { expo_bar: 1, barstol: 2, nespresso_l: 1, koeleskab_l: 1, papkrus: 1 } },
+      { id: 'stor',   m2: 8, dele: { expo_bar: 1, expo_skab: 1, barstol: 4, nespresso_s: 1, koeleskab_h: 1, vask: 1, papkrus: 2 } }
+    ]},
+
+    /* --- Bagved --- */
+    depot: { gruppe: 'bagved', varianter: [
+      { id: 'lille',  m2: 3, vaegLbm: 4, doere: 1, dele: { abc_reol: 1, depot_bord: 1, affald: 1 } },
+      { id: 'stor',   m2: 6, vaegLbm: 7, doere: 1, dele: { abc_reol: 2, depot_bord: 1, stumtjener: 1, affald: 1, koeleskab_l: 1 } }
+    ]}
   },
 
   /* Områdernes indervægge bygges i denne højde */
@@ -189,7 +249,7 @@ window.WD_PRIS = {
     stor:  { leje: 650, navn: 'El-tavle, 32A med 8 udtag' },
     /* Varer der udløser den store tavle */
     /* Områder der trækker nok strøm til den store tavle */
-    stortForbrug: ['bar', 'media', 'display']
+    stortForbrug: ['bar', 'media', 'scene', 'montre']
   },
 
   /* -------------------------------------------------------------------

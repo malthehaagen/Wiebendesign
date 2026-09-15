@@ -108,28 +108,48 @@
     return s.stand.m2 * (P.gulv[s.stand.gulv] + (s.stand.haevet ? P.haevetGulv : 0));
   }
 
-  /* Et områdes pris: varerne i pakken plus dets egne vægge og dør */
-  function omraadePris(id) {
+  /* Standardstørrelsen er den midterste, når der er flere at vælge imellem */
+  function standardVariant(id) {
+    var v = P.omraader[id].varianter;
+    return v[Math.floor((v.length - 1) / 2)].id;
+  }
+  function variant(id, vid) {
+    var v = P.omraader[id].varianter;
+    return v.filter(function (x) { return x.id === (vid || (s.omraader[id] && s.omraader[id].variant) || standardVariant(id)); })[0] || v[0];
+  }
+  function omraadeTilgaengeligt(id) {
     var o = P.omraader[id];
-    var sum = 0;
-    Object.keys(o.dele).forEach(function (v) {
-      var l = vare(v);
-      if (l) sum += l.leje * o.dele[v];
+    return !o.minStandM2 || s.stand.m2 >= o.minStandM2;
+  }
+
+  /* Et områdes pris: varerne i pakken plus dets egne vægge og dør */
+  function omraadePris(id, vid) {
+    var v = variant(id, vid), sum = 0;
+    if (v.prM2) sum += v.m2 * v.prM2;
+    Object.keys(v.dele || {}).forEach(function (navn) {
+      var l = vare(navn);
+      if (l) sum += l.leje * v.dele[navn];
     });
-    if (o.vaegLbm) {
+    if (v.vaegLbm) {
       var h = P.vaeg.hoejder.filter(function (x) { return x.m === P.omraadeVaeghoejde; })[0];
-      sum += o.vaegLbm * (h.frame + h.pvc);
+      sum += v.vaegLbm * (h.frame + h.pvc);
     }
-    if (o.doere) sum += o.doere * P.vaeg.doer;
+    if (v.doere) sum += v.doere * P.vaeg.doer;
     return sum;
   }
 
   function omraadeLinjer() {
-    return Object.keys(P.omraader).filter(function (id) { return s.omraader[id]; })
-      .map(function (id) {
-        return { id: id, antal: s.omraader[id], navn: C.omraader[id].titel,
-                 pris: omraadePris(id) * s.omraader[id], m2: P.omraader[id].m2 * s.omraader[id] };
-      });
+    return Object.keys(P.omraader).filter(function (id) {
+      return s.omraader[id] && s.omraader[id].antal > 0 && omraadeTilgaengeligt(id);
+    }).map(function (id) {
+      var antal = s.omraader[id].antal, v = variant(id);
+      var stoerrelse = C.omraader[id].stoerrelser[v.id];
+      return {
+        id: id, antal: antal, variant: v.id,
+        navn: C.omraader[id].titel + (stoerrelse ? ' (' + stoerrelse.toLowerCase() + ')' : ''),
+        pris: omraadePris(id) * antal, m2: v.m2 * antal
+      };
+    });
   }
 
   function omraadeAreal() {
@@ -255,7 +275,7 @@
       { navn: 'Stand, vægge og gulv', pris: iv.tal(standDele), note: standNote },
       { navn: 'Områder og udstyr', pris: iv.tal(omraadeSum), note: omraadeNote },
       { navn: 'Opbygning og transport', pris: montSum,
-        note: mont[0].note + (mont[1] ? ' · ' + mont[1].note : '') }
+        note: 'opbygning, nedtagning, kørsel og forsikring — vi står for det hele' }
     ].filter(function (l) { return l.pris[1] > 0; });
 
     var wieben = iv.sum(wiebenLinjer.map(function (l) { return l.pris; }));
@@ -274,22 +294,26 @@
      Områderne lægges på i den rækkefølge, formålet tilsiger, indtil de
      fylder ca. 70 % af standen. Resten skal være plads at gå på.      */
   var PRIORITET = {
-    leads:      ['reception', 'staabord', 'depot', 'bar', 'media', 'staabord', 'moede'],
-    brand:      ['reception', 'media', 'depot', 'display', 'staabord', 'bar', 'lounge'],
-    lancering:  ['reception', 'display', 'depot', 'media', 'staabord', 'bar', 'moede'],
-    relationer: ['reception', 'moede', 'depot', 'lounge', 'bar', 'staabord', 'display']
+    leads:      ['reception', 'staabord', 'depot', 'bar', 'media', 'moedeAabent', 'garderobe', 'staabord'],
+    brand:      ['reception', 'media', 'depot', 'platform', 'staabord', 'bar', 'lounge', 'scene'],
+    lancering:  ['reception', 'platform', 'depot', 'media', 'montre', 'staabord', 'bar', 'moedeAabent'],
+    relationer: ['reception', 'moede', 'depot', 'lounge', 'bar', 'garderobe', 'staabord', 'moedeAabent']
   };
 
   function foreslaaOmraader() {
     var raekke = PRIORITET[s.profil.formaal] || PRIORITET.leads;
     var plads = s.stand.m2 * 0.7, brugt = 0, ud = {};
     raekke.forEach(function (id) {
-      var o = P.omraader[id];
-      if (brugt + o.m2 > plads) return;
-      ud[id] = (ud[id] || 0) + 1;
-      brugt += o.m2;
+      if (!P.omraader[id] || !omraadeTilgaengeligt(id)) return;
+      /* Tag den største størrelse, der stadig er plads til */
+      var muligt = P.omraader[id].varianter.filter(function (v) { return brugt + v.m2 <= plads; });
+      if (!muligt.length) return;
+      var v = muligt[muligt.length - 1];
+      if (ud[id]) { ud[id].antal += 1; }
+      else { ud[id] = { antal: 1, variant: v.id }; }
+      brugt += v.m2;
     });
-    if (!Object.keys(ud).length) ud.reception = 1;
+    if (!Object.keys(ud).length) ud.reception = { antal: 1, variant: 'lille' };
     return ud;
   }
 
@@ -521,26 +545,57 @@
   function visOmraader() {
     var v = document.getElementById('omraader');
     v.innerHTML = '';
-    Object.keys(P.omraader).forEach(function (id) {
-      var t = C.omraader[id], o = P.omraader[id];
-      var antal = s.omraader[id] || 0;
-      var k = el('<div class="omraade' + (antal ? ' valgt' : '') + '"></div>');
-      k.appendChild(el('<span class="ill">' + C.svg[t.ikon] + '</span>'));
-      k.appendChild(el('<span class="card-titel">' + esc(t.titel) + '</span>'));
-      k.appendChild(el('<span class="card-tekst">' + esc(t.tekst) + '</span>'));
-      k.appendChild(el('<span class="card-meta"><span class="card-pris">' +
-        fmtKort(spaend(iv.tal(omraadePris(id)))) + ' kr.</span> · fylder ca. ' + o.m2 + ' m²</span>'));
-      var st = el('<span class="stepper"></span>');
-      var minus = el('<button type="button" aria-label="Færre">−</button>');
-      minus.disabled = !antal;
-      minus.onclick = function () { saetAntal(id, antal - 1); };
-      var plus = el('<button type="button" aria-label="Flere">+</button>');
-      plus.onclick = function () { saetAntal(id, antal + 1); };
-      st.appendChild(minus);
-      st.appendChild(el('<span class="antal">' + antal + '</span>'));
-      st.appendChild(plus);
-      k.appendChild(st);
-      v.appendChild(k);
+
+    C.omraadeGrupper.forEach(function (gr) {
+      var ider = Object.keys(P.omraader).filter(function (id) {
+        return P.omraader[id].gruppe === gr.id && omraadeTilgaengeligt(id);
+      });
+      if (!ider.length) return;
+      v.appendChild(el('<h3 class="grp-title">' + esc(gr.titel) + '</h3>'));
+      v.appendChild(el('<p class="grp-hjaelp">' + esc(gr.hjaelp) + '</p>'));
+      var raekke = el('<div class="cards cards-4"></div>');
+
+      ider.forEach(function (id) {
+        var t = C.omraader[id];
+        var valgt = s.omraader[id] || { antal: 0, variant: standardVariant(id) };
+        var vr = variant(id, valgt.variant);
+        var k = el('<div class="omraade' + (valgt.antal ? ' valgt' : '') + '"></div>');
+        k.appendChild(el('<span class="ill">' + C.svg[t.ikon] + '</span>'));
+        k.appendChild(el('<span class="card-titel">' + esc(t.titel) + '</span>'));
+        k.appendChild(el('<span class="card-tekst">' + esc(t.tekst) + '</span>'));
+
+        /* Størrelse vises kun, når området er valgt til, og kun hvis der er noget at vælge */
+        var muligt = P.omraader[id].varianter;
+        if (valgt.antal && muligt.length > 1) {
+          var seg = el('<span class="stoerrelser"></span>');
+          muligt.forEach(function (m) {
+            var b = el('<button type="button" class="seg-btn' + (m.id === vr.id ? ' valgt' : '') + '">' +
+              esc(C.stoerrelsesnavne[m.id]) + '</button>');
+            b.title = (t.stoerrelser[m.id] || '') + ' · ' + m.m2 + ' m²';
+            b.onclick = function () { saetVariant(id, m.id); };
+            seg.appendChild(b);
+          });
+          k.appendChild(seg);
+        }
+
+        var beskrivelse = t.stoerrelser[vr.id];
+        k.appendChild(el('<span class="card-meta"><span class="card-pris">' +
+          fmtKort(spaend(iv.tal(omraadePris(id, vr.id)))) + ' kr.</span>' +
+          (beskrivelse ? ' · ' + esc(beskrivelse) : '') + ' · ' + vr.m2 + ' m²</span>'));
+
+        var st = el('<span class="stepper"></span>');
+        var minus = el('<button type="button" aria-label="Færre">−</button>');
+        minus.disabled = !valgt.antal;
+        minus.onclick = function () { saetAntal(id, valgt.antal - 1); };
+        var plus = el('<button type="button" aria-label="Flere">+</button>');
+        plus.onclick = function () { saetAntal(id, valgt.antal + 1); };
+        st.appendChild(minus);
+        st.appendChild(el('<span class="antal">' + valgt.antal + '</span>'));
+        st.appendChild(plus);
+        k.appendChild(st);
+        raekke.appendChild(k);
+      });
+      v.appendChild(raekke);
     });
 
     var brugt = omraadeAreal();
@@ -604,8 +659,15 @@
 
   function saetAntal(id, n) {
     s.omraaderRoert = true;
-    if (n <= 0) delete s.omraader[id]; else s.omraader[id] = n;
+    if (n <= 0) { delete s.omraader[id]; }
+    else if (s.omraader[id]) { s.omraader[id].antal = n; }
+    else { s.omraader[id] = { antal: n, variant: standardVariant(id) }; }
     opdater();
+  }
+
+  function saetVariant(id, vid) {
+    s.omraaderRoert = true;
+    if (s.omraader[id]) { s.omraader[id].variant = vid; opdater(); }
   }
 
   function visIndsigter(id, antal) {
@@ -633,8 +695,7 @@
     });
     k.appendChild(ul);
     k.appendChild(el('<div class="bkol-sum"><span>I alt</span><span>' + fmtKort(r.vist) + ' kr.</span></div>'));
-    k.appendChild(el('<p class="bkol-fod">Hver post er et spænd, ikke en fast pris. Vi lægger os først fast, når der ligger en godkendt tegning — regn med ' +
-      Math.round(P.meta.spaendNed * 100) + ' % under og ' + Math.round(P.meta.spaendOp * 100) + ' % over midten.</p>'));
+    k.appendChild(el('<p class="bkol-fod">Hver post er et spænd, ikke en fast pris. Vi lægger os først fast, når der ligger en godkendt tegning.</p>'));
     v.appendChild(k);
 
     document.getElementById('samlet').innerHTML =
@@ -697,6 +758,49 @@
       '<p class="forbehold">Det er et skøn, ikke et tilbud. Når vi har set standen tegnet, er der typisk noget der skal justeres — måske passer ti stole ikke til pladsen, måske skal væggen stå et andet sted. Det finder vi ud af sammen.</p>';
   }
 
+  function visPrintark() {
+    var r = beregn(), g = geometri();
+    var dato = s.messe.dato ? new Date(s.messe.dato) : null;
+    var sted = (s.messe.by || land().navn) + (s.messe.by ? ', ' + land().navn : '');
+    document.getElementById('pa-undertitel').textContent =
+      sted + (dato && !isNaN(dato) ? ' · ' + dato.toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' }) : '') +
+      ' · udarbejdet ' + new Date().toLocaleDateString('da-DK');
+
+    var omr = r.omraader.concat(r.tilkoeb);
+    var rk = [
+      ['Areal', s.stand.m2 + ' m² med ' + s.stand.aabneSider + (s.stand.aabneSider === 1 ? ' åben side' : ' åbne sider')],
+      ['Vægge', C.vaegtyper[s.stand.vaegtype].titel + ', ' + dec(Math.round(g.vaegLbm * 10) / 10) + ' meter i ' + String(s.stand.vaeghoejde).replace('.', ',') + ' meters højde'],
+      ['Tryk på væggene', C.grafikdaekning[s.stand.grafik].titel],
+      ['Gulv', C.gulv[s.stand.gulv].titel + (s.stand.haevet ? ', hævet' : '')],
+      ['Belysning', C.belysning[s.stand.belysning].titel],
+      ['Områder', omr.length ? omr.map(function (l) { return (l.antal > 1 ? l.antal + ' × ' : '') + l.navn; }).join(', ') : 'Ingen valgt'],
+      ['Messedage', s.team.dage]
+    ];
+    document.getElementById('pa-konfiguration').innerHTML = rk.map(function (par) {
+      return '<dt>' + esc(par[0]) + '</dt><dd>' + esc(String(par[1])) + '</dd>';
+    }).join('');
+
+    document.getElementById('pa-pris').innerHTML =
+      r.wiebenLinjer.map(function (l) {
+        return '<tr><td>' + esc(l.navn) + '<span>' + esc(l.note) + '</span></td><td>' + fmtKort(spaend(l.pris)) + ' kr.</td></tr>';
+      }).join('') +
+      '<tr class="pa-sum"><td>I alt</td><td>' + fmtKort(r.vist) + ' kr.</td></tr>';
+
+    document.getElementById('pa-tidslinje-intro').textContent = C.tidslinjeIntro;
+    document.getElementById('pa-tidslinje').innerHTML = C.tidslinje.map(function (t) {
+      var naar;
+      if (dato && !isNaN(dato)) {
+        var d = new Date(dato.getTime());
+        d.setDate(d.getDate() - t.uger * 7);
+        naar = d.toLocaleDateString('da-DK', { day: 'numeric', month: 'short', year: 'numeric' });
+      } else {
+        naar = t.uger > 0 ? t.uger + ' uger før' : (t.uger === 0 ? 'Messeugen' : 'Ugen efter');
+      }
+      return '<tr><td class="pa-naar">' + esc(naar) + '</td><td>' + esc(t.titel) +
+             '<span>' + esc(t.tekst) + '</span></td><td class="pa-hvem">' + esc(C.hvemLabels[t.hvem]) + '</td></tr>';
+    }).join('');
+  }
+
   function visPrisbar() {
     var bar = document.getElementById('prisbar');
     bar.hidden = s.trin < 2;
@@ -739,6 +843,7 @@
     visBudget();
     visTidslinje();
     visOpsummering();
+    visPrintark();
     visPrisbar();
     gem();
   }
@@ -851,7 +956,12 @@
         konfiguration: { profil: s.profil, messe: s.messe, stand: s.stand, omraader: s.omraader, tilkoeb: s.tilkoeb, team: s.team },
         estimat: { wieben: r.vist }
       });
-      f.replaceWith(el('<div class="kvittering">Tak — jeres oplæg er klar. I en færdig løsning ville det nu ligge i Wieben Designs indbakke sammen med hele konfigurationen, og I ville høre fra os inden for en arbejdsdag.</div>'));
+      var opkald = f.querySelector('#opkald').checked;
+      f.replaceWith(el('<div class="kvittering"><strong>Tak — oplægget er på vej til jer.</strong>' +
+        '<span>' + (opkald
+          ? 'Vi ringer inden for en arbejdsdag og taler om, hvad der kan lade sig gøre på jeres plads.'
+          : 'I hører ikke mere fra os, medmindre I selv tager fat. Får I brug for at vende det, er vi på 70 23 11 11.') +
+        '</span><span class="kvit-note">Prototype — oplægget bliver ikke sendt endnu. Tryk “Hent som PDF nu” for at se det.</span></div>'));
     });
   }
 

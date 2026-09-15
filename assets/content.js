@@ -140,17 +140,49 @@ window.WD_INDHOLD = {
   },
 
   /* ---------------- Områder ----------------
-     Rækkefølgen følger gæstens vej ind på standen.                 */
+     Grupperne følger gæstens vej ind på standen.                    */
+  omraadeGrupper: [
+    { id: 'modtag',    titel: 'Tag imod',    hjaelp: 'Det første gæsten møder. Uden et tydeligt sted at henvende sig bliver standen et rum, folk kigger ind i frem for går ind i.' },
+    { id: 'samtale',   titel: 'Tal sammen',  hjaelp: 'Her afgøres det, om et hej bliver til et lead. Jo længere folk bliver, jo mere når I at sige.' },
+    { id: 'vis',       titel: 'Vis frem',    hjaelp: 'Hvordan produkterne kommer til deres ret — løftet op, lyst op eller sat i bevægelse.' },
+    { id: 'servering', titel: 'Servering',   hjaelp: 'Den mest undervurderede grund til at folk bliver stående på en stand.' },
+    { id: 'bagved',    titel: 'Bag kulisserne', hjaelp: 'Det gæsten ikke skal se, men som afgør, om standen ser ryddelig ud hele ugen.' }
+  ],
+
   omraader: {
-    reception: { titel: 'Velkomst',            tekst: 'En disk ved indgangen, hvor I tager imod og lægger materialer frem. Det første, gæsten møder.', ikon: 'disk' },
-    staabord:  { titel: 'Ståborde',            tekst: 'Til de korte samtaler. Folk der står, bliver i to minutter — folk der sætter sig, bliver i tyve.', ikon: 'bord' },
-    bar:       { titel: 'Bar og servering',    tekst: 'Bardisk med kaffe og køleskab. Den simpleste måde at forlænge en samtale.', ikon: 'kaffe' },
-    lounge:    { titel: 'Loungeområde',        tekst: 'Sofa og lænestole til de samtaler, der skal tage tid.', ikon: 'lounge' },
-    moede:     { titel: 'Lukket mødeområde',   tekst: 'Eget rum med vægge og dør. Til aftaler, der ikke skal høres af nabostanden.', ikon: 'vitrine' },
-    display:   { titel: 'Produktdisplay',      tekst: 'Glasmontre med lys, hvor produktet står i øjenhøjde og er til at se på.', ikon: 'vitrine' },
-    media:     { titel: 'Skærm og demo',       tekst: 'Storskærm med afspiller, der kører jeres video eller demo i sløjfe.', ikon: 'skaerm' },
-    depot:     { titel: 'Depot',               tekst: 'Aflåst rum til kasser, jakker og brochurer. Det, der ellers ender bag disken.', ikon: 'reol' }
+    reception:   { titel: 'Velkomstdisk',        tekst: 'Et tydeligt sted at tage imod og lægge materialer frem.', ikon: 'disk',
+                   stoerrelser: { lille: 'Lille disk', mellem: 'Disk med brochurer', stor: 'Disk med aflåst skab' } },
+    garderobe:   { titel: 'Garderobe',           tekst: 'Et sted at hænge jakker og tasker, så de ikke ligger på stolene.', ikon: 'knage',
+                   stoerrelser: { fast: '' } },
+
+    staabord:    { titel: 'Ståborde',            tekst: 'Til de korte samtaler. Folk der står, bliver i to minutter — folk der sætter sig, bliver i tyve.', ikon: 'bord',
+                   stoerrelser: { lille: '1 bord, 2 stole', mellem: '2 borde, 4 stole', stor: '3 borde, 6 stole' } },
+    moedeAabent: { titel: 'Åbent mødeområde',    tekst: 'Bord og stole midt på standen. Halvprivat — man kan sætte sig, uden at gæsten føler sig lukket inde.', ikon: 'bord',
+                   stoerrelser: { lille: 'Bord til 4', stor: 'U-bord til 6' } },
+    moede:       { titel: 'Lukket mødeområde',   tekst: 'Eget rum med vægge og dør. Til aftaler, der ikke skal høres af nabostanden.', ikon: 'vitrine',
+                   stoerrelser: { lille: 'Rum til 4', stor: 'Rum til 6 med skærm' } },
+    lounge:      { titel: 'Loungeområde',        tekst: 'Bløde møbler til de samtaler, der skal tage tid.', ikon: 'lounge',
+                   stoerrelser: { lille: '2 lænestole', mellem: 'Sofa og 2 lænestole', stor: '2 sofaer og 4 lænestole' } },
+
+    platform:    { titel: 'Produktplatform',     tekst: 'Et hævet podie, produkterne står på. Løfter store ting op i synsfeltet og markerer, at de er hovedsagen.', ikon: 'podie',
+                   stoerrelser: { lille: '4 m²', mellem: '9 m²', stor: '16 m²' } },
+    montre:      { titel: 'Glasmontre',          tekst: 'Aflåst montre med lys. Til det, der skal ses, men ikke røres.', ikon: 'vitrine',
+                   stoerrelser: { lille: '1 montre', stor: '2 montrer' } },
+    reol:        { titel: 'Produktreol',         tekst: 'Hylder til mange varer ad gangen. Til sortimenter frem for enkeltprodukter.', ikon: 'reol',
+                   stoerrelser: { lille: '2 reoler', stor: '4 reoler' } },
+    media:       { titel: 'Skærm og video',      tekst: 'Storskærm med afspiller, der kører jeres video eller demo i sløjfe.', ikon: 'skaerm',
+                   stoerrelser: { lille: '43 tommer', mellem: '55 tommer', stor: '75 tommer på stander' } },
+    scene:       { titel: 'Præsentationsområde', tekst: 'Skærm og stolerækker til korte oplæg på faste tidspunkter. Trækker folk til standen på klokkeslæt.', ikon: 'scene',
+                   stoerrelser: { fast: '' } },
+
+    bar:         { titel: 'Bar og servering',    tekst: 'Kaffe holder folk stående. Fire minutter mere er forskellen på en hilsen og et lead.', ikon: 'kaffe',
+                   stoerrelser: { lille: 'Kaffe ved disken', mellem: 'Bar med køleskab', stor: 'Fuld bar med vask' } },
+
+    depot:       { titel: 'Depot',               tekst: 'Aflåst rum til kasser, jakker og brochurer. Det, der ellers ender bag disken.', ikon: 'reol',
+                   stoerrelser: { lille: 'Lille depot', stor: 'Stort depot med køleskab' } }
   },
+
+  stoerrelsesnavne: { lille: 'Lille', mellem: 'Mellem', stor: 'Stor', fast: 'Standard' },
 
   /* ---------------- Ja/nej-tilkøb ---------------- */
   tilkoeb: {
@@ -249,12 +281,12 @@ window.WD_INDHOLD = {
       tekst: 'Den simpleste måde at forlænge en samtale fra 40 sekunder til fire minutter. Fire minutter er forskellen på en hilsen og et lead.' },
 
     { id: 'siddeplads', vaegt: 7,
-      naar: s => s.profil.formaal === 'relationer' && !s.omraader.lounge && !s.omraader.moede,
+      naar: s => s.profil.formaal === 'relationer' && !s.omraader.lounge && !s.omraader.moede && !s.omraader.moedeAabent,
       titel: 'Møder kræver et sted at sidde',
       tekst: 'I vil pleje kunderelationer. Den samtale foregår ikke ved et ståbord to meter fra jeres konkurrent. Et loungeområde eller et lukket mødeområde er ikke luksus — det er formålet med at være der.' },
 
     { id: 'lancering', vaegt: 7,
-      naar: s => s.profil.formaal === 'lancering' && !s.omraader.display && !s.omraader.media,
+      naar: s => s.profil.formaal === 'lancering' && !s.omraader.montre && !s.omraader.platform && !s.omraader.media,
       titel: 'Ét produkt, ét brændpunkt',
       tekst: 'Ved en lancering skal alt andet træde tilbage. Ét belyst produkt eller én stor skærm midt i standen slår ti produkter på hylder — hver gang.' },
 
@@ -319,6 +351,8 @@ window.WD_INDHOLD = {
     led:      '<svg viewBox="0 0 100 70"><rect class="stand" x="22" y="14" width="26" height="20"/><rect class="stand" x="52" y="14" width="26" height="20"/><rect class="stand" x="22" y="38" width="26" height="20"/><rect class="glo" x="52" y="38" width="26" height="20"/><rect class="stand" x="52" y="38" width="26" height="20"/></svg>',
     kaffe:    '<svg viewBox="0 0 100 70"><path class="stand" d="M32 24 L68 24 L64 50 L36 50 Z"/><path class="aaben" d="M68 28 Q80 30 76 40 Q72 44 66 42"/><line class="nabo" x1="28" y1="56" x2="72" y2="56"/></svg>',
     koel:     '<svg viewBox="0 0 100 70"><rect class="stand" x="30" y="10" width="40" height="50" rx="3"/><line class="nabo" x1="30" y1="28" x2="70" y2="28"/><line class="aaben" x1="62" y1="18" x2="62" y2="24"/><line class="aaben" x1="62" y1="34" x2="62" y2="40"/></svg>',
+    podie:    '<svg viewBox="0 0 100 70"><rect class="stand" x="20" y="38" width="60" height="16"/><rect class="nabo" x="36" y="18" width="28" height="20"/><line class="aaben" x1="14" y1="54" x2="86" y2="54"/></svg>',
+    scene:    '<svg viewBox="0 0 100 70"><rect class="stand" x="26" y="10" width="48" height="24" rx="2"/><circle class="nabo" cx="34" cy="48" r="5"/><circle class="nabo" cx="50" cy="48" r="5"/><circle class="nabo" cx="66" cy="48" r="5"/><line class="aaben" x1="22" y1="60" x2="78" y2="60"/></svg>',
     lys:      '<svg viewBox="0 0 100 70"><line class="aaben" x1="16" y1="16" x2="84" y2="16"/><circle class="stand" cx="32" cy="22" r="5"/><circle class="stand" cx="50" cy="22" r="5"/><circle class="stand" cx="68" cy="22" r="5"/><path class="nabo" d="M32 28 L22 56 L42 56 Z M50 28 L40 56 L60 56 Z M68 28 L58 56 L78 56 Z"/></svg>',
     plante:   '<svg viewBox="0 0 100 70"><path class="stand" d="M50 52 L50 26"/><path class="aaben" d="M50 32 Q34 24 36 40 Q46 42 50 32 Z M50 32 Q66 24 64 40 Q54 42 50 32 Z"/><rect class="nabo" x="42" y="52" width="16" height="10" rx="2"/></svg>',
     el:       '<svg viewBox="0 0 100 70"><rect class="stand" x="28" y="14" width="44" height="42" rx="3"/><path class="aaben" d="M52 22 L42 38 L50 38 L46 50"/></svg>'

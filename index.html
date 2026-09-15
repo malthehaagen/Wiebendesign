@@ -141,7 +141,7 @@
     <p class="step-intro">Vælg de områder, jeres stand skal have — og hvor mange af hver.</p>
     <p class="forbehold">Det er et udgangspunkt, ikke en plantegning. Når vi tegner standen, finder vi ud af, hvad der rent faktisk kan være, og hvordan områderne skal ligge i forhold til hinanden.</p>
     <div id="forslag" class="forslag"></div>
-    <div id="omraader" class="cards cards-4 cards-omraader"></div>
+    <div id="omraader"></div>
     <p class="field-hjaelp" id="areal-hjaelp"></p>
 
     <h3 class="grp-title">Skal der være noget af det her?</h3>
@@ -181,8 +181,8 @@
     <div id="opsummering" class="opsummering"></div>
 
     <form id="kontakt" class="kontakt" novalidate>
-      <h3>Skal vi regne på det for alvor?</h3>
-      <p>Send oplægget til os, så vender vi tilbage med et konkret tilbud og en tegning af standen.</p>
+      <h3>Få oplægget tilsendt</h3>
+      <p>Skriv jer på, så sender vi oplægget som PDF — med pris, indhold og tidslinje, I kan tage med videre internt. Helt uforpligtende.</p>
       <div class="form-grid">
         <label>Navn<input type="text" name="navn" required></label>
         <label>Virksomhed<input type="text" name="virksomhed" required></label>
@@ -190,9 +190,10 @@
         <label>Telefon<input type="tel" name="telefon"></label>
         <label class="full">Noget vi skal vide?<textarea name="besked" rows="3"></textarea></label>
       </div>
+      <label class="tjek"><input type="checkbox" name="opkald" id="opkald"> <span>I må gerne ringe og tale om, hvad der kan lade sig gøre<em>Ellers hører I kun fra os med oplægget</em></span></label>
       <div class="form-row">
-        <button type="submit" class="btn btn-primary btn-lg">Send oplægget</button>
-        <button type="button" class="btn" id="print">Gem som PDF</button>
+        <button type="submit" class="btn btn-primary btn-lg">Send oplægget til mig</button>
+        <button type="button" class="btn" id="print">Hent som PDF nu</button>
         <button type="button" class="btn" id="nulstil">Start forfra</button>
       </div>
       <p class="disclaimer">Prototype — formularen sender ikke data nogen steder hen endnu.</p>
@@ -217,6 +218,35 @@
   </div>
   <div class="prisbar-detalje wrap" id="prisbar-detalje" hidden></div>
 </div>
+
+<!-- ============ PDF-ARK — vises kun ved print ============ -->
+<section id="printark" aria-hidden="true">
+  <header class="pa-top">
+    <img src="assets/logo.png" alt="Wieben Design">
+    <div class="pa-top-tekst">
+      <h1>Oplæg til messestand</h1>
+      <p id="pa-undertitel"></p>
+    </div>
+  </header>
+  <section class="pa-blok">
+    <h2>Standen</h2>
+    <dl id="pa-konfiguration" class="pa-liste"></dl>
+  </section>
+  <section class="pa-blok">
+    <h2>Pris</h2>
+    <table id="pa-pris" class="pa-tabel"></table>
+    <p class="pa-note">Alle beløb er lejepriser for hele messen, ekskl. moms, og er et skøn. Den endelige pris afhænger af standens opbygning og fastlægges, når der ligger en godkendt tegning. Messearrangøren opkræver selv leje af pladsen, tilmeldingsgebyr og el-tilslutning.</p>
+  </section>
+  <section class="pa-blok pa-bryd">
+    <h2>Frem mod messen</h2>
+    <p class="pa-note" id="pa-tidslinje-intro"></p>
+    <table id="pa-tidslinje" class="pa-tabel"></table>
+  </section>
+  <footer class="pa-bund">
+    <p><strong>Wieben Design A/S</strong> · Porsborgparken 8B, 9530 Støvring · 70 23 11 11 · wd@wiebendesign.dk</p>
+    <p>30 års erfaring med messestande · 72 destinationer på 5 kontinenter</p>
+  </footer>
+</section>
 
 <footer class="bund">
   <div class="wrap">
