@@ -178,6 +178,12 @@ p{margin:0 0 1em}
   display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
   background:var(--primary-lys); border:1px solid #cfe2e5; border-radius:var(--radius); padding:16px 18px; margin-bottom:8px;
 }
+.forslag-knapper{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+.btn-tekst{background:transparent; border-color:transparent; color:var(--ink-3); padding-inline:8px}
+.btn-tekst:hover{background:transparent; border-color:transparent; color:var(--primary); text-decoration:underline}
+.startvalg{margin-bottom:8px}
+.startvalg .card{padding:20px}
+.startvalg .card-titel{font-size:1.15rem}
 .forslag-tekst{display:flex; flex-direction:column; gap:2px}
 .forslag-tekst strong{font-family:var(--font-h); color:var(--ink)}
 .forslag-tekst span{font-size:.87rem; color:var(--ink-2)}

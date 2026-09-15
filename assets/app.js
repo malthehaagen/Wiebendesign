@@ -19,6 +19,7 @@
       grafik: 'fuld', gulv: 'taeppe', haevet: false, belysning: 'forstaerket'
     },
     omraader: {},
+    omraadeValg: null,
     omraaderRoert: false,
     tilkoeb: { skilt: false, rigLys: false, beplantning: false, led: false },
     led: 'l',
@@ -201,8 +202,9 @@
     var op = [Math.max(m.minMandtimer, m2 * m.mandtimerPrM2[0]), Math.max(m.minMandtimer, m2 * m.mandtimerPrM2[1])];
     var ned = iv.gang(op, m.nedtagningsandel);
     var vaerksted = iv.tal(Math.max(4, m2 * m.vaerkstedPrM2));
-    var timer = iv.sum([op, ned, vaerksted]);
-    var linjer = [{ navn: 'Opbygning, nedtagning og pakning', pris: iv.gang(timer, m.timepris),
+    var indUd = [Math.max(2, m2 * m.indUdbaeringPrM2[0]), Math.max(3, m2 * m.indUdbaeringPrM2[1])];
+    var timer = iv.sum([op, ned, vaerksted, indUd]);
+    var linjer = [{ navn: 'Opbygning, ind- og udbæring, nedtagning og pakning', pris: iv.gang(timer, m.timepris),
                     note: 'anslået ' + Math.round(timer[0]) + '–' + Math.round(timer[1]) + ' mandtimer med ' + montoerer + ' montører' }];
 
     /* Vi kører selv, medmindre standen er for stor til bilen, eller turen er
@@ -228,6 +230,14 @@
       : (km <= m.altidEgenKoerselKm ? egen
       : (midt(speditoer) < midt(egen) ? speditoer : egen));
     linjer.push(valgt);
+
+    /* Tomgods: kører vi selv, tager kasserne turen hjem med bilen.
+       Sender vi med speditør, skal de opbevares, mens messen kører. */
+    if (valgt === speditoer) {
+      linjer.push({ navn: 'Tomgods under messen',
+        pris: [m.tomgodsPrLaes[0] * laes, m.tomgodsPrLaes[1] * laes],
+        note: 'opbevaring af de tomme kasser' });
+    }
 
     var naetter = km <= 200 ? 0 : (km <= 600 ? 1 : 2);
     var dage = km <= 200 ? 2 : 3;
@@ -275,7 +285,7 @@
       { navn: 'Stand, vægge og gulv', pris: iv.tal(standDele), note: standNote },
       { navn: 'Områder og udstyr', pris: iv.tal(omraadeSum), note: omraadeNote },
       { navn: 'Opbygning og transport', pris: montSum,
-        note: 'opbygning, nedtagning, kørsel og forsikring — vi står for det hele' }
+        note: 'opbygning, ind- og udbæring, tomgods, nedtagning, kørsel og forsikring — vi står for det hele' }
     ].filter(function (l) { return l.pris[1] > 0; });
 
     var wieben = iv.sum(wiebenLinjer.map(function (l) { return l.pris; }));
@@ -614,16 +624,60 @@
           : 'Områderne fylder ca. ' + dec(brugt) + ' m² af jeres ' + s.stand.m2 + ' m² — omkring ' + andel +
             ' %. Resten er plads at gå på.';
 
+  }
+
+  function visStartvalg() {
+    var v = document.getElementById('startvalg');
+    document.getElementById('omraadedel').hidden = !s.omraadeValg;
+    v.innerHTML = '';
+
+    if (!s.omraadeValg) {
+      var forslag = foreslaaOmraader();
+      var antal = Object.keys(forslag).length;
+      var pris = Object.keys(forslag).reduce(function (a, id) {
+        return a + omraadePris(id, forslag[id].variant) * forslag[id].antal;
+      }, 0);
+
+      var kort2 = el('<div class="cards cards-2"></div>');
+      kort2.appendChild(kort({
+        titel: 'Brug vores forslag', valgt: false,
+        tekst: 'Vi sætter ' + antal + ' områder op ud fra jeres formål og standens størrelse. Bagefter kan du rette i det hele — det er kun et udgangspunkt.',
+        meta: '<span class="card-pris">' + fmtKort(spaend(iv.tal(pris))) + ' kr.</span> for hele messen',
+        klik: function () { s.omraader = foreslaaOmraader(); s.omraadeValg = 'forslag'; opdater(); }
+      }));
+      kort2.appendChild(kort({
+        titel: 'Jeg bygger selv', valgt: false,
+        tekst: 'Start med en tom stand og vælg områderne én for én. Vi holder øje med, om der er plads til dem.',
+        meta: 'Tager et par minutter mere',
+        klik: function () { s.omraader = {}; s.omraadeValg = 'selv'; s.omraaderRoert = true; opdater(); }
+      }));
+      v.appendChild(kort2);
+      return;
+    }
+
     var linjer = omraadeLinjer().concat(tilkoebLinjer());
     var sum = linjer.reduce(function (a, l) { return a + l.pris; }, 0);
-    document.getElementById('forslag').innerHTML =
-      '<div class="forslag-tekst"><strong>' + (linjer.length ? 'Vi har sat et forslag op ud fra jeres formål' : 'Ingen områder valgt endnu') + '</strong>' +
+    var bar = el('<div class="forslag"></div>');
+    bar.appendChild(el('<div class="forslag-tekst"><strong>' +
+      (s.omraadeValg === 'forslag' ? 'I bygger videre på vores forslag' : 'I bygger selv standen op') + '</strong>' +
       '<span>' + (linjer.length
-        ? linjer.length + ' valg til ' + fmtKort(spaend(iv.tal(sum))) + ' kr. for hele messen. Ret frit i det.'
-        : 'Vælg selv herunder, eller lad os foreslå en sammensætning.') + '</span></div>';
-    var knap = el('<button type="button" class="btn">' + (linjer.length ? 'Nulstil til vores forslag' : 'Foreslå en sammensætning') + '</button>');
-    knap.onclick = function () { s.omraader = foreslaaOmraader(); opdater(); };
-    document.getElementById('forslag').appendChild(knap);
+        ? linjer.length + ' valg til ' + fmtKort(spaend(iv.tal(sum))) + ' kr. for hele messen. Rul ned og ret frit i det.'
+        : 'Ingen områder valgt endnu. Rul ned og vælg dem, standen skal have.') + '</span></div>'));
+    var knapper = el('<div class="forslag-knapper"></div>');
+    if (s.omraadeValg === 'forslag') {
+      var nulstil = el('<button type="button" class="btn">Hent forslaget igen</button>');
+      nulstil.onclick = function () { s.omraader = foreslaaOmraader(); opdater(); };
+      knapper.appendChild(nulstil);
+    } else {
+      var brug = el('<button type="button" class="btn">Brug vores forslag alligevel</button>');
+      brug.onclick = function () { s.omraader = foreslaaOmraader(); s.omraadeValg = 'forslag'; opdater(); };
+      knapper.appendChild(brug);
+    }
+    var skift = el('<button type="button" class="btn btn-tekst">Start forfra</button>');
+    skift.onclick = function () { s.omraader = {}; s.omraadeValg = null; opdater(); };
+    knapper.appendChild(skift);
+    bar.appendChild(knapper);
+    v.appendChild(bar);
   }
 
   function visTilkoeb() {
@@ -845,6 +899,7 @@
     visAabneSider();
     visVaegtyper();
     visValg();
+    visStartvalg();
     visOmraader();
     visTilkoeb();
     visIndsigter('indsigter-2', 2);
@@ -859,7 +914,6 @@
 
   function gaaTil(n) {
     s.trin = Math.max(0, Math.min(TRIN.length - 1, n));
-    if (s.trin === 3 && !s.omraaderRoert && !Object.keys(s.omraader).length) s.omraader = foreslaaOmraader();
     Array.prototype.forEach.call(document.querySelectorAll('.step'), function (sec) {
       sec.hidden = Number(sec.dataset.step) !== s.trin;
     });
@@ -871,7 +925,7 @@
     try {
       localStorage.setItem(GEM, JSON.stringify({
         profil: s.profil, messe: s.messe, stand: s.stand,
-        omraader: s.omraader, omraaderRoert: s.omraaderRoert,
+        omraader: s.omraader, omraadeValg: s.omraadeValg, omraaderRoert: s.omraaderRoert,
         tilkoeb: s.tilkoeb, led: s.led, team: s.team
       }));
     } catch (e) { /* privat browsing */ }
@@ -882,7 +936,7 @@
       var raa = localStorage.getItem(GEM);
       if (!raa) return;
       var g = JSON.parse(raa);
-      ['profil', 'messe', 'stand', 'omraader', 'tilkoeb', 'led', 'team'].forEach(function (k) { if (g[k]) s[k] = g[k]; });
+      ['profil', 'messe', 'stand', 'omraader', 'omraadeValg', 'tilkoeb', 'led', 'team'].forEach(function (k) { if (g[k]) s[k] = g[k]; });
       if (g.omraaderRoert) s.omraaderRoert = true;
       /* Gemt tilstand kan stamme fra en tidligere version, hvor et område
          bare var et tal. Bring den på nuværende form frem for at knække. */

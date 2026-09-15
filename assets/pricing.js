@@ -271,6 +271,16 @@ window.WD_PRIS = {
     minMandtimer:    8,
     nedtagningsandel: 0.4,         /* nedtagning som andel af opbygning         */
     vaerkstedPrM2:   0.15,         /* pakning på værkstedet                     */
+
+    /* Ind- og udbæring i hallen: kasser fra bilen til standen og retur.
+       Lå før gemt i opbygningstimerne — nu en post for sig. AFLEDT. */
+    indUdbaeringPrM2: [0.06, 0.10],
+
+    /* Tomgods: de tomme kasser skal væk fra hallen under messen.
+       Kører vi selv, tager vi dem med hjem i bilen, og det koster ikke
+       ekstra. Sender vi med speditør, bliver de stående og opbevaret,
+       og det er en regning. Pris pr. lastbillæs — AFLEDT, bør bekræftes. */
+    tomgodsPrLaes:   [900, 1800],
     m2PrMontoer:     25,
     minMontoerer:    2,
 
