@@ -356,13 +356,42 @@
   /* =====================================================================
      VISNING
      ===================================================================== */
+  /* Er trinnet i sig selv udfyldt? Kun to trin kræver noget af kunden. */
+  function trinUdfyldt(n) {
+    if (n === 1) return C.profilSpoergsmaal.every(function (sp) { return s.profil[sp.id]; });
+    if (n === 3) return !!s.omraadeValg;
+    return true;
+  }
+
+  /* Et trin er åbent, når alt før det er udfyldt — også forlæns. */
+  function kanGaaTil(n) {
+    for (var i = 0; i < n; i++) if (!trinUdfyldt(i)) return false;
+    return true;
+  }
+
+  /* Hvad mangler der, før trinnet kan åbnes? */
+  function hvorforLaast(n) {
+    for (var i = 0; i < n; i++) {
+      if (trinUdfyldt(i)) continue;
+      return i === 1 ? 'Svar på de tre spørgsmål om jeres messeprofil først'
+                     : 'Vælg først, om I vil bruge vores forslag eller bygge standen selv';
+    }
+    return '';
+  }
+
   function visTrin() {
     var ol = document.createElement('ol');
     TRIN.forEach(function (navn, i) {
       var li = document.createElement('li');
-      li.textContent = (i > 0 ? i + '. ' : '') + navn;
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = (i > 0 ? i + '. ' : '') + navn;
+      var aaben = kanGaaTil(i);
       if (i === s.trin) li.className = 'aktiv';
-      else if (i < s.trin) { li.className = 'gjort klikbar'; li.onclick = function () { gaaTil(i); }; }
+      else if (!aaben) { li.className = 'laast'; b.disabled = true; b.title = hvorforLaast(i); }
+      else { li.className = (i < s.trin ? 'gjort ' : '') + 'klikbar'; }
+      if (aaben && i !== s.trin) b.onclick = function () { gaaTil(i); };
+      li.appendChild(b);
       ol.appendChild(li);
     });
     var v = document.getElementById('steps');
@@ -398,8 +427,7 @@
       v.appendChild(blok);
     });
     /* Kun spørgsmålene skal besvares */
-    document.getElementById('videre-profil').disabled =
-      !C.profilSpoergsmaal.every(function (sp) { return s.profil[sp.id]; });
+    document.getElementById('videre-profil').disabled = !trinUdfyldt(1);
   }
 
   function visAnbefaling() {
@@ -900,6 +928,7 @@
     visVaegtyper();
     visValg();
     visStartvalg();
+    document.getElementById('videre-omraader').disabled = !trinUdfyldt(3);
     visOmraader();
     visTilkoeb();
     visIndsigter('indsigter-2', 2);
@@ -913,7 +942,10 @@
   }
 
   function gaaTil(n) {
-    s.trin = Math.max(0, Math.min(TRIN.length - 1, n));
+    n = Math.max(0, Math.min(TRIN.length - 1, n));
+    /* Spring aldrig længere frem, end der er udfyldt til */
+    while (n > 0 && !kanGaaTil(n)) n--;
+    s.trin = n;
     Array.prototype.forEach.call(document.querySelectorAll('.step'), function (sec) {
       sec.hidden = Number(sec.dataset.step) !== s.trin;
     });
