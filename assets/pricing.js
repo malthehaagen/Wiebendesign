@@ -151,15 +151,11 @@ window.WD_PRIS = {
      ------------------------------------------------------------------- */
   omraader: {
     /* --- Tag imod --- */
-    reception: { gruppe: 'modtag', varianter: [
+    reception: { gruppe: 'samtale', varianter: [
       { id: 'lille',  m2: 2, dele: { expo_hylde: 1 } },
       { id: 'mellem', m2: 3, dele: { izi_disk: 1, brochure: 1 } },
       { id: 'stor',   m2: 5, dele: { izi_disk: 1, expo_skab: 1, brochure: 2 } }
     ]},
-    garderobe: { gruppe: 'modtag', varianter: [
-      { id: 'fast',   m2: 2, dele: { stumtjener: 2, affald: 1 } }
-    ]},
-
     /* --- Tal sammen --- */
     staabord: { gruppe: 'samtale', varianter: [
       { id: 'lille',  m2: 3, dele: { staabord: 1, barstol: 2 } },
@@ -204,7 +200,7 @@ window.WD_PRIS = {
     ]},
 
     /* --- Servering --- */
-    bar: { gruppe: 'servering', varianter: [
+    bar: { gruppe: 'samtale', varianter: [
       { id: 'lille',  m2: 3, dele: { expo_bar: 1, nespresso_l: 1, papkrus: 1 } },
       { id: 'mellem', m2: 5, dele: { expo_bar: 1, barstol: 2, nespresso_l: 1, koeleskab_l: 1, papkrus: 1 } },
       { id: 'stor',   m2: 8, dele: { expo_bar: 1, expo_skab: 1, barstol: 4, nespresso_s: 1, koeleskab_h: 1, vask: 1, papkrus: 2 } }
@@ -213,7 +209,8 @@ window.WD_PRIS = {
     /* --- Bagved --- */
     depot: { gruppe: 'bagved', varianter: [
       { id: 'lille',  m2: 3, vaegLbm: 4, doere: 1, dele: { abc_reol: 1, depot_bord: 1, affald: 1 } },
-      { id: 'stor',   m2: 6, vaegLbm: 7, doere: 1, dele: { abc_reol: 2, depot_bord: 1, stumtjener: 1, affald: 1, koeleskab_l: 1 } }
+      { id: 'mellem', m2: 4, vaegLbm: 5, doere: 1, dele: { abc_reol: 1, depot_bord: 1, affald: 1, stumtjener: 2 } },
+      { id: 'stor',   m2: 6, vaegLbm: 7, doere: 1, dele: { abc_reol: 2, depot_bord: 1, affald: 1, stumtjener: 2, koeleskab_l: 1 } }
     ]}
   },
 

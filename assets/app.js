@@ -8,7 +8,7 @@
   var P = window.WD_PRIS;
   var C = window.WD_INDHOLD;
   var TRIN = ['Start', 'Profil', 'Standen', 'Områder', 'Messeklar', 'Oplæg'];
-  var GEM = 'wd-standberegner-v4';
+  var GEM = 'wd-standberegner-v5';
 
   var s = {
     trin: 0,
@@ -294,10 +294,10 @@
      Områderne lægges på i den rækkefølge, formålet tilsiger, indtil de
      fylder ca. 70 % af standen. Resten skal være plads at gå på.      */
   var PRIORITET = {
-    leads:      ['reception', 'staabord', 'depot', 'bar', 'media', 'moedeAabent', 'garderobe', 'staabord'],
+    leads:      ['reception', 'staabord', 'depot', 'bar', 'media', 'moedeAabent', 'staabord'],
     brand:      ['reception', 'media', 'depot', 'platform', 'staabord', 'bar', 'lounge', 'scene'],
     lancering:  ['reception', 'platform', 'depot', 'media', 'montre', 'staabord', 'bar', 'moedeAabent'],
-    relationer: ['reception', 'moede', 'depot', 'lounge', 'bar', 'garderobe', 'staabord', 'moedeAabent']
+    relationer: ['reception', 'moede', 'depot', 'lounge', 'bar', 'staabord', 'moedeAabent']
   };
 
   function foreslaaOmraader() {
@@ -557,7 +557,8 @@
 
       ider.forEach(function (id) {
         var t = C.omraader[id];
-        var valgt = s.omraader[id] || { antal: 0, variant: standardVariant(id) };
+        var gemt = s.omraader[id] || {};
+        var valgt = { antal: Number(gemt.antal) || 0, variant: gemt.variant || standardVariant(id) };
         var vr = variant(id, valgt.variant);
         var k = el('<div class="omraade' + (valgt.antal ? ' valgt' : '') + '"></div>');
         k.appendChild(el('<span class="ill">' + C.svg[t.ikon] + '</span>'));
@@ -600,10 +601,18 @@
 
     var brugt = omraadeAreal();
     var andel = s.stand.m2 ? Math.round(brugt / s.stand.m2 * 100) : 0;
-    document.getElementById('areal-hjaelp').textContent = brugt
-      ? 'Områderne fylder ca. ' + dec(brugt) + ' m² af jeres ' + s.stand.m2 + ' m² — omkring ' + andel +
-        ' %. Resten er plads at gå på.'
-      : 'Vælg de områder, standen skal have. Vi holder øje med, om der er plads til dem.';
+    var ah = document.getElementById('areal-hjaelp');
+    ah.classList.toggle('advarsel', andel > 75);
+    ah.textContent = !brugt
+      ? 'Vælg de områder, standen skal have. Vi holder øje med, om der er plads til dem.'
+      : andel > 100
+        ? 'Områderne fylder ca. ' + dec(brugt) + ' m² — mere end de ' + s.stand.m2 +
+          ' m², I har. Noget må ud, vælges mindre, eller også skal standen være større.'
+        : andel > 75
+          ? 'Områderne fylder ca. ' + dec(brugt) + ' m² af jeres ' + s.stand.m2 + ' m² — omkring ' + andel +
+            ' %. Det bliver trangt: gæsterne skal også kunne bevæge sig rundt.'
+          : 'Områderne fylder ca. ' + dec(brugt) + ' m² af jeres ' + s.stand.m2 + ' m² — omkring ' + andel +
+            ' %. Resten er plads at gå på.';
 
     var linjer = omraadeLinjer().concat(tilkoebLinjer());
     var sum = linjer.reduce(function (a, l) { return a + l.pris; }, 0);
@@ -875,6 +884,18 @@
       var g = JSON.parse(raa);
       ['profil', 'messe', 'stand', 'omraader', 'tilkoeb', 'led', 'team'].forEach(function (k) { if (g[k]) s[k] = g[k]; });
       if (g.omraaderRoert) s.omraaderRoert = true;
+      /* Gemt tilstand kan stamme fra en tidligere version, hvor et område
+         bare var et tal. Bring den på nuværende form frem for at knække. */
+      var rene = {};
+      Object.keys(s.omraader || {}).forEach(function (id) {
+        if (!P.omraader[id]) return;
+        var v = s.omraader[id];
+        var antal = typeof v === 'number' ? v : Number(v && v.antal);
+        if (!(antal > 0)) return;
+        var vid = (v && v.variant && variant(id, v.variant).id) || standardVariant(id);
+        rene[id] = { antal: Math.round(antal), variant: vid };
+      });
+      s.omraader = rene;
     } catch (e) { /* ignorer ugyldigt gemt data */ }
   }
 

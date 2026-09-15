@@ -142,19 +142,17 @@ window.WD_INDHOLD = {
   /* ---------------- Områder ----------------
      Grupperne følger gæstens vej ind på standen.                    */
   omraadeGrupper: [
-    { id: 'modtag',    titel: 'Tag imod',    hjaelp: 'Det første gæsten møder. Uden et tydeligt sted at henvende sig bliver standen et rum, folk kigger ind i frem for går ind i.' },
-    { id: 'samtale',   titel: 'Tal sammen',  hjaelp: 'Her afgøres det, om et hej bliver til et lead. Jo længere folk bliver, jo mere når I at sige.' },
-    { id: 'vis',       titel: 'Vis frem',    hjaelp: 'Hvordan produkterne kommer til deres ret — løftet op, lyst op eller sat i bevægelse.' },
-    { id: 'servering', titel: 'Servering',   hjaelp: 'Den mest undervurderede grund til at folk bliver stående på en stand.' },
-    { id: 'bagved',    titel: 'Bag kulisserne', hjaelp: 'Det gæsten ikke skal se, men som afgør, om standen ser ryddelig ud hele ugen.' }
+    { id: 'samtale', titel: 'Hvor skal I tale med folk?',
+      hjaelp: 'Det er her, et hej bliver til et lead. Jo længere gæsten bliver, jo mere når I at sige — og det afhænger af, om der er noget at stå ved, sætte sig i eller drikke.' },
+    { id: 'vis', titel: 'Hvordan skal produkterne vises?',
+      hjaelp: 'Vælg efter hvad I skal vise. Store ting skal løftes op, små ting skal bag glas, mange ting skal på hylder, og det der ikke kan stå på standen, skal på en skærm.' },
+    { id: 'bagved', titel: 'Hvad skal gæsten ikke se?',
+      hjaelp: 'Det oftest oversete valg. Uden et aflåst rum ender kasser, jakker og brochurer bag disken — og det er det første, gæsten lægger mærke til.' }
   ],
 
   omraader: {
-    reception:   { titel: 'Velkomstdisk',        tekst: 'Et tydeligt sted at tage imod og lægge materialer frem.', ikon: 'disk',
+    reception:   { titel: 'Velkomstdisk',        tekst: 'Et tydeligt sted at henvende sig. Uden den bliver standen et rum, folk kigger ind i frem for går ind i.', ikon: 'disk',
                    stoerrelser: { lille: 'Lille disk', mellem: 'Disk med brochurer', stor: 'Disk med aflåst skab' } },
-    garderobe:   { titel: 'Garderobe',           tekst: 'Et sted at hænge jakker og tasker, så de ikke ligger på stolene.', ikon: 'knage',
-                   stoerrelser: { fast: '' } },
-
     staabord:    { titel: 'Ståborde',            tekst: 'Til de korte samtaler. Folk der står, bliver i to minutter — folk der sætter sig, bliver i tyve.', ikon: 'bord',
                    stoerrelser: { lille: '1 bord, 2 stole', mellem: '2 borde, 4 stole', stor: '3 borde, 6 stole' } },
     moedeAabent: { titel: 'Åbent mødeområde',    tekst: 'Bord og stole midt på standen. Halvprivat — man kan sætte sig, uden at gæsten føler sig lukket inde.', ikon: 'bord',
@@ -164,22 +162,22 @@ window.WD_INDHOLD = {
     lounge:      { titel: 'Loungeområde',        tekst: 'Bløde møbler til de samtaler, der skal tage tid.', ikon: 'lounge',
                    stoerrelser: { lille: '2 lænestole', mellem: 'Sofa og 2 lænestole', stor: '2 sofaer og 4 lænestole' } },
 
-    platform:    { titel: 'Produktplatform',     tekst: 'Et hævet podie, produkterne står på. Løfter store ting op i synsfeltet og markerer, at de er hovedsagen.', ikon: 'podie',
+    platform:    { titel: 'Produktplatform',     tekst: 'Til det store og tunge — maskiner, køretøjer, møbler. Et hævet podie løfter dem op i synsfeltet og markerer, at de er hovedsagen.', ikon: 'podie',
                    stoerrelser: { lille: '4 m²', mellem: '9 m²', stor: '16 m²' } },
-    montre:      { titel: 'Glasmontre',          tekst: 'Aflåst montre med lys. Til det, der skal ses, men ikke røres.', ikon: 'vitrine',
+    montre:      { titel: 'Glasmontre',          tekst: 'Til det lille og dyre. Aflåst montre med lys, hvor tingene kan ses tæt på uden at blive taget.', ikon: 'vitrine',
                    stoerrelser: { lille: '1 montre', stor: '2 montrer' } },
-    reol:        { titel: 'Produktreol',         tekst: 'Hylder til mange varer ad gangen. Til sortimenter frem for enkeltprodukter.', ikon: 'reol',
+    reol:        { titel: 'Produktreol',         tekst: 'Til mange varer ad gangen. Når det er bredden i sortimentet, der er pointen, frem for ét produkt.', ikon: 'reol',
                    stoerrelser: { lille: '2 reoler', stor: '4 reoler' } },
-    media:       { titel: 'Skærm og video',      tekst: 'Storskærm med afspiller, der kører jeres video eller demo i sløjfe.', ikon: 'skaerm',
+    media:       { titel: 'Skærm og video',      tekst: 'Til det, der ikke kan stå på standen — anlæg, processer, referencer. Kører i sløjfe uden at nogen skal betjene det.', ikon: 'skaerm',
                    stoerrelser: { lille: '43 tommer', mellem: '55 tommer', stor: '75 tommer på stander' } },
-    scene:       { titel: 'Præsentationsområde', tekst: 'Skærm og stolerækker til korte oplæg på faste tidspunkter. Trækker folk til standen på klokkeslæt.', ikon: 'scene',
+    scene:       { titel: 'Præsentationsområde', tekst: 'Til oplæg på faste tidspunkter. Samler folk på klokkeslæt i stedet for at vente på, at de driver forbi.', ikon: 'scene',
                    stoerrelser: { fast: '' } },
 
     bar:         { titel: 'Bar og servering',    tekst: 'Kaffe holder folk stående. Fire minutter mere er forskellen på en hilsen og et lead.', ikon: 'kaffe',
                    stoerrelser: { lille: 'Kaffe ved disken', mellem: 'Bar med køleskab', stor: 'Fuld bar med vask' } },
 
-    depot:       { titel: 'Depot',               tekst: 'Aflåst rum til kasser, jakker og brochurer. Det, der ellers ender bag disken.', ikon: 'reol',
-                   stoerrelser: { lille: 'Lille depot', stor: 'Stort depot med køleskab' } }
+    depot:       { titel: 'Depot',               tekst: 'Aflåst rum til kasser, jakker og brochurer. Regn med 15–20 % af standens areal.', ikon: 'reol',
+                   stoerrelser: { lille: 'Kun opbevaring', mellem: 'Med garderobe', stor: 'Med garderobe og køleskab' } }
   },
 
   stoerrelsesnavne: { lille: 'Lille', mellem: 'Mellem', stor: 'Stor', fast: 'Standard' },
