@@ -50,8 +50,25 @@ assets/pricing.js     ALLE PRISER — den eneste fil, der skal rettes for at æn
 assets/content.js     Tekster, messer, faglige indsigter, tidslinje, illustrationer
 assets/app.js         Beregning, rådgivningslogik og visning
 assets/styles.css     Design. Farver og fonts ligger som variabler øverst
+assets/config.js      Endpoint og til/fra-knapper. Ingen hemmeligheder her
 assets/logo.png       Wieben Designs logo
+
+integration/apps-script.gs   Serverleddet: regneark, kundemail og besked til jer
+integration/OPSAETNING.md    Trin for trin til at sætte det i drift
+docs/prisgrundlag.md         Salgs- og lejepriser udtrukket af tilbudsarket
 ```
+
+## Leads
+
+Oplæggene sendes til ét Google Apps Script, der skriver leadet i et regneark,
+sender oplægget til kunden og giver jer besked. Mailen kan sendes gennem Resend
+fra `wiebendesign.dk` eller gennem jeres Google-konto.
+
+API-nøglen ligger i scriptets egenskaber, aldrig i browseren. Fremgangsmåden står
+i [`integration/OPSAETNING.md`](integration/OPSAETNING.md).
+
+Uden et endpoint kører modulet videre som prototype: flowet virker, men intet
+bliver sendt.
 
 ## Priserne
 
@@ -129,19 +146,28 @@ Fonts hentes fra Google Fonts i `index.html`. Skal de selvhostes, er det den ene
 
 ## Hvad der mangler før produktion
 
+**Tallene skal bekræftes.** Ni satser i `pricing.js` er afledte og markeret
+AFLEDT — montagenormerne, ind- og udbæring, tomgods, printprisen,
+backlit-prisen, truss-riggen, produktplatformen, 60 m²-grænsen for speditør og
+fragtprisen. Den hurtigste kontrol er at køre tre afsluttede tilbud gennem
+beregneren og se, om den rammer inden for spændet.
+
+**Resten:**
+
 - **Rigtige fotos** på valgkortene. De indbyggede SVG-illustrationer i
   `WD_INDHOLD.svg` er placeholdere. Læg billeder i `assets/img/` og skift den
   linje i `app.js`, hvor `<span class="ill">` bygges:
   ```js
   b.appendChild(el('<span class="ill"><img src="assets/img/' + id + '.jpg" alt=""></span>'));
   ```
-- **Bekræftelse af de afledte satser** ovenfor, især montagenormerne
-- **Formularen sender ikke noget** endnu — den logger konfigurationen til
-  konsollen og skal kobles til mail, CRM eller en formularbackend
-- **Messeliste med rigtige datoer** og de messer, Wieben Design faktisk vil optræde på
-- **Kobling til udlejningswebshoppen** på wieben.dk, hvor kunden allerede starter
-  med at vælge sin messe
-- **Persondata**: kontaktformularen skal have samtykketekst og databehandling på plads
+- **Endpointet skal sættes op** — se `integration/OPSAETNING.md`
+- **Persondata**: samtykketekst og link til privatlivspolitik på formularen
+- **Hosting**: hvordan modulet lægges på wiebendesign.dk
+- **Teksterne** bør gennemlæses af Wieben Design. De er skrevet uden adgang til
+  firmaets eget site — se Baggrund
+- **Engelsk version**, når den danske ligger fast. Alle tekster ligger samlet i
+  `content.js`
+- **Opfølgningen internt**: hvem kontakter leadet, hvor hurtigt og med hvad
 
 ## Baggrund
 

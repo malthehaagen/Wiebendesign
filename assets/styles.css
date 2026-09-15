@@ -331,6 +331,17 @@ p{margin:0 0 1em}
 }
 .form-row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
 .disclaimer{font-size:.78rem; color:var(--ink-3); margin:14px 0 0}
+.sendefejl{
+  background:#fdf0e3; border:1px solid #f0d9bc; border-left:3px solid #9a5b16;
+  border-radius:var(--radius); padding:12px 16px; margin:14px 0 0; font-size:.88rem; color:#7a4712;
+}
+.sendefejl em{display:block; font-style:normal; font-size:.76rem; color:#9a7a55; margin-top:4px}
+/* Prisen skjult, indtil kunden har afleveret sin mail */
+.ops-pris.skjult-pris strong{filter:blur(9px); user-select:none}
+.ops-pris.skjult-pris::after{
+  content:"Skriv jer på herunder, så sender vi prisen"; display:block;
+  font-size:.85rem; color:var(--primary-dyb); font-weight:600; margin-top:6px;
+}
 .kvittering{background:var(--primary-lys); border:1px solid #cfe2e5; border-radius:var(--radius); padding:20px; color:var(--accent); display:flex; flex-direction:column; gap:6px}
 .kvittering strong{font-family:var(--font-h); font-size:1.05rem}
 .kvittering span{font-weight:400; color:var(--ink-2); font-size:.92rem}

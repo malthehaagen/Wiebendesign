@@ -6,6 +6,7 @@
   'use strict';
 
   var P = window.WD_PRIS;
+  var K = window.WD_CONFIG || {};
   var C = window.WD_INDHOLD;
   var TRIN = ['Start', 'Profil', 'Standen', 'Områder', 'Messeklar', 'Oplæg'];
   var GEM = 'wd-standberegner-v5';
@@ -24,6 +25,7 @@
     tilkoeb: { skilt: false, rigLys: false, beplantning: false, led: false },
     led: 'l',
     omraadeAreal: 0,
+    sendt: false,
     team: { dage: 3 }
   };
 
@@ -894,7 +896,7 @@
 
   function visPrisbar() {
     var bar = document.getElementById('prisbar');
-    bar.hidden = s.trin < 2;
+    bar.hidden = s.trin < 2 || (K.kraevEmailForPris && !s.sendt);
     if (bar.hidden) return;
     var r = beregn();
     document.getElementById('prisbar-belob').textContent = fmt(r.vist).replace(' kr.', '');
@@ -938,6 +940,12 @@
     visOpsummering();
     visPrintark();
     visPrisbar();
+
+    /* Oplægget som PDF kan gøres betinget af, at kunden har afleveret sin mail */
+    var pdfknap = document.getElementById('print');
+    if (pdfknap) pdfknap.hidden = !!(K.kraevEmailForOplaeg && !s.sendt);
+    var opsPris = document.querySelector('.ops-pris');
+    if (opsPris) opsPris.classList.toggle('skjult-pris', !!(K.kraevEmailForPris && !s.sendt));
     gem();
   }
 
@@ -1055,21 +1063,103 @@
 
     document.getElementById('kontakt').addEventListener('submit', function (e) {
       e.preventDefault();
-      var f = e.target;
-      if (!f.checkValidity()) { f.reportValidity(); return; }
-      var r = beregn();
-      console.log('Oplæg klar til afsendelse:', {
-        kontakt: Object.fromEntries(new FormData(f).entries()),
-        konfiguration: { profil: s.profil, messe: s.messe, stand: s.stand, omraader: s.omraader, tilkoeb: s.tilkoeb, team: s.team },
-        estimat: { wieben: r.vist }
-      });
-      var opkald = f.querySelector('#opkald').checked;
-      f.replaceWith(el('<div class="kvittering"><strong>Tak — oplægget er på vej til jer.</strong>' +
-        '<span>' + (opkald
-          ? 'Vi ringer inden for en arbejdsdag og taler om, hvad der kan lade sig gøre på jeres plads.'
-          : 'I hører ikke mere fra os, medmindre I selv tager fat. Får I brug for at vende det, er vi på 70 23 11 11.') +
-        '</span><span class="kvit-note">Prototype — oplægget bliver ikke sendt endnu. Tryk “Hent som PDF nu” for at se det.</span></div>'));
+      send(e.target);
     });
+  }
+
+  /* =====================================================================
+     AFSENDELSE
+     ===================================================================== */
+  function oplaeg(f) {
+    var r = beregn(), g = geometri();
+    var felter = Object.fromEntries(new FormData(f).entries());
+    return {
+      modtaget: new Date().toISOString(),
+      kontakt: {
+        navn: felter.navn, virksomhed: felter.virksomhed,
+        email: felter.email, telefon: felter.telefon || '',
+        besked: felter.besked || '', oenskerOpkald: !!felter.opkald
+      },
+      messe: { by: s.messe.by, land: land().navn, dato: s.messe.dato, km: s.messe.km, dage: s.team.dage },
+      profil: s.profil,
+      stand: {
+        m2: s.stand.m2, aabneSider: s.stand.aabneSider,
+        vaegge: C.vaegtyper[s.stand.vaegtype].titel,
+        vaegmeter: Math.round(g.vaegLbm * 10) / 10,
+        vaeghoejde: s.stand.vaeghoejde,
+        tryk: C.grafikdaekning[s.stand.grafik].titel,
+        gulv: C.gulv[s.stand.gulv].titel + (s.stand.haevet ? ', hævet' : ''),
+        belysning: C.belysning[s.stand.belysning].titel
+      },
+      omraader: r.omraader.concat(r.tilkoeb).map(function (l) {
+        return { navn: l.navn, antal: l.antal || 1, pris: Math.round(l.pris) };
+      }),
+      poster: r.wiebenLinjer.map(function (l) {
+        var v = spaend(l.pris);
+        return { navn: l.navn, note: l.note, fra: afrund(v[0]), til: afrund(v[1]) };
+      }),
+      estimat: { fra: afrund(r.vist[0]), til: afrund(r.vist[1]), valuta: 'DKK', moms: 'ekskl.' },
+      leads: { fra: r.leads[0], til: r.leads[1] }
+    };
+  }
+
+  function send(f) {
+    if (!f.checkValidity()) { f.reportValidity(); return; }
+    var knap = f.querySelector('button[type=submit]');
+    var data = oplaeg(f);
+
+    /* Uden endpoint kører modulet videre som prototype */
+    if (!K.endpoint) {
+      console.log('Oplæg klar til afsendelse:', data);
+      kvittering(f, data, 'prototype');
+      return;
+    }
+
+    knap.disabled = true;
+    var oprindelig = knap.textContent;
+    knap.textContent = 'Sender …';
+    var fejlbesked = f.querySelector('.sendefejl');
+    if (fejlbesked) fejlbesked.remove();
+
+    /* text/plain holder browseren fra at sende en preflight-forespørgsel,
+       som Apps Script ikke svarer på */
+    fetch(K.endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(data)
+    }).then(function (svar) {
+      if (!svar.ok) throw new Error('Serveren svarede ' + svar.status);
+      return svar.json();
+    }).then(function (svar) {
+      if (svar && svar.ok === false) throw new Error(svar.fejl || 'Ukendt fejl');
+      kvittering(f, data, 'sendt');
+    }).catch(function (fejl) {
+      knap.disabled = false;
+      knap.textContent = oprindelig;
+      f.querySelector('.form-row').insertAdjacentElement('afterend', el(
+        '<p class="sendefejl">Oplægget kunne ikke sendes lige nu. Prøv igen om et øjeblik, ' +
+        'eller ring til os på 70 23 11 11 — vi har tallene klar.<em>' + esc(fejl.message) + '</em></p>'));
+    });
+  }
+
+  function kvittering(f, data, tilstand) {
+    var opkald = data.kontakt.oenskerOpkald;
+    var boks = el('<div class="kvittering"></div>');
+    boks.appendChild(el('<strong>Tak — oplægget er på vej til ' + esc(data.kontakt.email) + '</strong>'));
+    boks.appendChild(el('<span>' + (opkald
+      ? 'Vi ringer inden for en arbejdsdag og taler om, hvad der kan lade sig gøre på jeres plads.'
+      : 'I hører ikke mere fra os, medmindre I selv tager fat. Får I brug for at vende det, er vi på 70 23 11 11.') + '</span>'));
+    if (tilstand === 'prototype') {
+      boks.appendChild(el('<span class="kvit-note">Prototype — der er ikke sat et endpoint op endnu, så mailen bliver ikke sendt. Oplægget ligger i browserens konsol.</span>'));
+    }
+    var knapper = el('<div class="form-row" style="margin-top:14px"></div>');
+    var pdf = el('<button type="button" class="btn">Hent oplægget som PDF</button>');
+    pdf.onclick = function () { window.print(); };
+    knapper.appendChild(pdf);
+    boks.appendChild(knapper);
+    f.replaceWith(boks);
+    s.sendt = true;
+    opdater();
   }
 
   hent();
