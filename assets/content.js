@@ -116,7 +116,7 @@ window.WD_INDHOLD = {
   /* ---------------- Vægge, gulv, lys ---------------- */
   vaegtyper: {
     print:  { titel: 'Almindelige vægge',  tekst: 'Hvide vægge, hvor jeres billeder og budskaber printes direkte på. Det, de fleste stande er bygget af.', teknik: 'beMatrix rammesystem' },
-    pixlip: { titel: 'Lysvægge',           tekst: 'Væggene lyser indefra, så billederne står som på en skærm. Dyrere, men ingen anden væg trækker blikket på samme måde.', teknik: 'Pixlip backlit' }
+    pixlip: { titel: 'Lysvægge',           tekst: 'Væggene lyser indefra, så billederne står som på en skærm. Koster lidt mere pr. meter, og ingen anden væg trækker blikket på samme måde.', teknik: 'Pixlip backlit' }
   },
   grafikdaekning: {
     ingen:  { titel: 'Ingenting',              tekst: 'Rene hvide vægge uden tryk.' },
@@ -124,11 +124,15 @@ window.WD_INDHOLD = {
     fuld:   { titel: 'Det hele',               tekst: 'Tryk på alle vægflader.' }
   },
   gulv: {
-    ingen:  { titel: 'Hallens gulv',  tekst: 'Ingen belægning.' },
-    taeppe: { titel: 'Tæppe',         tekst: 'Antracitgråt tæppe med blødt underlag. Det mest almindelige valg.' },
-    vinyl:  { titel: 'Vinyl',         tekst: 'Hvidt, glat gulv. Skarpt og lyst.' },
+    taeppe: { titel: 'Tæppe',         tekst: 'Med blødt underlag. Det mest almindelige valg — farven aftaler vi med jer.' },
+    vinyl:  { titel: 'Vinyl',         tekst: 'Glat gulv. Skarpt og lyst udtryk.' },
     trae:   { titel: 'Trægulv',       tekst: 'Naturtræ. Det varmeste udtryk — og det dyreste.' }
   },
+  haevet: {
+    nej: { titel: 'Gulvet i hallen',  tekst: 'Belægningen lægges direkte på hallens gulv. Kabler føres langs væggene.' },
+    ja:  { titel: 'Hævet gulv',       tekst: 'Gulvet bygges op, så kabler og teknik ligger skjult under det. Standen får en tydelig kant mod gangen.' }
+  },
+
   belysning: {
     standard:    { titel: 'Almindeligt',  tekst: 'Spots på væggene. Nok til at standen er ordentligt oplyst.' },
     forstaerket: { titel: 'Ekstra lys',   tekst: 'Flere og kraftigere spots. Mærkbart lysere end nabostandene.' },
@@ -226,15 +230,10 @@ window.WD_INDHOLD = {
       titel: 'Bevægelse fanger øjet',
       tekst: 'Fra ca. 24 m² kan standen bære en stor skærm. Bevægelse er det eneste, der trækker blikket på lang afstand i en messehal — og en 55-tommer koster 2.750 kr. for hele messen.' },
 
-    { id: 'bemanding', vaegt: 8,
-      naar: s => s.team.personer * WD_PRIS.leads.m2PrPerson < s.stand.m2,
-      titel: 'I er for få på standen',
-      tekst: 'Regn med én person pr. ca. 5 m² i åbningstiden, og aldrig færre end to. En optaget sælger koster jer den næste gæst — og gæster går ikke ind på en tom stand.' },
-
     { id: 'pixlip', vaegt: 6,
       naar: s => s.profil.ambition === 'signatur' && s.stand.vaegtype === 'print',
       titel: 'Der findes et niveau over almindelige vægge',
-      tekst: 'I har sat ambitionen til signatur. Lysvægge lyser indefra, så billederne står som på en skærm hele vejen rundt. De koster mærkbart mere pr. meter — prøv at slå dem til og se forskellen.' },
+      tekst: 'I har sat ambitionen til signatur. Lysvægge lyser indefra, så billederne står som på en skærm hele vejen rundt. Prøv at slå dem til og se, hvad forskellen koster — den er mindre, end de fleste tror.' },
 
     { id: 'opfoelgning', vaegt: 4,
       naar: () => true,
@@ -242,20 +241,25 @@ window.WD_INDHOLD = {
       tekst: 'Hovedparten af messeleads lukkes efter messen — men kun hvis de bliver fulgt op hurtigt. Aftal opfølgningsprocessen, før I kører til messen, ikke efter.' }
   ],
 
-  /* ---------------- Tidslinje (uger før messen) ---------------- */
+  /* ---------------- Tidslinje (uger før messen) ----------------
+     hvem: 'os' = Wieben Design klarer det, 'jer' = kunden, 'sammen' = begge.
+     Al koordinering med messearrangøren ligger hos os.              */
+  tidslinjeIntro: 'Vi står for al koordinering undervejs — kontakten til messearrangøren, bestillingerne, produktionen og opbygningen. Det, der står som jeres, er det, kun I kan svare på.',
   tidslinje: [
-    { uger: 32, titel: 'Book plads og placering',      tekst: 'De gode hjørne- og ø-pladser bliver taget først. Meld jer til, så snart standplanen åbner.' },
-    { uger: 20, titel: 'Koncept og designoplæg',       tekst: 'Formål, budskab og indretning på plads. Her træffes de valg, der binder resten.' },
-    { uger: 14, titel: 'Godkendelse af tegning',       tekst: 'Endelig godkendelse af 3D og plantegning. Herefter reserveres materiellet.' },
-    { uger: 10, titel: 'Bestil el, vand og internet',  tekst: 'Bestilles hos messecenteret — sent bestilt bliver dyrere bestilt.' },
-    { uger: 6,  titel: 'Deadline for grafikfiler',     tekst: 'Print skal produceres og monteres. Efter denne dato bliver ændringer dyre.' },
-    { uger: 4,  titel: 'Møbler og udstyr låst',        tekst: 'Møbelleje, skærme og kaffeløsning reserveres til levering direkte på standen.' },
-    { uger: 3,  titel: 'Bemanding og leadproces',      tekst: 'Hvem står hvornår? Hvordan registreres et lead? Hvem følger op — og hvornår?' },
-    { uger: 2,  titel: 'Kundeinvitationer sendt',      tekst: 'De vigtigste møder bookes før messen. Standen er rammen, ikke rekrutteringen.' },
-    { uger: 1,  titel: 'Pakning på værkstedet',        tekst: 'Standen pakkes og køres afsted. Vi håndterer levering, indbæring og opbygning.' },
-    { uger: 0,  titel: 'Opbygning og messe',           tekst: 'Vi bygger typisk op 1–2 dage før åbning og tager ned umiddelbart efter lukning.' },
-    { uger: -1, titel: 'Opfølgning på leads',          tekst: 'Alle leads kontaktet inden for fem hverdage.' }
+    { uger: 32, hvem: 'jer',    titel: 'Book plads og placering',      tekst: 'De gode hjørne- og ø-pladser bliver taget først. Sig til, så rådgiver vi om, hvilken placering der passer til det, I vil opnå.' },
+    { uger: 20, hvem: 'sammen', titel: 'Koncept og designoplæg',       tekst: 'Vi tegner oplægget ud fra jeres formål og budskab. Her træffes de valg, der binder resten.' },
+    { uger: 14, hvem: 'sammen', titel: 'Godkendelse af tegningen',     tekst: 'I godkender den endelige tegning. Derefter reserverer vi materiellet og sætter produktionen i gang.' },
+    { uger: 10, hvem: 'os',     titel: 'El, vand og internet bestilt',  tekst: 'Vi bestiller forsyningerne hos messearrangøren og holder styr på deres frister.' },
+    { uger: 6,  hvem: 'sammen', titel: 'Grafikken skal være klar',     tekst: 'I sender logo, billeder og tekst — vi producerer og monterer. Efter denne dato bliver ændringer dyre.' },
+    { uger: 4,  hvem: 'os',     titel: 'Møbler og udstyr reserveret',  tekst: 'Vi reserverer alt inventar til levering direkte på standen.' },
+    { uger: 3,  hvem: 'jer',    titel: 'Aftal hvordan I følger op',    tekst: 'Hvordan registrerer I et lead på standen, og hvem kontakter dem bagefter? Det afgør, hvad messen er værd.' },
+    { uger: 2,  hvem: 'jer',    titel: 'Inviter jeres kunder',         tekst: 'De vigtigste møder bookes før messen. Standen er rammen, ikke rekrutteringen.' },
+    { uger: 1,  hvem: 'os',     titel: 'Pakning på værkstedet',        tekst: 'Standen pakkes hos os i Støvring og køres afsted.' },
+    { uger: 0,  hvem: 'os',     titel: 'Opbygning og messe',           tekst: 'Vi bygger typisk op 1–2 dage før åbning, er til rådighed under messen og tager ned umiddelbart efter lukning.' },
+    { uger: -1, hvem: 'jer',    titel: 'Følg op på jeres leads',       tekst: 'Alle leads kontaktet inden for fem hverdage. Vi kører standen på lager imens.' }
   ],
+
+  hvemLabels: { os: 'Vi klarer det', jer: 'Jeres del', sammen: 'Sammen' },
 
   /* ---------------- Illustrationer ----------------
      Placeholdere. Erstattes med fotos — se README.md.  */

@@ -267,7 +267,11 @@ p{margin:0 0 1em}
 .tl-punkt{position:relative; padding:0 0 20px 26px}
 .tl-punkt::before{content:""; position:absolute; left:-7px; top:5px; width:12px; height:12px; border-radius:50%; background:var(--flade); border:2px solid var(--linje-2)}
 .tl-punkt.naer::before{background:var(--primary); border-color:var(--primary)}
-.tl-dato{font-size:.76rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--primary-dyb)}
+.tl-dato{font-size:.76rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--primary-dyb); display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+.tl-hvem{font-size:.64rem; font-weight:700; letter-spacing:.07em; padding:2px 7px; border-radius:99px; text-transform:uppercase}
+.tl-os{background:var(--primary); color:#fff}
+.tl-sammen{background:var(--primary-lys); color:var(--primary-dyb)}
+.tl-jer{background:var(--flade-3); color:var(--ink-3)}
 .tl-titel{font-family:var(--font-h); font-weight:600; font-size:.98rem; color:var(--ink)}
 .tl-tekst{font-size:.86rem; color:var(--ink-3); margin:2px 0 0}
 

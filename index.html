@@ -93,19 +93,13 @@
       </div>
     </div>
 
-    <h3 class="grp-title">Størrelse</h3>
+    <h3 class="grp-title">Størrelse og varighed</h3>
     <div class="sliders">
       <div class="slider-box">
         <label for="m2">Areal</label>
         <input type="range" id="m2" min="6" max="200" step="1" value="24">
         <output id="m2-ud">24 m²</output>
         <p class="field-hjaelp" id="m2-hjaelp"></p>
-      </div>
-      <div class="slider-box">
-        <label for="personer">Jeres egne folk på standen</label>
-        <input type="range" id="personer" min="1" max="20" step="1" value="3">
-        <output id="personer-ud">3 personer</output>
-        <p class="field-hjaelp" id="personer-hjaelp"></p>
       </div>
       <div class="slider-box">
         <label for="dage">Messedage</label>
@@ -134,8 +128,10 @@
     </div>
 
     <h3 class="grp-title">Gulv</h3>
-    <div id="gulv" class="cards cards-4"></div>
-    <label class="tjek"><input type="checkbox" id="haevet"> <span>Hævet gulv — skjuler kabler og markerer standens grænse<em id="haevet-pris"></em></span></label>
+    <div id="gulv" class="cards cards-3"></div>
+    <h3 class="grp-title">Skal gulvet hæves?</h3>
+    <p class="grp-hjaelp">Et hævet gulv giver plads til kabler under gulvet og markerer tydeligt, hvor jeres stand begynder.</p>
+    <div id="haevet" class="cards cards-2"></div>
 
     <h3 class="grp-title">Belysning</h3>
     <div id="belysning" class="cards cards-3"></div>
@@ -171,6 +167,7 @@
     <div id="budget3" class="budget3"></div>
     <div id="samlet" class="samlet"></div>
     <h3 class="grp-title">Tidslinje frem mod messen</h3>
+    <p class="grp-hjaelp" id="tidslinje-intro"></p>
     <div id="tidslinje" class="tidslinje"></div>
     <div class="nav-row">
       <button class="btn" data-goto="3">Tilbage</button>

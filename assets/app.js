@@ -20,7 +20,7 @@
     },
     kurv: {},
     kurvRoert: false,
-    team: { personer: 3, dage: 3 }
+    team: { dage: 3 }
   };
 
   /* ---------- Intervalregning ---------- */
@@ -167,8 +167,8 @@
      lejepriser, men montagetimer og standens endelige opbygning flytter sig,
      indtil der ligger en tegning — prisen er et udgangspunkt, ikke et tilbud. */
   function spaend(a) {
-    var midt = (a[0] + a[1]) / 2, p = P.meta.spaend;
-    return [midt * (1 - p), midt * (1 + p)];
+    var midt = (a[0] + a[1]) / 2;
+    return [midt * (1 - P.meta.spaendNed), midt * (1 + P.meta.spaendOp)];
   }
 
   function beregn() {
@@ -445,9 +445,18 @@
         klik: function () { s.stand.gulv = id; opdater(); }
       }));
     });
-    document.getElementById('haevet').checked = s.stand.haevet;
-    document.getElementById('haevet-pris').textContent =
-      ' · ' + nf.format(P.haevetGulv) + ' kr./m², i alt ' + kr(P.haevetGulv * s.stand.m2) + ' kr.';
+    var hv = document.getElementById('haevet');
+    hv.innerHTML = '';
+    [['nej', false], ['ja', true]].forEach(function (par) {
+      var t = C.haevet[par[0]];
+      hv.appendChild(kort({
+        titel: t.titel, tekst: t.tekst, valgt: s.stand.haevet === par[1],
+        meta: par[1]
+          ? '<span class="card-pris">' + fmtKort(spaend(iv.tal(P.haevetGulv * s.stand.m2))) + ' kr.</span> oveni gulvet'
+          : 'Ingen ekstra udgift',
+        klik: function () { s.stand.haevet = par[1]; opdater(); }
+      }));
+    });
 
     var b = document.getElementById('belysning');
     b.innerHTML = '';
@@ -537,7 +546,8 @@
       var ul = el('<ul></ul>');
       o.linjer.forEach(function (l) {
         ul.appendChild(el('<li><span>' + esc(l.navn) +
-          (l.note ? '<em>' + esc(l.note) + '</em>' : '') + '</span><span>' + fmtKort(l.pris) + '</span></li>'));
+          (l.note ? '<em>' + esc(l.note) + '</em>' : '') + '</span><span>' +
+          fmtKort(o.spred ? spaend(l.pris) : l.pris) + '</span></li>'));
       });
       k.appendChild(ul);
       if (o.ekstra) k.appendChild(o.ekstra);
@@ -548,9 +558,9 @@
 
     v.appendChild(kolonne({
       titel: 'Det koster hos os', hvem: 'Leje af standen for hele messen, ekskl. moms', badge: 'Estimat',
-      linjer: r.wiebenLinjer, sum: r.vist,
-      fod: 'Enkeltposterne er vores egne lejepriser, men montagetimerne og standens endelige opbygning kan flytte sig. Derfor viser vi totalen som et spænd på ±' +
-        Math.round(P.meta.spaend * 100) + ' %.'
+      linjer: r.wiebenLinjer, sum: r.vist, spred: true,
+      fod: 'Hver post er et spænd, ikke en fast pris. Standens endelige opbygning og montagetimerne flytter sig, indtil vi har en godkendt tegning — regn med ' +
+        Math.round(P.meta.spaendNed * 100) + ' % under og ' + Math.round(P.meta.spaendOp * 100) + ' % over midten.'
     }));
 
     v.appendChild(kolonne({
@@ -573,6 +583,8 @@
   function visTidslinje() {
     var v = document.getElementById('tidslinje');
     v.innerHTML = '';
+    var intro = document.getElementById('tidslinje-intro');
+    if (intro) intro.textContent = C.tidslinjeIntro;
     var dato = s.messe.dato ? new Date(s.messe.dato) : null;
     C.tidslinje.forEach(function (t) {
       var p = el('<div class="tl-punkt"></div>');
@@ -585,7 +597,8 @@
         naar = t.uger > 0 ? t.uger + ' uger før' : (t.uger === 0 ? 'Messeugen' : 'Ugen efter');
       }
       if (t.uger <= 6) p.classList.add('naer');
-      p.appendChild(el('<div class="tl-dato">' + esc(naar) + '</div>'));
+      p.appendChild(el('<div class="tl-dato">' + esc(naar) +
+        '<span class="tl-hvem tl-' + t.hvem + '">' + esc(C.hvemLabels[t.hvem]) + '</span></div>'));
       p.appendChild(el('<div class="tl-titel">' + esc(t.titel) + '</div>'));
       p.appendChild(el('<p class="tl-tekst">' + esc(t.tekst) + '</p>'));
       v.appendChild(p);
@@ -609,7 +622,6 @@
       linje('Tryk på væggene', C.grafikdaekning[s.stand.grafik].titel) +
       linje('Gulv', C.gulv[s.stand.gulv].titel + (s.stand.haevet ? ', hævet' : '')) +
       linje('Belysning', C.belysning[s.stand.belysning].titel + (s.stand.rig ? ' · truss-rig' : '')) +
-      linje('Bemanding', s.team.personer + ' personer i ' + s.team.dage + ' dage') +
       linje('Forventede leads', r.leads[0] + '–' + r.leads[1]) +
       '</dl>' +
       '<div class="ops-inventar"><dt>Inventar</dt><dd>' +
@@ -630,11 +642,10 @@
     var h = '<ul>';
     r.wiebenLinjer.forEach(function (l) {
       h += '<li><span>' + esc(l.navn) + (l.note ? '<em>' + esc(l.note) + '</em>' : '') +
-        '</span><span>' + fmtKort(l.pris) + '</span></li>';
+        '</span><span>' + fmtKort(spaend(l.pris)) + '</span></li>';
     });
     h += '<li class="sum"><span>I alt, afrundet til et spænd</span><span>' + fmtKort(r.vist) + ' kr.</span></li></ul>' +
-      '<p class="disclaimer">Leje for hele messen, ekskl. moms. Posterne er vores egne priser, men totalen vises som et spænd på ±' +
-      Math.round(P.meta.spaend * 100) + ' %, fordi montagetimer og den endelige opbygning først ligger fast på en godkendt tegning. Messearrangørens pris på pladsen ligger uden for beløbet — se trin 4.</p>';
+      '<p class="disclaimer">Leje for hele messen, ekskl. moms. Hver post er et spænd, fordi den endelige opbygning og montagetimerne først ligger fast på en godkendt tegning. Messearrangørens pris på pladsen ligger uden for beløbet — se trin 4.</p>';
     document.getElementById('prisbar-detalje').innerHTML = h;
   }
 
@@ -643,17 +654,12 @@
      ===================================================================== */
   function opdater() {
     document.getElementById('m2-ud').textContent = s.stand.m2 + ' m²';
-    document.getElementById('personer-ud').textContent = s.team.personer + (s.team.personer === 1 ? ' person' : ' personer');
     document.getElementById('dage-ud').textContent = s.team.dage + (s.team.dage === 1 ? ' dag' : ' dage');
 
     var sider = Math.max(2, Math.round(Math.sqrt(s.stand.m2 * 1.5)));
     document.getElementById('m2-hjaelp').textContent =
       'Ca. ' + sider + ' × ' + Math.max(2, Math.round(s.stand.m2 / sider)) + ' meter · plads til omkring ' +
       Math.max(1, Math.round(s.stand.m2 / 8)) + ' samtidige samtaler.';
-    document.getElementById('personer-hjaelp').textContent =
-      'Jeres egne medarbejdere — det påvirker ikke prisen hos os. Vi bruger tallet til at rådgive: på ' +
-      s.stand.m2 + ' m² anbefaler vi ' + Math.max(2, Math.ceil(s.stand.m2 / P.leads.m2PrPerson)) + ' personer i åbningstiden.';
-
     visTrin();
     visProfil();
     visAnbefaling();
@@ -756,10 +762,8 @@
       document.getElementById(id).addEventListener('input', function (e) { saet(Number(e.target.value)); opdater(); });
     }
     slider('m2', function (v) { s.stand.m2 = v; });
-    slider('personer', function (v) { s.team.personer = v; });
     slider('dage', function (v) { s.team.dage = v; });
 
-    document.getElementById('haevet').addEventListener('change', function (e) { s.stand.haevet = e.target.checked; opdater(); });
     document.getElementById('rig').addEventListener('change', function (e) { s.stand.rig = e.target.checked; opdater(); });
 
     var toggle = document.getElementById('prisbar-toggle');
@@ -793,7 +797,6 @@
   hent();
   bind();
   document.getElementById('m2').value = s.stand.m2;
-  document.getElementById('personer').value = s.team.personer;
   document.getElementById('dage').value = s.team.dage;
   document.getElementById('messedato').value = s.messe.dato || '';
   document.getElementById('km').value = s.messe.ukendt && s.messe.km ? s.messe.km : '';

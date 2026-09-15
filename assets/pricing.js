@@ -23,8 +23,10 @@ window.WD_PRIS = {
     /* Spændet på det viste totalbeløb. Enkeltposterne er faste lejepriser,
        men montagetimer, standens faktiske opbygning og kundens endelige valg
        flytter sig, indtil der ligger en godkendt tegning. Totalen vises derfor
-       som midtpunktet ± dette. */
-    spaend: 0.20
+       som midtpunktet inden for dette spænd. Nedad er der mere luft end
+       opad: en stand kan sagtens blive enklere end her antaget. */
+    spaendNed: 0.25,
+    spaendOp:  0.20
   },
 
   /* -------------------------------------------------------------------
@@ -66,7 +68,6 @@ window.WD_PRIS = {
      GULV — kr. pr. m² (prisgrundlaget, afsnittet "Gulvbelægning")
      ------------------------------------------------------------------- */
   gulv: {
-    ingen:  0,
     taeppe: 90 + 25,   /* Heuga 530XL + blødt undergulv */
     vinyl:  150,       /* Hvid vinyl, Armstrong        */
     trae:   250        /* Trægulv, naturtræ            */
@@ -200,5 +201,5 @@ window.WD_PRIS = {
   },
 
   /* Nøgletal til forventningsafstemning */
-  leads: { prM2PrDag: [0.40, 0.72], m2PrPerson: 5 }
+  leads: { prM2PrDag: [0.40, 0.72] }
 };
