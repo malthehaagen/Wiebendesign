@@ -139,6 +139,29 @@ window.WD_INDHOLD = {
     pro:         { titel: 'Kraftigt lys', tekst: 'Store projektører til høje vægge og store flader.' }
   },
 
+  /* ---------------- Områder ----------------
+     Rækkefølgen følger gæstens vej ind på standen.                 */
+  omraader: {
+    reception: { titel: 'Velkomst',            tekst: 'En disk ved indgangen, hvor I tager imod og lægger materialer frem. Det første, gæsten møder.', ikon: 'disk' },
+    staabord:  { titel: 'Ståborde',            tekst: 'Til de korte samtaler. Folk der står, bliver i to minutter — folk der sætter sig, bliver i tyve.', ikon: 'bord' },
+    bar:       { titel: 'Bar og servering',    tekst: 'Bardisk med kaffe og køleskab. Den simpleste måde at forlænge en samtale.', ikon: 'kaffe' },
+    lounge:    { titel: 'Loungeområde',        tekst: 'Sofa og lænestole til de samtaler, der skal tage tid.', ikon: 'lounge' },
+    moede:     { titel: 'Lukket mødeområde',   tekst: 'Eget rum med vægge og dør. Til aftaler, der ikke skal høres af nabostanden.', ikon: 'vitrine' },
+    display:   { titel: 'Produktdisplay',      tekst: 'Glasmontre med lys, hvor produktet står i øjenhøjde og er til at se på.', ikon: 'vitrine' },
+    media:     { titel: 'Skærm og demo',       tekst: 'Storskærm med afspiller, der kører jeres video eller demo i sløjfe.', ikon: 'skaerm' },
+    depot:     { titel: 'Depot',               tekst: 'Aflåst rum til kasser, jakker og brochurer. Det, der ellers ender bag disken.', ikon: 'reol' }
+  },
+
+  /* ---------------- Ja/nej-tilkøb ---------------- */
+  tilkoeb: {
+    skilt:       { titel: 'Hængende skilt over standen', tekst: 'Jeres navn båret oppe i riggen, så standen kan ses fra den anden ende af hallen.', ikon: 'skaerm' },
+    rigLys:      { titel: 'Lys fra riggen',              tekst: 'Projektører hængt over standen. Lyser hele gulvet op i stedet for kun væggene.', ikon: 'lys' },
+    led:         { titel: 'LED-væg',                     tekst: 'En skærmvæg bygget af fliser. Lyser kraftigere end nogen printet flade og kan vise levende billeder.', ikon: 'led' },
+    beplantning: { titel: 'Beplantning',                 tekst: 'Det billigste greb, der får en stand til at virke færdig.', ikon: 'plante' }
+  },
+
+  ledIntro: 'Vælg størrelsen. Styringen indgår altid — en LED-væg kan ikke lejes uden.',
+
   /* ---------------- Katalog: navne og beskrivelser ---------------- */
   katalogGrupper: [
     { id: 'diske',   titel: 'Diske, depot og opbevaring' },
@@ -191,9 +214,14 @@ window.WD_INDHOLD = {
   /* ---------------- Faglige indsigter ---------------- */
   indsigter: [
     { id: 'depot', vaegt: 9,
-      naar: s => s.stand.m2 >= 15 && !s.kurv.abc_reol && !s.kurv.expo_skab,
+      naar: s => s.stand.m2 >= 15 && !s.omraader.depot,
       titel: 'Hvor skal kasserne stå?',
-      tekst: 'Afsæt 15–20 % af arealet til aflåst depot. Uden det ender emballage, jakker og brochurekasser bag disken — og det er det første, gæsten ser. En ABC-reol og en bordplade koster under 700 kr. for hele messen.' },
+      tekst: 'Afsæt 15–20 % af arealet til aflåst depot. Uden det ender emballage, jakker og brochurekasser bag disken — og det er det første, gæsten ser.' },
+
+    { id: 'plads', vaegt: 10,
+      naar: s => s.omraadeAreal > s.stand.m2 * 0.75,
+      titel: 'Der bliver trangt',
+      tekst: 'Jeres områder fylder mere end tre fjerdedele af standen. Gæsterne skal også kunne bevæge sig rundt — regn med at mindst en fjerdedel af arealet skal stå tomt, ellers føles standen lukket udefra.' },
 
     { id: 'aabneSider', vaegt: 8,
       naar: s => s.stand.aabneSider === 1 && s.stand.m2 >= 20,
@@ -205,30 +233,35 @@ window.WD_INDHOLD = {
       titel: '3-sekundersreglen',
       tekst: 'En gæst går forbi jeres stand på tre sekunder. På den tid skal hun kunne se hvem I er, og hvilket problem I løser — på fem meters afstand. Rene vægge svarer til at møde op uden skilt.' },
 
+    { id: 'velkomst', vaegt: 8,
+      naar: s => !s.omraader.reception && !s.omraader.staabord && s.stand.m2 >= 12,
+      titel: 'Der er ingen at tage imod ved',
+      tekst: 'Gæsten skal kunne se, hvor hun henvender sig, allerede fra gangen. Uden en disk eller et ståbord forrest bliver standen et rum, folk kigger ind i frem for går ind i.' },
+
     { id: 'lys', vaegt: 7,
       naar: s => s.stand.belysning === 'standard',
       titel: 'Lys er den billigste opgradering',
-      tekst: 'Messehaller er mørkere, end folk husker. Går I fra standard- til forstærket lys, koster det typisk et par tusind kroner for hele messen — og det løfter standen mere end noget andet beløb i samme størrelse.' },
+      tekst: 'Messehaller er mørkere, end folk husker. Går I fra almindeligt til ekstra lys, koster det typisk et par tusind kroner for hele messen — og det løfter standen mere end noget andet beløb i samme størrelse.' },
 
-    { id: 'kaffe', vaegt: 8,
-      naar: s => !s.kurv.nespresso_s && !s.kurv.nespresso_l && !s.kurv.bonamat && s.stand.m2 >= 15,
+    { id: 'servering', vaegt: 7,
+      naar: s => !s.omraader.bar && s.stand.m2 >= 15,
       titel: 'Kaffe holder folk stående',
-      tekst: 'Den simpleste måde at forlænge en samtale fra 40 sekunder til fire minutter. Fire minutter er forskellen på en hilsen og et lead. En Nespresso koster 500 kr. for hele messen.' },
+      tekst: 'Den simpleste måde at forlænge en samtale fra 40 sekunder til fire minutter. Fire minutter er forskellen på en hilsen og et lead.' },
 
     { id: 'siddeplads', vaegt: 7,
-      naar: s => s.profil.formaal === 'relationer' && !s.kurv.cafebord && !s.kurv.loungestol && !s.kurv.sofa,
+      naar: s => s.profil.formaal === 'relationer' && !s.omraader.lounge && !s.omraader.moede,
       titel: 'Møder kræver et sted at sidde',
-      tekst: 'I vil pleje kunderelationer. Den samtale foregår ikke ved et ståbord to meter fra jeres konkurrent. Et loungehjørne eller et siddebord med fire stole er ikke luksus — det er formålet med at være der.' },
+      tekst: 'I vil pleje kunderelationer. Den samtale foregår ikke ved et ståbord to meter fra jeres konkurrent. Et loungeområde eller et lukket mødeområde er ikke luksus — det er formålet med at være der.' },
 
     { id: 'lancering', vaegt: 7,
-      naar: s => s.profil.formaal === 'lancering' && !s.kurv.vitrine && !s.kurv.mon55 && !s.kurv.mon65 && !s.kurv.mon75,
+      naar: s => s.profil.formaal === 'lancering' && !s.omraader.display && !s.omraader.media,
       titel: 'Ét produkt, ét brændpunkt',
-      tekst: 'Ved en lancering skal alt andet træde tilbage. Et belyst vitrineskab eller én stor skærm midt i standen slår ti produkter på hylder — hver gang.' },
+      tekst: 'Ved en lancering skal alt andet træde tilbage. Ét belyst produkt eller én stor skærm midt i standen slår ti produkter på hylder — hver gang.' },
 
-    { id: 'skaerm', vaegt: 6,
-      naar: s => s.stand.m2 >= 24 && !s.kurv.mon43 && !s.kurv.mon55 && !s.kurv.mon65 && !s.kurv.mon75 && !s.kurv.ledskin,
-      titel: 'Bevægelse fanger øjet',
-      tekst: 'Fra ca. 24 m² kan standen bære en stor skærm. Bevægelse er det eneste, der trækker blikket på lang afstand i en messehal — og en 55-tommer koster 2.750 kr. for hele messen.' },
+    { id: 'skilt', vaegt: 6,
+      naar: s => s.stand.m2 >= 30 && !s.tilkoeb.skilt,
+      titel: 'Byg opad, ikke kun udad',
+      tekst: 'Fra 30 m² bliver hængende branding afgørende. Det er det, der gør jer synlige fra den anden ende af hallen — tjek messearrangørens højdegrænse tidligt, den er ofte 3–6 meter.' },
 
     { id: 'pixlip', vaegt: 6,
       naar: s => s.profil.ambition === 'signatur' && s.stand.vaegtype === 'print',
@@ -286,6 +319,8 @@ window.WD_INDHOLD = {
     led:      '<svg viewBox="0 0 100 70"><rect class="stand" x="22" y="14" width="26" height="20"/><rect class="stand" x="52" y="14" width="26" height="20"/><rect class="stand" x="22" y="38" width="26" height="20"/><rect class="glo" x="52" y="38" width="26" height="20"/><rect class="stand" x="52" y="38" width="26" height="20"/></svg>',
     kaffe:    '<svg viewBox="0 0 100 70"><path class="stand" d="M32 24 L68 24 L64 50 L36 50 Z"/><path class="aaben" d="M68 28 Q80 30 76 40 Q72 44 66 42"/><line class="nabo" x1="28" y1="56" x2="72" y2="56"/></svg>',
     koel:     '<svg viewBox="0 0 100 70"><rect class="stand" x="30" y="10" width="40" height="50" rx="3"/><line class="nabo" x1="30" y1="28" x2="70" y2="28"/><line class="aaben" x1="62" y1="18" x2="62" y2="24"/><line class="aaben" x1="62" y1="34" x2="62" y2="40"/></svg>',
+    lys:      '<svg viewBox="0 0 100 70"><line class="aaben" x1="16" y1="16" x2="84" y2="16"/><circle class="stand" cx="32" cy="22" r="5"/><circle class="stand" cx="50" cy="22" r="5"/><circle class="stand" cx="68" cy="22" r="5"/><path class="nabo" d="M32 28 L22 56 L42 56 Z M50 28 L40 56 L60 56 Z M68 28 L58 56 L78 56 Z"/></svg>',
+    plante:   '<svg viewBox="0 0 100 70"><path class="stand" d="M50 52 L50 26"/><path class="aaben" d="M50 32 Q34 24 36 40 Q46 42 50 32 Z M50 32 Q66 24 64 40 Q54 42 50 32 Z"/><rect class="nabo" x="42" y="52" width="16" height="10" rx="2"/></svg>',
     el:       '<svg viewBox="0 0 100 70"><rect class="stand" x="28" y="14" width="44" height="42" rx="3"/><path class="aaben" d="M52 22 L42 38 L50 38 L46 50"/></svg>'
   }
 };

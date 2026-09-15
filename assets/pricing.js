@@ -140,6 +140,47 @@ window.WD_PRIS = {
   },
 
   /* -------------------------------------------------------------------
+     OMRÅDER — de zoner kunden vælger i stedet for enkeltvarer.
+     Hvert område er en pakke af varer fra kataloget herover, plus evt.
+     vægge og dør. m2 er områdets omtrentlige pladsbehov på standen.
+     Zoneinddelingen følger branchens gængse model: velkomst, engagement,
+     samtale og depot, med servering og produktzone på større stande.
+     ------------------------------------------------------------------- */
+  omraader: {
+    reception: { m2: 3, dele: { izi_disk: 1, brochure: 1 } },
+    staabord:  { m2: 3, dele: { staabord: 1, barstol: 2 } },
+    bar:       { m2: 5, dele: { expo_bar: 1, barstol: 2, nespresso_l: 1, koeleskab_l: 1, papkrus: 1 } },
+    lounge:    { m2: 6, dele: { sofa: 1, loungestol: 2, loungebord: 1 } },
+    moede:     { m2: 8, dele: { ubord: 1, stol_arm: 4 }, vaegLbm: 6, doere: 1 },
+    display:   { m2: 3, dele: { vitrine: 1 } },
+    media:     { m2: 3, dele: { mon55: 1, afspiller: 1 } },
+    depot:     { m2: 4, dele: { abc_reol: 1, depot_bord: 1, stumtjener: 1, affald: 1 }, vaegLbm: 5, doere: 1 }
+  },
+
+  /* Områdernes indervægge bygges i denne højde */
+  omraadeVaeghoejde: 2.5,
+
+  /* -------------------------------------------------------------------
+     TILKØB — rene ja/nej-spørgsmål
+     ------------------------------------------------------------------- */
+  tilkoeb: {
+    /* Hængende skilt over standen: truss hele vejen rundt + frise med tryk */
+    skilt:       { type: 'omkreds' },
+    /* Projektører hængt i riggen, ca. én pr. 6 m² */
+    rigLys:      { type: 'perM2', prSpot: 329, m2PrSpot: 6 },
+    beplantning: { type: 'fast', pris: 2800 }
+  },
+
+  /* LED-vægge i faste størrelser. Fliser er 50 × 50 cm, og styringen
+     indgår altid — der kan ikke lejes en LED-væg uden. */
+  ledStoerrelser: [
+    { id: 's',  navn: '1,5 × 1 meter', m2: 1.5, fliser: 6 },
+    { id: 'm',  navn: '2 × 1,5 meter', m2: 3,   fliser: 12 },
+    { id: 'l',  navn: '3 × 2 meter',   m2: 6,   fliser: 24 },
+    { id: 'xl', navn: '4 × 3 meter',   m2: 12,  fliser: 48 }
+  ],
+
+  /* -------------------------------------------------------------------
      EL — obligatorisk, lægges automatisk i prisen. Kunden vælger den ikke
      til eller fra; vi vælger tavlen ud fra, hvad der skal have strøm.
      ------------------------------------------------------------------- */
@@ -147,7 +188,8 @@ window.WD_PRIS = {
     lille: { leje: 550, navn: 'El-tavle, 16A med 6 udtag' },
     stor:  { leje: 650, navn: 'El-tavle, 32A med 8 udtag' },
     /* Varer der udløser den store tavle */
-    stortForbrug: ['mon55', 'mon65', 'mon75', 'ledskin', 'koeleskab_h', 'koeleskab_l', 'nespresso_s', 'bonamat', 'vitrine']
+    /* Områder der trækker nok strøm til den store tavle */
+    stortForbrug: ['bar', 'media', 'display']
   },
 
   /* -------------------------------------------------------------------
@@ -175,29 +217,20 @@ window.WD_PRIS = {
     m2PrMontoer:     25,
     minMontoerer:    2,
 
-    /* Egen lastbil op til denne afstand; længere ude bruger vi speditør
-       og fly til montørerne — AFLEDT arbejdsmodel */
-    egenkoerselMaxKm: 450,
-    fragtPrKm:        [12, 20],
-    oversoeiskFragt:  [45000, 85000]
-  },
-
-  /* -------------------------------------------------------------------
-     MESSECENTERETS EGNE PRISER — betales direkte til arrangøren.
-     IKKE fra Wieben Designs prisgrundlag. Brancheestimat, som varierer
-     fra messe til messe.
-     ------------------------------------------------------------------- */
-  messecenter: {
-    standlejeTrin: [
-      { tilM2: 36,    perM2: [545, 665] },
-      { tilM2: 100,   perM2: [455, 555] },
-      { tilM2: 300,   perM2: [370, 450] },
-      { tilM2: 600,   perM2: [305, 375] },
-      { tilM2: 99999, perM2: [245, 305] }
-    ],
-    tilmeldingsgebyr: [4000, 6000],
-    forsyning:        [4500, 7500],   /* el, vand og internet hos arrangøren */
-    aabenSideTillaegPct: { 1: 0, 2: 0.06, 3: 0.12, 4: 0.18 }
+    /* Wieben Design kører selv i hele Europa, når det kan lade sig gøre.
+       Det er standens STØRRELSE, ikke afstanden, der afgør, hvornår der
+       skal speditør på — AFLEDT, bør bekræftes. */
+    egenkoerselMaxM2: 60,
+    /* Under denne afstand kører vi altid selv — det giver ikke mening at
+       flyve til Herning eller København */
+    altidEgenKoerselKm: 600,
+    /* Turen er derhen og hjem. Spændet er, om der kører én eller to
+       montører med — det skifter fra opgave til opgave. */
+    ture:             2,
+    koeretidMontoerer: [1, 2],
+    /* Speditør ved store stande: pris pr. lastbillæs, pr. km tur/retur */
+    m2PrLaes:         60,
+    fragtPrKm:        [22, 34]
   },
 
   /* Nøgletal til forventningsafstemning */

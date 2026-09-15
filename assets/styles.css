@@ -181,6 +181,18 @@ p{margin:0 0 1em}
 .forslag-tekst strong{font-family:var(--font-h); color:var(--ink)}
 .forslag-tekst span{font-size:.87rem; color:var(--ink-2)}
 
+.omraade{
+  position:relative; display:flex; flex-direction:column; gap:6px;
+  background:var(--flade); border:1px solid var(--linje); border-radius:var(--radius); padding:16px;
+  transition:border-color .15s, box-shadow .15s;
+}
+.omraade.valgt{border-color:var(--primary); box-shadow:0 0 0 1px var(--primary)}
+.omraade .stepper{align-self:flex-start; margin-top:10px}
+.omraade .card-meta{margin-top:auto}
+.ledvalg{background:var(--flade); border:1px solid var(--linje); border-radius:var(--radius); padding:18px; margin-top:14px}
+.ledvalg h4{margin:0 0 4px; font-size:1rem}
+.ledvalg .grp-hjaelp{margin-top:0}
+
 .varer{display:grid; grid-template-columns:repeat(2,1fr); gap:10px}
 @media (max-width:720px){ .varer{grid-template-columns:1fr} }
 .vare{
