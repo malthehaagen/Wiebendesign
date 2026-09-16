@@ -281,7 +281,7 @@
      lejepriser, men montagetimer og standens endelige opbygning flytter sig,
      indtil der ligger en tegning — prisen er et udgangspunkt, ikke et tilbud. */
   function spaend(a) {
-    var midt = (a[0] + a[1]) / 2;
+    var midt = (a[0] + a[1]) / 2 * (P.meta.prisniveau || 1);
     return [midt * (1 - P.meta.spaendNed), midt * (1 + P.meta.spaendOp)];
   }
 
@@ -828,7 +828,7 @@
       '<h3>Cirka ' + fmtKort(r.vist) + ' kr. for standen</h3>' +
       '<p>Med ' + s.stand.m2 + ' m² og ' + s.team.dage + ' messedage er et realistisk mål ' +
       r.leads[0] + '–' + r.leads[1] + ' kvalificerede leads — ' + fmtKort(r.prLead) + ' kr. pr. lead i standomkostning.</p>' +
-      '<p class="disclaimer">Oveni kommer det, messearrangøren selv opkræver: lejen af selve pladsen, tilmeldingsgebyr og el-tilslutning. Det fakturerer de direkte til jer, og priserne svinger fra messe til messe — vi bestiller det gerne på jeres vegne.</p>';
+      '<p class="disclaimer">Beløbet dækker standen: materiel, grafik, opbygning, transport og vores arbejde. Messearrangørens egne gebyrer er ikke med — dem aftaler I direkte med messen.</p>';
   }
 
   function visTidslinje() {
@@ -880,7 +880,7 @@
       '</dd></div>' +
       '<div class="ops-pris"><span>Estimat hos os — leje for hele messen, ekskl. moms</span>' +
       '<strong>' + fmt(r.vist) + '</strong>' +
-      '<span>Oveni kommer messearrangørens egen pris for pladsen, tilmelding og el-tilslutning.</span></div>' +
+      '<span>Beløbet dækker standen. Messearrangørens egne gebyrer er ikke med.</span></div>' +
       '<p class="forbehold">Det er et skøn, ikke et tilbud. Når vi har set standen tegnet, er der typisk noget der skal justeres — måske passer ti stole ikke til pladsen, måske skal væggen stå et andet sted. Det finder vi ud af sammen.</p>';
   }
 

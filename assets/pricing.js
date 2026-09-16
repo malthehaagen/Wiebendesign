@@ -26,7 +26,14 @@ window.WD_PRIS = {
        som midtpunktet inden for dette spænd. Nedad er der mere luft end
        opad: en stand kan sagtens blive enklere end her antaget. */
     spaendNed: 0.25,
-    spaendOp:  0.20
+    spaendOp:  0.20,
+
+    /* Skrue på hele prisniveauet uden at røre de enkelte satser.
+       1 = modellens egne tal. 0,85 = 15 % under. 1,1 = 10 % over.
+       Brug den, mens I finder ud af, hvor beregneren skal lande —
+       og husk, at en lavere værdi ikke gør standen billigere at bygge,
+       kun billigere at love bort. */
+    prisniveau: 1
   },
 
   /* -------------------------------------------------------------------

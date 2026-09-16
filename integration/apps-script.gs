@@ -184,7 +184,7 @@ function kundeMail(d) {
       '<h2 style="font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:' + BLAA + ';margin:26px 0 10px;">Pris</h2>' +
       posterTabel(d) +
       '<p style="margin:22px 0 0;padding:14px 16px;background:#eaf3f4;border-radius:8px;font-size:13px;">' +
-      'Oveni kommer det, messearrangøren selv opkræver: leje af pladsen, tilmeldingsgebyr og el-tilslutning. Det fakturerer de direkte til jer — vi bestiller det gerne på jeres vegne.</p>' +
+      'Beløbet dækker standen: materiel, grafik, opbygning, transport og vores arbejde. Messearrangørens egne gebyrer er ikke med — dem aftaler I direkte med messen.</p>' +
       '<p style="margin:22px 0 0;">' + (d.kontakt.oenskerOpkald
         ? 'Vi ringer til jer inden for en arbejdsdag.'
         : 'Vil I vende det med os, er I velkomne til at ringe på 70 23 11 11.') + '</p>' +
