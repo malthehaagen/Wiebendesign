@@ -85,17 +85,27 @@
     };
   }
 
+  function hoejde(m) {
+    return P.vaeg.hoejder.filter(function (x) { return x.m === (m || s.stand.vaeghoejde); })[0] ||
+           P.vaeg.hoejder.filter(function (x) { return x.m === 3; })[0];
+  }
+
+  /* Lysvægge findes kun i de højder, Pixlip-profilen fås i */
+  function hoejdeMulig(h) {
+    return s.stand.vaegtype !== 'pixlip' || !!h.pixlip;
+  }
+
   function vaegpris() {
     var g = geometri();
     if (!g.vaegLbm) return { konstruktion: 0, print: 0 };
     var daekning = P.grafikdaekning[s.stand.grafik];
+    var h = hoejde();
     if (s.stand.vaegtype === 'pixlip') {
       return {
-        konstruktion: g.vaegLbm * P.vaeg.pixlipPrLbm * (s.stand.vaeghoejde / 3),
+        konstruktion: g.vaegLbm * (h.pixlip || P.vaeg.hoejder.filter(function (x) { return x.m === 3; })[0].pixlip),
         print: g.vaegAreal * daekning * P.vaeg.pixlipPrintPrM2
       };
     }
-    var h = P.vaeg.hoejder.filter(function (x) { return x.m === s.stand.vaeghoejde; })[0] || P.vaeg.hoejder[2];
     return {
       konstruktion: g.vaegLbm * (h.frame + h.pvc),
       print: g.vaegAreal * daekning * P.vaeg.printPrM2
@@ -550,7 +560,14 @@
         svg: C.svg[id], titel: t.titel, tekst: t.tekst, valgt: s.stand.vaegtype === id,
         meta: '<span class="card-pris">' + fmtKort(iv.tal(pris.konstruktion + pris.print)) + ' kr.</span> for jeres stand' +
               '<span class="card-teknik">' + esc(t.teknik) + '</span>',
-        klik: function () { s.stand.vaegtype = id; opdater(); }
+        klik: function () {
+          s.stand.vaegtype = id;
+          if (!hoejdeMulig(hoejde())) {
+            var muligt = P.vaeg.hoejder.filter(hoejdeMulig);
+            s.stand.vaeghoejde = muligt[muligt.length - 1].m;
+          }
+          opdater();
+        }
       }));
     });
   }
@@ -561,15 +578,24 @@
     valg.forEach(function (o) {
       var b = el('<button type="button" class="seg-btn">' + esc(o.titel) + '</button>');
       if (o.vaerdi === aktiv) b.classList.add('valgt');
-      b.onclick = function () { klik(o.vaerdi); };
+      if (o.laast) { b.disabled = true; b.title = 'Findes ikke som lysvæg'; }
+      else b.onclick = function () { klik(o.vaerdi); };
       v.appendChild(b);
     });
   }
 
   function visValg() {
     seg('vaeghoejde', P.vaeg.hoejder.map(function (h) {
-      return { vaerdi: h.m, titel: String(h.m).replace('.', ',') + ' m' };
+      return { vaerdi: h.m, titel: String(h.m).replace('.', ',') + ' m', laast: !hoejdeMulig(h) };
     }), s.stand.vaeghoejde, function (v) { s.stand.vaeghoejde = v; opdater(); });
+    var hh = document.getElementById('hoejde-hjaelp');
+    var valgtHoejde = hoejde();
+    hh.classList.toggle('advarsel', !!valgtHoejde.hoej);
+    hh.textContent = valgtHoejde.hoej
+      ? 'Over ' + P.friHoejde + ' meter skal messen sige god for højden. Grænsen står i udstillerhåndbogen og ligger typisk mellem 3 og 6 meter — vi tjekker den, før vi tegner.'
+      : (s.stand.vaegtype === 'pixlip'
+          ? 'Lysvægge fås op til 4 meter. Skal I højere op, skal væggene være almindelige.'
+          : 'Op til ' + P.friHoejde + ' meter kan I regne med, at det er tilladt. Derover afhænger det af messens regler.');
 
     seg('grafik', Object.keys(C.grafikdaekning).map(function (k) {
       return { vaerdi: k, titel: C.grafikdaekning[k].titel };

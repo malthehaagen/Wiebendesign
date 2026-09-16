@@ -174,7 +174,7 @@ window.WD_INDHOLD = {
   },
   grafikdaekning: {
     ingen:  { titel: 'Ingenting',              tekst: 'Rene hvide vægge uden tryk.' },
-    delvis: { titel: 'De vigtigste flader',    tekst: 'Tryk der hvor folk kigger — cirka halvdelen af væggene.' },
+    delvis: { titel: 'De vigtigste',           tekst: 'Tryk der hvor folk kigger — cirka halvdelen af væggene.' },
     fuld:   { titel: 'Det hele',               tekst: 'Tryk på alle vægflader.' }
   },
   gulv: {

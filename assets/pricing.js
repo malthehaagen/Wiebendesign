@@ -52,21 +52,32 @@ window.WD_PRIS = {
      Priser pr. løbende meter væg i den valgte højde.
      ------------------------------------------------------------------- */
   vaeg: {
+    /* Rammer og plader pr. løbende meter væg i den valgte højde.
+       Over 3 meter findes der ingen ramme i den højde — så stables to,
+       og priserne herunder er den billigste kombination, der rammer
+       højden. 4 m er f.eks. en 2,5 m ramme med en 1,5 m ovenpå.
+       pixlip er PX200-profilen i samme højde; den findes kun til 4 m,
+       og derover er der ingen lysvæg at få.                          */
     hoejder: [
-      { m: 2,   frame: 237, pvc: 130 },
-      { m: 2.5, frame: 250, pvc: 156 },
-      { m: 3,   frame: 301, pvc: 182 }
+      { m: 2,   frame: 237, pvc: 130, pixlip: 514 },
+      { m: 2.5, frame: 250, pvc: 156, pixlip: 641 },
+      { m: 3,   frame: 301, pvc: 182, pixlip: 766 },
+      { m: 3.5, frame: 422, pvc: 233, pixlip: 892,  hoej: true },
+      { m: 4,   frame: 456, pvc: 259, pixlip: 1019, hoej: true },
+      { m: 4.5, frame: 487, pvc: 286, pixlip: null, hoej: true },
+      { m: 5,   frame: 500, pvc: 312, pixlip: null, hoej: true }
     ],
     /* Print på banner, kr. pr. m² — AFLEDT af bannerpriserne i arket
        (5.600 kr. for 12 m², 2.800 for 6 m², 1.400 for 3 m²) */
     printPrM2: 465,
-    /* Pixlip backlit lysvæg: PX200-profil pr. lbm i 3 m + backlit-print
-       (PIXLIP Wall profil PX200, 3000 mm = 766 kr.; banner AFLEDT) */
-    pixlipPrLbm: 766,
+    /* Backlit-print til Pixlip — samme metode på Pixlip-bannerne */
     pixlipPrintPrM2: 520,
     /* Dør i væg: b62 Frame Door + PVC-sæt */
     doer: 881 + 156
   },
+
+  /* Over denne højde skal messens højdegrænse tjekkes først */
+  friHoejde: 3,
 
   /* Grafikdækning af vægarealet */
   grafikdaekning: { ingen: 0, delvis: 0.45, fuld: 1 },
