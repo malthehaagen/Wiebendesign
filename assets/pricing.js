@@ -297,7 +297,16 @@ window.WD_PRIS = {
     koeretidMontoerer: [1, 2],
     /* Speditør ved store stande: pris pr. lastbillæs, pr. km tur/retur */
     m2PrLaes:         60,
-    fragtPrKm:        [22, 34]
+    fragtPrKm:        [22, 34],
+
+    /* Uden for Europa kører vi ikke selv. Fragten aftales konkret med
+       speditøren — tallene her er et udgangspunkt, ikke et tilbud.
+       Wieben Design har lager i USA, så nogle opgaver bygges af
+       materiel, der allerede står derovre. AFLEDT, bør bekræftes. */
+    oversoeiskFragtPrLaes: [55000, 110000],
+    oversoeiskFlybillet:   9500,
+    oversoeiskNaetter:     6,
+    oversoeiskDage:        7
   },
 
   /* Nøgletal til forventningsafstemning */

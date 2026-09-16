@@ -198,6 +198,25 @@
     return P.projektstyring.filter(function (t) { return s.stand.m2 <= t.tilM2; })[0].pris;
   }
 
+  /* Hvordan kommer standen frem? Vi kører selv, medmindre den er for stor
+     til bilen, eller turen er så lang, at speditør og fly bliver billigere.
+     Både prisen og teksten under byvalget spørger her. */
+  function transportmaade() {
+    var m = P.montage, m2 = s.stand.m2, km = s.messe.km;
+    if (s.messe.oversoeisk) return 'oversoeisk';
+    if (m2 > m.egenkoerselMaxM2) return 'speditoer';
+    if (km <= m.altidEgenKoerselKm) return 'egen';
+
+    var montoerer = Math.max(m.minMontoerer, Math.ceil(m2 / m.m2PrMontoer));
+    var laes = Math.ceil(m2 / m.m2PrLaes);
+    var fragt = (km * m.fragtPrKm[0] * laes + km * m.fragtPrKm[1] * laes) / 2 + m.flybillet * montoerer;
+    var koersel = (km / m.kmPrTime) * m.ture * m.timepris *
+                    (m.koeretidMontoerer[0] + m.koeretidMontoerer[1]) / 2 +
+                  km * m.lastbilPrKm * m.ture + km * m.kmPengePrKm * m.ture +
+                  (s.messe.bro ? m.broafgift * m.ture : 0);
+    return fragt < koersel ? 'speditoer' : 'egen';
+  }
+
   function montage() {
     var m = P.montage, m2 = s.stand.m2, km = s.messe.km;
     var montoerer = Math.max(m.minMontoerer, Math.ceil(m2 / m.m2PrMontoer));
@@ -209,8 +228,20 @@
     var linjer = [{ navn: 'Opbygning, ind- og udbæring, nedtagning og pakning', pris: iv.gang(timer, m.timepris),
                     note: 'anslået ' + Math.round(timer[0]) + '–' + Math.round(timer[1]) + ' mandtimer med ' + montoerer + ' montører' }];
 
-    /* Vi kører selv, medmindre standen er for stor til bilen, eller turen er
-       så lang, at speditør og fly bliver billigere. */
+    /* Uden for Europa kører vi ikke selv — der er kun én vej */
+    if (s.messe.oversoeisk) {
+      var laesO = Math.ceil(m2 / m.m2PrLaes);
+      linjer.push({ navn: 'Oversøisk fragt',
+        pris: [m.oversoeiskFragtPrLaes[0] * laesO, m.oversoeiskFragtPrLaes[1] * laesO],
+        note: laesO + (laesO === 1 ? ' forsendelse' : ' forsendelser') + ' — aftales konkret med speditøren' });
+      linjer.push({ navn: 'Montørernes rejse', pris: iv.tal(m.oversoeiskFlybillet * montoerer),
+        note: montoerer + ' mand tur/retur' });
+      linjer.push({ navn: 'Ophold og fortæring',
+        pris: iv.tal(m.overnatning * montoerer * m.oversoeiskNaetter + m.fortaering * montoerer * m.oversoeiskDage) });
+      linjer.push({ navn: 'Forsikring af transporten', pris: iv.tal(m.forsikring) });
+      return linjer;
+    }
+
     var laes = Math.ceil(m2 / m.m2PrLaes);
     var speditoer = {
       pris: [km * m.fragtPrKm[0] * laes + m.flybillet * montoerer,
@@ -227,10 +258,7 @@
       navn: 'Kørsel og køretid',
       note: nf.format(km) + ' km hver vej, ca. ' + Math.round(koeretimer) + ' timer på vejen'
     };
-    var midt = function (a) { return (a.pris[0] + a.pris[1]) / 2; };
-    var valgt = m2 > m.egenkoerselMaxM2 ? speditoer
-      : (km <= m.altidEgenKoerselKm ? egen
-      : (midt(speditoer) < midt(egen) ? speditoer : egen));
+    var valgt = transportmaade() === 'speditoer' ? speditoer : egen;
     linjer.push(valgt);
 
     /* Tomgods: kører vi selv, tager kasserne turen hjem med bilen.
@@ -476,14 +504,19 @@
     document.getElementById('km-manuel').hidden = !s.messe.ukendt;
 
     var h = document.getElementById('by-hjaelp');
+    if (l.oversoeisk) {
+      h.textContent = 'Uden for Europa sender vi standen med speditør, og montørerne flyver. ' +
+        'Vi har lager i USA og har bygget på 72 destinationer på 5 kontinenter — den præcise fragt aftaler vi konkret.';
+      return;
+    }
     if (s.messe.ukendt && !s.messe.km) {
       h.textContent = 'Skriv cirka hvor langt der er fra vores værksted i Støvring, så regner vi transporten ud fra det.';
       return;
     }
-    var langt = s.messe.km > P.montage.egenkoerselMaxKm;
     h.textContent = 'Ca. ' + nf.format(s.messe.km) + ' km fra vores værksted i Støvring. ' +
-      (langt ? 'På den afstand sender vi standen med speditør og flyver montørerne derned.'
-             : 'Vi kører selv derned med standen.' + (s.messe.bro ? ' Broafgift er regnet med.' : ''));
+      (transportmaade() === 'speditoer'
+        ? 'På den afstand er det billigere at sende standen med speditør og flyve montørerne derned — så det regner vi med.'
+        : 'Vi kører selv derned med standen.' + (s.messe.bro ? ' Broafgift er regnet med.' : ''));
   }
 
   function visAabneSider() {
@@ -1009,6 +1042,7 @@
     document.getElementById('land').addEventListener('change', function (e) {
       s.messe.land = e.target.value;
       var l = land();
+      s.messe.oversoeisk = !!l.oversoeisk;
       if (l.byer.length) {
         s.messe.by = l.byer[0].navn;
         s.messe.km = l.byer[0].km;
@@ -1027,6 +1061,7 @@
         var b = by(e.target.value);
         s.messe.by = e.target.value;
         s.messe.ukendt = false;
+        s.messe.oversoeisk = !!land().oversoeisk;
         if (b) { s.messe.km = b.km; s.messe.bro = b.bro; }
       }
       opdater();
