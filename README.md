@@ -99,6 +99,10 @@ Afledt og markeret som sådan i `pricing.js` — bør bekræftes af Wieben Desig
   Det er beregningens største usikkerhed, og det er den, prisspændet består af
 - **Arbejdsmodel for transport** — egen lastbil op til 450 km, derover speditør
   og fly til montørerne
+- **Timenormer for grafisk arbejde** — 0,10–0,18 time pr. m² tryk, når kunden
+  leverer logo og billeder, 0,20–0,35 når vi laver det hele fra bunden.
+  Selve timeprisen, **750 kr.**, er oplyst af Wieben Design — den står ikke i
+  arket, hvor den eneste timesats er montørens 652 kr.
 
 Prisspændet er typisk ±4–5 %, fordi alt andet end montagetimerne er faste
 lejepriser.
@@ -154,12 +158,6 @@ beregneren og se, om den rammer inden for spændet.
 
 **Resten:**
 
-- **Rigtige fotos** på valgkortene. De indbyggede SVG-illustrationer i
-  `WD_INDHOLD.svg` er placeholdere. Læg billeder i `assets/img/` og skift den
-  linje i `app.js`, hvor `<span class="ill">` bygges:
-  ```js
-  b.appendChild(el('<span class="ill"><img src="assets/img/' + id + '.jpg" alt=""></span>'));
-  ```
 - **Endpointet skal sættes op** — se `integration/OPSAETNING.md`
 - **Hosting**: hvordan modulet lægges på wiebendesign.dk
 - **Teksterne** bør gennemlæses af Wieben Design. Tone, påstande og ordvalg er
@@ -167,6 +165,24 @@ beregneren og se, om den rammer inden for spændet.
 - **Engelsk version**, når den danske ligger fast. Alle tekster ligger samlet i
   `content.js`
 - **Opfølgningen internt**: hvem kontakter leadet, hvor hurtigt og med hvad
+
+## Efter lancering
+
+**Rigtige fotos på valgkortene.** Besluttet udskudt til efter lancering: arbejdet
+med at finde, beskære og godkende billeder vejer for nu tungere end det, de
+tilføjer. De indbyggede SVG-illustrationer i `WD_INDHOLD.svg` fungerer indtil da.
+
+Når billederne skal ind, læg dem i `assets/img/` og skift den linje i `app.js`,
+hvor `<span class="ill">` bygges:
+
+```js
+b.appendChild(el('<span class="ill"><img src="assets/img/' + id + '.jpg" alt=""></span>'));
+```
+
+De otte, der gør mest forskel, er dem hvor valget er rent visuelt: almindelige
+vægge vs. lysvægge, de tre gulve, de tre belysningsniveauer, hængeskilt og
+LED-skærm. De fire "åbne sider"-kort skal **ikke** være fotos — de er
+plantegninger af standens placering i hallen.
 
 ## Baggrund
 
