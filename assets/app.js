@@ -545,6 +545,13 @@
   function land(id) {
     return C.lande.filter(function (l) { return l.id === (id || s.messe.land); })[0] || C.lande[0];
   }
+  /* Skriver kunden selv afstanden ind, kender vi ikke ruten. Men skal man
+     over en bro til hver by i landet, skal man det også til den, kunden
+     nævner — så tages broafgiften med. Ved „Et andet land“ ved vi intet. */
+  function broForLand() {
+    var byer = land().byer;
+    return byer.length > 0 && byer.every(function (b) { return b.bro; });
+  }
   function by(navn) {
     return land().byer.filter(function (b) { return b.navn === (navn || s.messe.by); })[0] || null;
   }
@@ -1108,10 +1115,21 @@
     /* Spring aldrig længere frem, end der er udfyldt til */
     while (n > 0 && !kanGaaTil(n)) n--;
     s.trin = n;
+    var aktiv = null;
     Array.prototype.forEach.call(document.querySelectorAll('.step'), function (sec) {
       sec.hidden = Number(sec.dataset.step) !== s.trin;
+      if (!sec.hidden) aktiv = sec;
     });
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    /* Knappen, man trykkede på, er lige blevet skjult — så uden dette
+       ryger fokus til <body>, og tastaturbrugeren skal tabbe forfra. */
+    if (aktiv) {
+      var overskrift = aktiv.querySelector('h1, h2');
+      if (overskrift) {
+        overskrift.setAttribute('tabindex', '-1');
+        overskrift.focus({ preventScroll: true });
+      }
+    }
     opdater();
   }
 
@@ -1171,7 +1189,7 @@
         s.messe.bro = l.byer[0].bro;
         s.messe.ukendt = false;
       } else {
-        s.messe.by = ''; s.messe.bro = false; s.messe.ukendt = true; s.messe.km = 0;
+        s.messe.by = ''; s.messe.bro = broForLand(); s.messe.ukendt = true; s.messe.km = 0;
         document.getElementById('km').value = '';
       }
       opdater();
@@ -1180,7 +1198,7 @@
       if (e.target.value === '__anden__') {
         /* Den gamle bys afstand skal væk, ellers regner vi videre på den
            og skriver „Ca. 130 km“ under et felt, kunden lige har tømt. */
-        s.messe.ukendt = true; s.messe.by = ''; s.messe.bro = false; s.messe.km = 0;
+        s.messe.ukendt = true; s.messe.by = ''; s.messe.bro = broForLand(); s.messe.km = 0;
         document.getElementById('km').value = '';
       } else {
         var b = by(e.target.value);
@@ -1193,7 +1211,7 @@
     });
     document.getElementById('km').addEventListener('input', function (e) {
       s.messe.km = Math.max(0, Number(e.target.value) || 0);
-      s.messe.bro = false;
+      s.messe.bro = broForLand();
       opdater();
     });
     document.getElementById('messedato').addEventListener('change', function (e) {
