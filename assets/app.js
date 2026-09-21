@@ -501,6 +501,9 @@
 
   function kort(o) {
     var b = el('<button type="button" class="card"></button>');
+    /* Visningen bygges om ved hvert valg, så knappen her erstattes af en ny.
+       Nøglen gør, at fokus kan flyttes til aflaseren bagefter. */
+    if (o.fokus) b.setAttribute('data-fokus', o.fokus);
     /* Fluebenet er tegnet med CSS, så en skærmlæser skal have det sagt */
     if (o.valgt !== undefined) b.setAttribute('aria-pressed', o.valgt ? 'true' : 'false');
     if (o.valgt) b.classList.add('valgt');
@@ -523,6 +526,7 @@
       var c = el('<div class="cards cards-' + Math.min(4, sp.valg.length) + '"></div>');
       sp.valg.forEach(function (valg) {
         c.appendChild(kort({
+          fokus: 'profil:' + sp.id + ':' + valg.id,
           titel: valg.titel, tekst: valg.tekst, valgt: s.profil[sp.id] === valg.id,
           klik: function () { s.profil[sp.id] = valg.id; opdater(); }
         }));
@@ -606,6 +610,7 @@
     [1, 2, 3, 4].forEach(function (n) {
       var a = C.aabneSider[n];
       v.appendChild(kort({
+        fokus: 'sider:' + n,
         svg: C.svg['sider' + n], titel: a.titel, tekst: a.tekst,
         valgt: s.stand.aabneSider === n,
         klik: function () { s.stand.aabneSider = n; opdater(); }
@@ -628,6 +633,7 @@
       var pris = vaegpris();
       s.stand.vaegtype = gemt;
       v.appendChild(kort({
+        fokus: 'vaegtype:' + id,
         svg: C.svg[id], titel: t.titel, tekst: t.tekst, valgt: s.stand.vaegtype === id,
         meta: '<span class="card-pris">' + fmtKort(spaend(iv.tal(pris.konstruktion + pris.print))) + ' kr.</span> for jeres stand' +
               '<span class="card-teknik">' + esc(t.teknik) + '</span>',
@@ -648,6 +654,7 @@
     v.innerHTML = '';
     valg.forEach(function (o) {
       var b = el('<button type="button" class="seg-btn">' + esc(o.titel) + '</button>');
+      b.setAttribute('data-fokus', id + ':' + o.vaerdi);
       if (o.vaerdi === aktiv) b.classList.add('valgt');
       if (o.laast) { b.disabled = true; b.title = 'Findes ikke som lysvæg'; }
       else b.onclick = function () { klik(o.vaerdi); };
@@ -686,6 +693,7 @@
         var ga2 = grafikarbejde();
         s.grafikarbejde = gemt;
         gav.appendChild(kort({
+          fokus: 'grafikarbejde:' + id,
           titel: t.titel, tekst: t.tekst, valgt: s.grafikarbejde === id,
           meta: '<span class="card-pris">' + fmtKort(spaend(ga2.pris)) + ' kr.</span> · anslået ' +
                 Math.round(ga2.timer[0]) + '–' + Math.round(ga2.timer[1]) + ' timer',
@@ -699,6 +707,7 @@
     Object.keys(C.gulv).forEach(function (id) {
       var t = C.gulv[id];
       g.appendChild(kort({
+        fokus: 'gulv:' + id,
         titel: t.titel, tekst: t.tekst, valgt: s.stand.gulv === id,
         meta: '<span class="card-pris">' + fmtKort(spaend(iv.tal(P.gulv[id] * s.stand.m2))) + ' kr.</span> · ' +
               nf.format(P.gulv[id]) + ' kr./m²',
@@ -710,6 +719,7 @@
     [['nej', false], ['ja', true]].forEach(function (par) {
       var t = C.haevet[par[0]];
       hv.appendChild(kort({
+        fokus: 'haevet:' + par[0],
         titel: t.titel, tekst: t.tekst, valgt: s.stand.haevet === par[1],
         meta: par[1]
           ? '<span class="card-pris">' + fmtKort(spaend(iv.tal(P.haevetGulv * s.stand.m2))) + ' kr.</span> oveni gulvet'
@@ -724,6 +734,7 @@
       var t = C.belysning[id];
       var def = P.belysning[id];
       b.appendChild(kort({
+        fokus: 'belysning:' + id,
         titel: t.titel, tekst: t.tekst, valgt: s.stand.belysning === id,
         meta: '<span class="card-pris">' +
               fmtKort(spaend(iv.tal(Math.ceil(s.stand.m2 / def.m2PrSpot) * def.prSpot))) + ' kr.</span> · ' +
@@ -764,6 +775,7 @@
           muligt.forEach(function (m) {
             var b = el('<button type="button" class="seg-btn' + (m.id === vr.id ? ' valgt' : '') + '">' +
               esc(C.stoerrelsesnavne[m.id]) + '</button>');
+            b.setAttribute('data-fokus', 'stoerrelse:' + id + ':' + m.id);
             b.title = (t.stoerrelser[m.id] || '') + ' · ' + m.m2 + ' m²';
             b.onclick = function () { saetVariant(id, m.id); };
             seg.appendChild(b);
@@ -778,9 +790,11 @@
 
         var st = el('<span class="stepper"></span>');
         var minus = el('<button type="button" aria-label="Færre">−</button>');
+        minus.setAttribute('data-fokus', 'minus:' + id);
         minus.disabled = !valgt.antal;
         minus.onclick = function () { saetAntal(id, valgt.antal - 1); };
         var plus = el('<button type="button" aria-label="Flere">+</button>');
+        plus.setAttribute('data-fokus', 'plus:' + id);
         plus.onclick = function () { saetAntal(id, valgt.antal + 1); };
         st.appendChild(minus);
         st.appendChild(el('<span class="antal">' + valgt.antal + '</span>'));
@@ -822,12 +836,14 @@
 
       var kort2 = el('<div class="cards cards-2"></div>');
       kort2.appendChild(kort({
+        fokus: 'startvalg:forslag',
         titel: 'Brug vores forslag', valgt: false,
         tekst: 'Vi sætter ' + antal + ' områder op ud fra jeres formål og standens størrelse. Bagefter kan I rette i det hele — det er kun et udgangspunkt.',
         meta: '<span class="card-pris">' + fmtKort(spaend(iv.tal(pris))) + ' kr.</span> for hele messen',
         klik: function () { s.omraader = foreslaaOmraader(); s.omraadeValg = 'forslag'; opdater(); }
       }));
       kort2.appendChild(kort({
+        fokus: 'startvalg:selv',
         titel: 'Jeg bygger selv', valgt: false,
         tekst: 'Start med en tom stand og vælg områderne én for én. Vi holder øje med, om der er plads til dem.',
         meta: 'Tager et par minutter mere',
@@ -879,6 +895,7 @@
         s.tilkoeb[id] = gemt;
       }
       v.appendChild(kort({
+        fokus: 'tilkoeb:' + id,
         svg: C.svg[t.ikon], titel: t.titel, tekst: t.tekst, valgt: til,
         meta: '<span class="card-pris">' + fmtKort(spaend(iv.tal(pris || 0))) + ' kr.</span>' +
               (id === 'led' ? ' · ' + esc(ledValgt().navn) : ''),
@@ -894,6 +911,7 @@
       lv.innerHTML = '';
       P.ledStoerrelser.forEach(function (l) {
         lv.appendChild(kort({
+          fokus: 'led:' + l.id,
           titel: l.navn, tekst: dec(l.m2) + ' m² skærm · ' + l.fliser + ' moduler',
           valgt: s.led === l.id,
           meta: '<span class="card-pris">' + fmtKort(spaend(iv.tal(ledPris(l)))) + ' kr.</span> inkl. styring',
@@ -1071,6 +1089,14 @@
      OPDATERING OG NAVIGATION
      ===================================================================== */
   function opdater() {
+    /* Alle valgkort og segmentknapper bliver bygget om herunder, så den
+       knap, brugeren stod på, forsvinder og fokus falder til <body>. Med
+       tastatur betyder det, at man skal tabbe forfra efter hvert valg.
+       Vi husker nøglen her og finder aflaseren igen til sidst. */
+    var haddeFokus = document.activeElement;
+    var fokusNoegle = haddeFokus && haddeFokus.getAttribute
+      ? haddeFokus.getAttribute('data-fokus') : null;
+
     s.omraadeAreal = omraadeAreal();
     s.ugerTilMesse = ugerTilMesse();
     document.getElementById('m2-ud').textContent = s.stand.m2 + ' m²';
@@ -1107,6 +1133,24 @@
     if (protonote) protonote.hidden = !!K.endpoint;
     var opsPris = document.querySelector('.ops-pris');
     if (opsPris) opsPris.classList.toggle('skjult-pris', !!(K.kraevEmailForPris && !s.sendt));
+
+    /* Kun hvis fokus faktisk gik tabt ved ombygningen — ellers ville vi
+       stjæle fokus fra den, der lige klikkede et andet sted hen. */
+    if (fokusNoegle && !document.contains(haddeFokus)) {
+      /* To knapper findes ikke bagefter: minus bliver slået fra ved nul, og
+         startvalget forsvinder, når det er truffet. Så peges der videre på
+         det nærmeste, det giver mening at stå på. */
+      var kaede = ['[data-fokus="' + fokusNoegle + '"]'];
+      if (fokusNoegle.indexOf('minus:') === 0) kaede.push('[data-fokus="plus:' + fokusNoegle.slice(6) + '"]');
+      if (fokusNoegle.indexOf('startvalg:') === 0) kaede.push('#omraadedel .sp-title');
+      for (var fi = 0; fi < kaede.length; fi++) {
+        var ny = document.querySelector(kaede[fi]);
+        if (!ny || ny.disabled || ny.closest('[hidden]')) continue;
+        if (ny.tabIndex < 0 && !/^(BUTTON|A|INPUT|SELECT|TEXTAREA)$/.test(ny.tagName)) ny.setAttribute('tabindex', '-1');
+        ny.focus({ preventScroll: true });
+        break;
+      }
+    }
     gem();
   }
 
@@ -1144,26 +1188,111 @@
     } catch (e) { /* privat browsing */ }
   }
 
+  /* ---------- Indlæsning af gemt tilstand ----------
+     Det gemte kan stamme fra en ældre version af beregneren, fra en
+     håndredigeret localStorage eller fra en pris, der siden er fjernet
+     fra kataloget. Derfor bliver intet taget for gode varer: felterne
+     flettes ind i standardværdierne, tal klemmes ind i deres grænser, og
+     et valg, vi ikke kender, falder tilbage på standarden.
+
+     Alternativet er at bumpe GEM-nøglen, hver gang tilstanden ændrer form
+     — men det smider kundens udfyldning væk. Det her beholder den.      */
+
+  /* Fletter kun de nøgler, standardtilstanden selv har, og kun hvis
+     typen passer. Ukendte nøgler i det gemte ignoreres. */
+  function flet(maal, kilde) {
+    if (!kilde || typeof kilde !== 'object') return;
+    Object.keys(maal).forEach(function (k) {
+      var v = kilde[k];
+      if (v === undefined || v === null) return;
+      if (typeof maal[k] === 'number') { var n = Number(v); if (!isNaN(n)) maal[k] = n; }
+      else if (typeof maal[k] === 'boolean') maal[k] = !!v;
+      else if (typeof v === 'string' || typeof v === 'number') maal[k] = v;
+    });
+  }
+  function iTabel(vaerdi, tabel, standard) {
+    return Object.prototype.hasOwnProperty.call(tabel, vaerdi) ? vaerdi : standard;
+  }
+  function iListe(vaerdi, liste, standard) {
+    return liste.indexOf(vaerdi) !== -1 ? vaerdi : standard;
+  }
+  function klem(v, fra, til, standard) {
+    var n = Number(v);
+    if (isNaN(n)) return standard;
+    return Math.min(til, Math.max(fra, Math.round(n)));
+  }
+
   function hent() {
     try {
       var raa = localStorage.getItem(GEM);
       if (!raa) return;
       var g = JSON.parse(raa);
-      ['profil', 'messe', 'stand', 'omraader', 'omraadeValg', 'tilkoeb', 'led', 'grafikarbejde', 'team'].forEach(function (k) { if (g[k]) s[k] = g[k]; });
+      if (!g || typeof g !== 'object') return;
+
+      flet(s.profil, g.profil);
+      flet(s.messe, g.messe);
+      flet(s.stand, g.stand);
+      flet(s.tilkoeb, g.tilkoeb);
+      flet(s.team, g.team);
+      if (typeof g.led === 'string') s.led = g.led;
+      if (typeof g.grafikarbejde === 'string') s.grafikarbejde = g.grafikarbejde;
+      if (g.omraadeValg === 'forslag' || g.omraadeValg === 'selv') s.omraadeValg = g.omraadeValg;
       if (g.omraaderRoert) s.omraaderRoert = true;
-      /* Gemt tilstand kan stamme fra en tidligere version, hvor et område
-         bare var et tal. Bring den på nuværende form frem for at knække. */
+
+      /* Profilsvar skal være et af de svar, spørgsmålet faktisk har */
+      C.profilSpoergsmaal.forEach(function (sp) {
+        var ider = sp.valg.map(function (v) { return v.id; });
+        if (s.profil[sp.id] && ider.indexOf(s.profil[sp.id]) === -1) s.profil[sp.id] = null;
+      });
+
+      /* Sted */
+      var landIder = C.lande.map(function (l) { return l.id; });
+      s.messe.land = iListe(s.messe.land, landIder, 'dk');
+      var byNavne = land().byer.map(function (b) { return b.navn; });
+      if (!s.messe.ukendt) {
+        s.messe.by = iListe(s.messe.by, byNavne, byNavne[0] || '');
+        var b = by();
+        if (b) { s.messe.km = b.km; s.messe.bro = b.bro; }
+      }
+      s.messe.km = Math.max(0, Number(s.messe.km) || 0);
+      s.messe.oversoeisk = !!land().oversoeisk;
+      if (s.messe.dato && isNaN(new Date(s.messe.dato).getTime())) s.messe.dato = '';
+
+      /* Standen — grænserne er de samme som skydernes i index.html */
+      s.stand.m2 = klem(s.stand.m2, 6, 200, 24);
+      s.stand.aabneSider = klem(s.stand.aabneSider, 1, 4, 1);
+      s.stand.vaegtype = iTabel(s.stand.vaegtype, C.vaegtyper, 'print');
+      s.stand.grafik = iTabel(s.stand.grafik, C.grafikdaekning, 'fuld');
+      s.stand.gulv = iTabel(s.stand.gulv, C.gulv, 'taeppe');
+      s.stand.belysning = iTabel(s.stand.belysning, C.belysning, 'forstaerket');
+      var hoejder = P.vaeg.hoejder.map(function (h) { return h.m; });
+      if (hoejder.indexOf(Number(s.stand.vaeghoejde)) === -1) s.stand.vaeghoejde = 3;
+      else s.stand.vaeghoejde = Number(s.stand.vaeghoejde);
+      if (!hoejdeMulig(hoejde())) {
+        var mulige = P.vaeg.hoejder.filter(hoejdeMulig);
+        s.stand.vaeghoejde = mulige[mulige.length - 1].m;
+      }
+
+      s.team.dage = klem(s.team.dage, 1, 8, 3);
+      s.grafikarbejde = iTabel(s.grafikarbejde, C.grafikarbejde, 'delvis');
+      s.led = iListe(s.led, P.ledStoerrelser.map(function (l) { return l.id; }), 'l');
+
+      /* Områder: en ældre version gemte bare et tal, og et område kan
+         være fjernet fra kataloget siden. */
       var rene = {};
-      Object.keys(s.omraader || {}).forEach(function (id) {
+      Object.keys(g.omraader || {}).forEach(function (id) {
         if (!P.omraader[id]) return;
-        var v = s.omraader[id];
+        var v = g.omraader[id];
         var antal = typeof v === 'number' ? v : Number(v && v.antal);
         if (!(antal > 0)) return;
         var vid = (v && v.variant && variant(id, v.variant).id) || standardVariant(id);
-        rene[id] = { antal: Math.round(antal), variant: vid };
+        rene[id] = { antal: Math.min(99, Math.round(antal)), variant: vid };
       });
       s.omraader = rene;
-    } catch (e) { /* ignorer ugyldigt gemt data */ }
+    } catch (e) {
+      /* Kan det gemte ikke bringes på form, er en tom beregner bedre end
+         en brækket. Standardtilstanden står urørt i s. */
+    }
   }
 
   function bind() {

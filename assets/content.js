@@ -430,7 +430,6 @@ window.WD_INDHOLD = {
     /* Depot: stablede kasser bag en væg */
     kasser:   '<svg viewBox="0 0 100 70"><rect class="nabo" x="16" y="10" width="68" height="50"/><rect class="stand" x="26" y="34" width="22" height="22"/><rect class="stand" x="52" y="34" width="22" height="22"/><rect class="stand" x="39" y="14" width="22" height="18"/><line class="aaben" x1="26" y1="45" x2="48" y2="45"/><line class="aaben" x1="52" y1="45" x2="74" y2="45"/></svg>',
     /* Mødebord: firkantet bord med stole på begge sider */
-    moedebord: '<svg viewBox="0 0 100 70"><rect class="stand" x="28" y="26" width="44" height="18" rx="2"/><path class="aaben" d="M34 20 L46 20 M34 20 L34 14 M46 20 L46 14 M54 20 L66 20 M54 20 L54 14 M66 20 L66 14 M34 50 L46 50 M34 50 L34 56 M46 50 L46 56 M54 50 L66 50 M54 50 L54 56 M66 50 L66 56"/></svg>',
-    el:       '<svg viewBox="0 0 100 70"><rect class="stand" x="28" y="14" width="44" height="42" rx="3"/><path class="aaben" d="M52 22 L42 38 L50 38 L46 50"/></svg>'
+    moedebord: '<svg viewBox="0 0 100 70"><rect class="stand" x="28" y="26" width="44" height="18" rx="2"/><path class="aaben" d="M34 20 L46 20 M34 20 L34 14 M46 20 L46 14 M54 20 L66 20 M54 20 L54 14 M66 20 L66 14 M34 50 L46 50 M34 50 L34 56 M46 50 L46 56 M54 50 L66 50 M54 50 L54 56 M66 50 L66 56"/></svg>'
   }
 };

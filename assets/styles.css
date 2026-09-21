@@ -31,7 +31,9 @@
 /* Uden denne kan man ikke se, hvor man er, når man tabber sig gennem siden.
    :focus-visible rammer kun tastatur, så et museklik ikke efterlader en ring. */
 :focus-visible{outline:2px solid var(--primary); outline-offset:2px; border-radius:4px}
-.step-title:focus-visible{outline:none}
+/* Overskrifter får tabindex=-1 for at kunne modtage fokus efter et
+   trinskift — de skal ikke vise en ring af det */
+.step-title:focus-visible, .sp-title:focus-visible{outline:none}
 .card:focus-visible, .omraade:focus-visible, .btn:focus-visible{outline-offset:3px}
 .seg-btn:focus-visible{outline-offset:-2px}
 /* Ingen op/ned-pile på talfelter — de indbyder til at rulle i dem */

@@ -130,7 +130,12 @@ window.WD_PRIS = {
   rig: { trussPrLbm: 130, frisehoejde: 1 },
 
   /* -------------------------------------------------------------------
-     KATALOG — leje pr. messe, direkte fra prisgrundlaget
+     KATALOG — leje pr. messe, direkte fra prisgrundlaget.
+     Kunden vælger ikke varer enkeltvis, men områder; varerne herunder er
+     det, områderne er sat sammen af. Tre af dem er prissat, men indgår
+     ikke i noget område endnu — mon32 (32" skærm), bonamat
+     (filterkaffemaskine) og vandkoger. De står klar, hvis et område skal
+     have dem, og skal ellers ryddes væk.
      ------------------------------------------------------------------- */
   katalog: {
     diske: [

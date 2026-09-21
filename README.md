@@ -208,6 +208,30 @@ skal ned.
   samtykke nok til, at I vender tilbage om messen, og både kvitteringen og
   kundens mail siger, at I gør det. Det løfte skal kunne holdes
 
+## Test
+
+Beregneren har ingen testramme i repoet — testene er kørt med Playwright mod
+Chromium under udviklingen. Det, der er kontrolleret:
+
+| Område | Dækning |
+|---|---|
+| Bredt gennemløb | Hvert formål × ambition, 17 arealer, alle væghøjder × vægtyper × grafikniveauer, 17 lande × 74 byer + „en anden by“ + „et andet land“, 1–8 messedage, alle tilkøb, alle LED-størrelser, hvert område i hver størrelse, tom stand |
+| Tallene | 32 konfigurationer: totalen skal være den samme i prisbjælken, dens specifikation, på trin 4, i samlet-boksen, i opsummeringen og i PDF-arket — og posterne skal summere til den |
+| Formularen | Seks slags ondsindet input (script-tags, billed-handlers, SVG-onload, 600 tegn), tom formular, ugyldig e-mail, dobbeltklik på afsend |
+| Gemt tilstand | Genindlæsning på hvert trin, 78 ødelagte tilstande (gammelt format, håndredigeret, tilfældigt skrald), localStorage slået fra, spring til låste trin |
+| Tastatur | Hele forløbet fra forside til afsendt oplæg uden mus — fokus må aldrig falde til `<body>` |
+| HTML | Dublerede id, links uden tekst, billeder uden alt, knapper uden navn, felter uden label, overskriftsorden |
+| Tekst | Dobbelte mellemrum, mellemrum før tegnsætning, engelske anførselstegn, bindestreg brugt som tankestreg, gentagne ord |
+| Forslaget | Alle 60 kombinationer af formål og størrelse: fyldningsgrad, depot med, ingen der udløser beregnerens egen trængsels-advarsel |
+| Mails | Begge skabeloner: balanceret HTML, formaterede beløb, ingen `undefined` |
+| Layout | Ti bredder fra 390 til 1440 px: intet vandret overløb, ingen knapper der stabler sig |
+
+**Ikke testet:** Safari og Firefox. Kun Chromium var tilgængeligt under
+udviklingen. Beregneren bruger `aspect-ratio`, `:focus-visible`,
+`focus({preventScroll})` og `scrollTo({behavior})`, som alle kræver
+Safari 15.4 / iOS 15.4 (marts 2022) eller nyere. Åbn den på en iPhone og en
+Mac, før den lægges på sitet.
+
 ## Efter lancering
 
 **Rigtige fotos på valgkortene.** Besluttet udskudt til efter lancering: arbejdet
