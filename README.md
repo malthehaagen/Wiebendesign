@@ -13,7 +13,7 @@ dem er kode:
 | Teksterne gennemlæst | Mangler — hver sætning er skrevet til lejligheden | Wieben Design |
 | Mailsystemet | Mangler endpoint og verificeret Resend-domæne | `integration/OPSAETNING.md` |
 | Hosting på wiebendesign.dk | Ikke besluttet | Wieben Design |
-| Engelsk version | Venter på at den danske tekst ligger fast | — |
+| Engelsk version | **Næste etape.** Sproglaget kan bygges nu; oversættelsen venter på, at den danske tekst er godkendt | — |
 
 Overskriften „Prototype“ står stadig i sidens header (`index.html`, `.top-note`).
 Den bør blive der, indtil priserne er bekræftet — det er én linje at fjerne
@@ -221,8 +221,12 @@ skal ned.
 - **Hosting**: hvordan modulet lægges på wiebendesign.dk
 - **Teksterne** bør gennemlæses af Wieben Design. Tone, påstande og ordvalg er
   rettet efter firmaets eget site — se [`docs/tone-of-voice.md`](docs/tone-of-voice.md)
-- **Engelsk version**, når den danske ligger fast. Alle tekster ligger samlet i
-  `content.js`
+- **Engelsk version**, når den danske tekst ligger fast. Bemærk, at teksterne
+  IKKE ligger samlet ét sted: `content.js` har ca. 430 strenge, men `app.js`
+  har 88 danske strenge hardkodet i logikken og `index.html` omkring 100 i
+  markuppen. En engelsk version kræver derfor først, at de strenge trækkes ud
+  i et sproglag — det arbejde afhænger ikke af, hvad teksten til sidst kommer
+  til at sige, og kan derfor gøres før godkendelsen
 - **Opfølgningen internt**: hvem kontakter leadet, hvor hurtigt og med hvad.
   Beregneren har ikke længere et „må vi ringe?“-felt — at sende oplægget er
   samtykke nok til, at I vender tilbage om messen, og både kvitteringen og
