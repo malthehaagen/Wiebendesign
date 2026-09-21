@@ -19,7 +19,7 @@ var ARK           = 'Leads';                      // fanen i regnearket
 
 var KOLONNER = ['Modtaget', 'Navn', 'Virksomhed', 'E-mail', 'Telefon', 'Ønsker opkald', 'Budgetramme',
                 'By', 'Land', 'Messedato', 'Messedage', 'Formål', 'Erfaring', 'Ambition',
-                'm²', 'Åbne sider', 'Vægge', 'Tryk', 'Gulv', 'Belysning',
+                'm²', 'Åbne sider', 'Vægge', 'Tryk', 'Grafisk arbejde', 'Gulv', 'Belysning',
                 'Områder', 'Estimat fra', 'Estimat til', 'Forventede leads', 'Besked'];
 
 /* ---------- Indgang ---------- */
@@ -62,7 +62,8 @@ function gemILead(d) {
     d.kontakt.oenskerOpkald ? 'JA' : '', d.kontakt.budget || '',
     d.messe.by, d.messe.land, d.messe.dato, d.messe.dage,
     d.profil.formaal, d.profil.erfaring, d.profil.ambition,
-    d.stand.m2, d.stand.aabneSider, d.stand.vaegge, d.stand.tryk, d.stand.gulv, d.stand.belysning,
+    d.stand.m2, d.stand.aabneSider, d.stand.vaegge, d.stand.tryk,
+    d.stand.grafiskArbejde || '', d.stand.gulv, d.stand.belysning,
     d.omraader.map(function (o) { return (o.antal > 1 ? o.antal + ' × ' : '') + o.navn; }).join(', '),
     d.estimat.fra, d.estimat.til,
     d.leads.fra + '–' + d.leads.til,
@@ -177,6 +178,7 @@ function kundeMail(d) {
         ['Areal', d.stand.m2 + ' m² med ' + d.stand.aabneSider + (d.stand.aabneSider === 1 ? ' åben side' : ' åbne sider')],
         ['Vægge', d.stand.vaegge + ', ' + String(d.stand.vaegmeter).replace('.', ',') + ' meter'],
         ['Tryk', d.stand.tryk],
+        ['Grafisk arbejde', d.stand.grafiskArbejde],
         ['Gulv', d.stand.gulv],
         ['Belysning', d.stand.belysning],
         ['Områder', omr]
@@ -226,6 +228,7 @@ function vorestMail(d) {
         ['Areal', d.stand.m2 + ' m², ' + d.stand.aabneSider + ' åbne sider'],
         ['Vægge', d.stand.vaegge + ', ' + String(d.stand.vaegmeter).replace('.', ',') + ' m i ' + String(d.stand.vaeghoejde).replace('.', ',') + ' m'],
         ['Tryk', d.stand.tryk],
+        ['Grafisk arbejde', d.stand.grafiskArbejde],
         ['Gulv', d.stand.gulv],
         ['Belysning', d.stand.belysning]
       ]) +

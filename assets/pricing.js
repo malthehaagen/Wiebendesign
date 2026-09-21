@@ -188,66 +188,69 @@ window.WD_PRIS = {
      prM2 bruges til områder, der bygges frem for at møbleres — så er
      prisen kvadratmeter gange denne sats.
      minStandM2 skjuler et område, indtil standen er stor nok til det.
+     maksIForslag er loftet for, hvor mange af området vores eget forslag
+     må lægge på — én velkomstdisk er nok, ståborde kan der være flere af.
+     Kunden kan altid selv skrue højere op bagefter.
      ------------------------------------------------------------------- */
   omraader: {
     /* --- Tag imod --- */
-    reception: { gruppe: 'samtale', varianter: [
+    reception: { gruppe: 'samtale', maksIForslag: 1, varianter: [
       { id: 'lille',  m2: 2, dele: { expo_hylde: 1 } },
       { id: 'mellem', m2: 3, dele: { izi_disk: 1, brochure: 1 } },
       { id: 'stor',   m2: 5, dele: { izi_disk: 1, expo_skab: 1, brochure: 2 } }
     ]},
     /* --- Tal sammen --- */
-    staabord: { gruppe: 'samtale', varianter: [
+    staabord: { gruppe: 'samtale', maksIForslag: 3, varianter: [
       { id: 'lille',  m2: 3, dele: { staabord: 1, barstol: 2 } },
       { id: 'mellem', m2: 5, dele: { staabord: 2, barstol: 4 } },
       { id: 'stor',   m2: 8, dele: { staabord: 3, barstol: 6 } }
     ]},
-    moedeAabent: { gruppe: 'samtale', varianter: [
+    moedeAabent: { gruppe: 'samtale', maksIForslag: 2, varianter: [
       { id: 'lille',  m2: 5, dele: { cafebord: 1, stol_arm: 4 } },
       { id: 'stor',   m2: 8, dele: { ubord: 1, stol_arm: 6 } }
     ]},
-    moede: { gruppe: 'samtale', varianter: [
+    moede: { gruppe: 'samtale', maksIForslag: 2, varianter: [
       { id: 'lille',  m2: 6,  vaegLbm: 5, doere: 1, dele: { cafebord: 1, stol_arm: 4 } },
       { id: 'stor',   m2: 10, vaegLbm: 8, doere: 1, dele: { ubord: 1, stol_arm: 6, mon43: 1 } }
     ]},
-    lounge: { gruppe: 'samtale', varianter: [
+    lounge: { gruppe: 'samtale', maksIForslag: 2, varianter: [
       { id: 'lille',  m2: 4,  dele: { loungestol: 2, loungebord: 1 } },
       { id: 'mellem', m2: 6,  dele: { sofa: 1, loungestol: 2, loungebord: 1 } },
       { id: 'stor',   m2: 10, dele: { sofa: 2, loungestol: 4, loungebord: 2 } }
     ]},
 
     /* --- Vis frem --- */
-    platform: { gruppe: 'vis', varianter: [
+    platform: { gruppe: 'vis', maksIForslag: 2, varianter: [
       { id: 'lille',  m2: 4,  prM2: 255 },
       { id: 'mellem', m2: 9,  prM2: 255 },
       { id: 'stor',   m2: 16, prM2: 255 }
     ]},
-    montre: { gruppe: 'vis', varianter: [
+    montre: { gruppe: 'vis', maksIForslag: 3, varianter: [
       { id: 'lille',  m2: 2, dele: { vitrine: 1 } },
       { id: 'stor',   m2: 4, dele: { vitrine: 2 } }
     ]},
-    reol: { gruppe: 'vis', varianter: [
+    reol: { gruppe: 'vis', maksIForslag: 3, varianter: [
       { id: 'lille',  m2: 2, dele: { abc_reol: 2 } },
       { id: 'stor',   m2: 4, dele: { abc_reol: 4 } }
     ]},
-    media: { gruppe: 'vis', varianter: [
+    media: { gruppe: 'vis', maksIForslag: 2, varianter: [
       { id: 'lille',  m2: 2, dele: { mon43: 1, afspiller: 1 } },
       { id: 'mellem', m2: 3, dele: { mon55: 1, afspiller: 1 } },
       { id: 'stor',   m2: 4, dele: { mon75: 1, afspiller: 1, stander: 1 } }
     ]},
-    scene: { gruppe: 'vis', minStandM2: 60, varianter: [
+    scene: { gruppe: 'vis', minStandM2: 60, maksIForslag: 1, varianter: [
       { id: 'fast',   m2: 12, dele: { mon65: 1, afspiller: 1, skalstol: 10 } }
     ]},
 
-    /* --- Servering --- */
-    bar: { gruppe: 'samtale', varianter: [
+    /* --- Servering, men står under „Hvor skal I tale med folk?“ --- */
+    bar: { gruppe: 'samtale', maksIForslag: 1, varianter: [
       { id: 'lille',  m2: 3, dele: { expo_bar: 1, nespresso_l: 1, papkrus: 1 } },
       { id: 'mellem', m2: 5, dele: { expo_bar: 1, barstol: 2, nespresso_l: 1, koeleskab_l: 1, papkrus: 1 } },
       { id: 'stor',   m2: 8, dele: { expo_bar: 1, expo_skab: 1, barstol: 4, nespresso_s: 1, koeleskab_h: 1, vask: 1, papkrus: 2 } }
     ]},
 
     /* --- Bagved --- */
-    depot: { gruppe: 'bagved', varianter: [
+    depot: { gruppe: 'bagved', maksIForslag: 1, varianter: [
       { id: 'lille',  m2: 3, vaegLbm: 4, doere: 1, dele: { abc_reol: 1, depot_bord: 1, affald: 1 } },
       { id: 'mellem', m2: 4, vaegLbm: 5, doere: 1, dele: { abc_reol: 1, depot_bord: 1, affald: 1, stumtjener: 2 } },
       { id: 'stor',   m2: 6, vaegLbm: 7, doere: 1, dele: { abc_reol: 2, depot_bord: 1, affald: 1, stumtjener: 2, koeleskab_l: 1 } }
@@ -284,7 +287,6 @@ window.WD_PRIS = {
   elTavle: {
     lille: { leje: 550, navn: 'El-tavle, 16A med 6 udtag' },
     stor:  { leje: 650, navn: 'El-tavle, 32A med 8 udtag' },
-    /* Varer der udløser den store tavle */
     /* Områder der trækker nok strøm til den store tavle */
     stortForbrug: ['bar', 'media', 'scene', 'montre']
   },

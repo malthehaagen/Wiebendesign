@@ -215,9 +215,9 @@ window.WD_INDHOLD = {
                    stoerrelser: { lille: 'Lille disk', mellem: 'Disk med brochurer', stor: 'Disk med aflåst skab' } },
     staabord:    { titel: 'Ståborde',            tekst: 'Til de korte samtaler. Folk der står, bliver i to minutter — folk der sætter sig, bliver i tyve.', ikon: 'bord',
                    stoerrelser: { lille: '1 bord, 2 stole', mellem: '2 borde, 4 stole', stor: '3 borde, 6 stole' } },
-    moedeAabent: { titel: 'Åbent mødeområde',    tekst: 'Bord og stole midt på standen. Halvprivat — man kan sætte sig, uden at gæsten føler sig lukket inde.', ikon: 'bord',
+    moedeAabent: { titel: 'Åbent mødeområde',    tekst: 'Bord og stole midt på standen. Halvprivat — man kan sætte sig, uden at gæsten føler sig lukket inde.', ikon: 'moedebord',
                    stoerrelser: { lille: 'Bord til 4', stor: 'U-bord til 6' } },
-    moede:       { titel: 'Lukket mødeområde',   tekst: 'Eget rum med vægge og dør. Til aftaler, der ikke skal høres af nabostanden.', ikon: 'vitrine',
+    moede:       { titel: 'Lukket mødeområde',   tekst: 'Eget rum med vægge og dør. Til aftaler, der ikke skal høres af nabostanden.', ikon: 'rum',
                    stoerrelser: { lille: 'Rum til 4', stor: 'Rum til 6 med skærm' } },
     lounge:      { titel: 'Loungeområde',        tekst: 'Bløde møbler til de samtaler, der skal tage tid.', ikon: 'lounge',
                    stoerrelser: { lille: '2 lænestole', mellem: 'Sofa og 2 lænestole', stor: '2 sofaer og 4 lænestole' } },
@@ -236,7 +236,7 @@ window.WD_INDHOLD = {
     bar:         { titel: 'Bar og servering',    tekst: 'Kaffe holder folk stående. Fire minutter mere er forskellen på en hilsen og et lead.', ikon: 'kaffe',
                    stoerrelser: { lille: 'Kaffe ved disken', mellem: 'Bar med køleskab', stor: 'Fuld bar med vask' } },
 
-    depot:       { titel: 'Integreret depot',               tekst: 'Aflåst rum til kasser, jakker og brochurer. Regn med 15–20 % af standens areal.', ikon: 'reol',
+    depot:       { titel: 'Integreret depot',               tekst: 'Aflåst rum til kasser, jakker og brochurer. Regn med 15–20 % af standens areal.', ikon: 'kasser',
                    stoerrelser: { lille: 'Kun opbevaring', mellem: 'Med garderobe', stor: 'Med garderobe og køleskab' } }
   },
 
@@ -247,7 +247,7 @@ window.WD_INDHOLD = {
     skilt:       { titel: 'Hængende skilt over standen', tekst: 'Jeres navn båret oppe i riggen, så standen kan ses fra den anden ende af hallen.', ikon: 'skaerm' },
     rigLys:      { titel: 'Lys fra riggen',              tekst: 'Projektører hængt over standen. Lyser hele gulvet op i stedet for kun væggene.', ikon: 'lys' },
     led:         { titel: 'LED-skærm',                   tekst: 'Vis produkterne i brug med film og demonstrationer. Skærmen bliver en del af standen og giver besøgende en anledning til at stoppe op.', ikon: 'led' },
-    beplantning: { titel: 'Beplantning',                 tekst: 'Det billigste greb, der får en stand til at virke færdig.', ikon: 'plante' }
+    beplantning: { titel: 'Beplantning',                 tekst: 'Det enkleste greb, der får en stand til at virke færdig.', ikon: 'plante' }
   },
 
   ledIntro: 'Skærmen bygges op af moduler og tilpasses jeres plads og det indhold, I vil vise. Styringen indgår altid — skærmen kan ikke lejes uden. Vi hjælper også med at tilpasse billeder, film og præsentationer, så de fungerer på den valgte størrelse.',
@@ -330,7 +330,7 @@ window.WD_INDHOLD = {
 
     { id: 'lys', vaegt: 7,
       naar: s => s.stand.belysning === 'standard',
-      titel: 'Lys er den billigste opgradering',
+      titel: 'Lyset løfter standen mest',
       tekst: 'Messehaller er mørkere, end folk husker. Går I fra almindeligt til ekstra lys, koster det typisk et par tusind kroner for hele messen — og det løfter standen mere end noget andet beløb i samme størrelse.' },
 
     { id: 'servering', vaegt: 7,
@@ -425,6 +425,12 @@ window.WD_INDHOLD = {
     scene:    '<svg viewBox="0 0 100 70"><rect class="stand" x="26" y="10" width="48" height="24" rx="2"/><circle class="nabo" cx="34" cy="48" r="5"/><circle class="nabo" cx="50" cy="48" r="5"/><circle class="nabo" cx="66" cy="48" r="5"/><line class="aaben" x1="22" y1="60" x2="78" y2="60"/></svg>',
     lys:      '<svg viewBox="0 0 100 70"><line class="aaben" x1="16" y1="16" x2="84" y2="16"/><circle class="stand" cx="32" cy="22" r="5"/><circle class="stand" cx="50" cy="22" r="5"/><circle class="stand" cx="68" cy="22" r="5"/><path class="nabo" d="M32 28 L22 56 L42 56 Z M50 28 L40 56 L60 56 Z M68 28 L58 56 L78 56 Z"/></svg>',
     plante:   '<svg viewBox="0 0 100 70"><path class="stand" d="M50 52 L50 26"/><path class="aaben" d="M50 32 Q34 24 36 40 Q46 42 50 32 Z M50 32 Q66 24 64 40 Q54 42 50 32 Z"/><rect class="nabo" x="42" y="52" width="16" height="10" rx="2"/></svg>',
+    /* Lukket rum: vægge hele vejen rundt med en åben dør i den ene side */
+    rum:      '<svg viewBox="0 0 100 70"><path class="vaeg" d="M40 60 L22 60 L22 10 L78 10 L78 60 L60 60"/><path class="aaben" d="M40 60 A20 20 0 0 0 60 40"/><rect class="stand" x="36" y="17" width="28" height="13" rx="2"/></svg>',
+    /* Depot: stablede kasser bag en væg */
+    kasser:   '<svg viewBox="0 0 100 70"><rect class="nabo" x="16" y="10" width="68" height="50"/><rect class="stand" x="26" y="34" width="22" height="22"/><rect class="stand" x="52" y="34" width="22" height="22"/><rect class="stand" x="39" y="14" width="22" height="18"/><line class="aaben" x1="26" y1="45" x2="48" y2="45"/><line class="aaben" x1="52" y1="45" x2="74" y2="45"/></svg>',
+    /* Mødebord: firkantet bord med stole på begge sider */
+    moedebord: '<svg viewBox="0 0 100 70"><rect class="stand" x="28" y="26" width="44" height="18" rx="2"/><path class="aaben" d="M34 20 L46 20 M34 20 L34 14 M46 20 L46 14 M54 20 L66 20 M54 20 L54 14 M66 20 L66 14 M34 50 L46 50 M34 50 L34 56 M46 50 L46 56 M54 50 L66 50 M54 50 L54 56 M66 50 L66 56"/></svg>',
     el:       '<svg viewBox="0 0 100 70"><rect class="stand" x="28" y="14" width="44" height="42" rx="3"/><path class="aaben" d="M52 22 L42 38 L50 38 L46 50"/></svg>'
   }
 };

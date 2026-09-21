@@ -56,6 +56,8 @@ assets/logo.png       Wieben Designs logo
 integration/apps-script.gs   Serverleddet: regneark, kundemail og besked til jer
 integration/OPSAETNING.md    Trin for trin til at sætte det i drift
 docs/prisgrundlag.md         Salgs- og lejepriser udtrukket af tilbudsarket
+docs/tone-of-voice.md        Sprog og påstande, udtrukket af wiebendesign.dk
+docs/messekalender-2026.csv  Messekalenderen, som byerne er valgt efter
 ```
 
 ## Leads
@@ -121,6 +123,22 @@ gulv: {
 Katalogets varer står som `{ id, leje }` i `pricing.js`, mens navn og beskrivelse
 ligger under samme `id` i `content.js`. Tilføjer du en vare, skal den oprettes
 begge steder.
+
+## Forslaget til områder
+
+Trykker kunden „Brug vores forslag“, fylder beregneren standen op til ca. 70 %
+af arealet. Rækkefølgen kommer fra formålet (`PRIORITET` i `app.js`), og
+`maksIForslag` i `pricing.js` sætter loftet for, hvor mange af hvert område
+forslaget må lægge på. Loftet 1 betyder én og kun én — velkomstdisk, depot,
+bar og præsentationsområde. De øvrige lofter ganges op på store stande, så et
+areal på 200 m² ikke får samme inventar som et på 60.
+
+To ting holder forslaget ærligt: første runde må intet område tage mere end
+sin andel af pladsen (ellers slugte en stor produktplatform hele standen, og
+depotet kom aldrig med), og når et område lægges på igen, regnes arealet på
+den størrelse, der faktisk er valgt. Alle 60 kombinationer af formål og
+størrelse lander på 50–70 % — ingen af dem udløser beregnerens egen
+trængsels-advarsel.
 
 ## Det der IKKE er jeres tal
 

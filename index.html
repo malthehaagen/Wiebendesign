@@ -29,9 +29,9 @@
   <!-- ============ TRIN 0: INTRO ============ -->
   <section class="step" data-step="0">
     <div class="hero">
-      <p class="eyebrow">30 års erfaring · messer i mere end 70 lande</p>
+      <p class="eyebrow">Mere end 30 års erfaring · messer i mere end 70 lande</p>
       <h1>Hvad skal jeres messestand kunne?</h1>
-      <p class="lead">Svar på nogle få spørgsmål om jeres brand, produkter og mål. Undervejs får I vores erfaring med, hvad der virker på en stand — og til sidst en sammensat pakke, en pris og en plan frem mod messedagen.</p>
+      <p class="lead">Svar på nogle få spørgsmål om jeres brand, produkter og mål. Undervejs får I vores erfaring med, hvad der virker på en stand — og til sidst en sammensat løsning, en pris og en plan frem mod messedagen.</p>
       <ul class="hero-list">
         <li><strong>4 minutter</strong> fra start til færdigt estimat</li>
         <li><strong>Vores egne priser</strong> — beregnet på det materiel, vi rent faktisk lejer ud</li>
@@ -99,7 +99,7 @@
       </div>
     </div>
 
-    <h3 class="grp-title">Hvor mange sider af standen er åbne?</h3>
+    <h3 class="sp-title">Hvor mange sider af standen er åbne?</h3>
     <p class="grp-hjaelp">Antallet af åbne sider afgør, hvor mange vægge vi skal bygge — og dermed en stor del af prisen.</p>
     <div id="aabneSider" class="cards cards-4"></div>
     <p class="field-hjaelp" id="vaeg-hjaelp"></p>
@@ -120,14 +120,14 @@
     </div>
 
     <div id="grafikarbejde-blok">
-      <h3 class="grp-title">Hvor langt er I med grafikken?</h3>
+      <h3 class="sp-title">Hvor langt er I med grafikken?</h3>
       <p class="grp-hjaelp">I kan få hjælp til hele det grafiske arbejde eller blot den del, der mangler. Det afgør, hvor mange timer der går med at gøre materialet klar til fladerne.</p>
       <div id="grafikarbejde" class="cards cards-3"></div>
     </div>
 
     <h3 class="grp-title">Gulv</h3>
     <div id="gulv" class="cards cards-3"></div>
-    <h3 class="grp-title">Skal gulvet hæves?</h3>
+    <h3 class="sp-title">Skal gulvet hæves?</h3>
     <p class="grp-hjaelp">Et hævet gulv giver plads til kabler under gulvet og markerer tydeligt, hvor jeres stand begynder.</p>
     <div id="haevet" class="cards cards-2"></div>
 
@@ -153,7 +153,7 @@
       <div id="omraader"></div>
       <p class="field-hjaelp" id="areal-hjaelp"></p>
 
-      <h3 class="grp-title">Skal der være noget af det her?</h3>
+      <h3 class="sp-title">Skal der være noget af det her?</h3>
       <div id="tilkoeb" class="cards cards-4"></div>
     </div>
     <div id="led-valg" class="ledvalg" hidden>
@@ -198,7 +198,7 @@
         <label>Virksomhed<input type="text" name="virksomhed" required></label>
         <label>E-mail<input type="email" name="email" required></label>
         <label>Telefon<input type="tel" name="telefon"></label>
-        <label class="full">Har I en budgetramme? <span class="valgfri-mrk">Valgfrit</span>
+        <label class="full"><span>Har I en budgetramme? <span class="valgfri-mrk">Valgfrit</span></span>
           <select name="budget" id="budgetramme">
             <option value="">Ikke oplyst</option>
             <option>Under 75.000 kr.</option>
@@ -215,9 +215,9 @@
       <div class="form-row">
         <button type="submit" class="btn btn-primary btn-lg">Send oplægget til mig</button>
         <button type="button" class="btn" id="print">Hent som PDF nu</button>
-        <button type="button" class="btn" id="nulstil">Start forfra</button>
+        <button type="button" class="btn btn-tekst" id="nulstil">Start forfra</button>
       </div>
-      <p class="disclaimer">Prototype — formularen sender ikke data nogen steder hen endnu.</p>
+      <p class="disclaimer" id="prototypenote" hidden>Prototype — formularen sender ikke data nogen steder hen endnu.</p>
     </form>
 
     <div class="nav-row">

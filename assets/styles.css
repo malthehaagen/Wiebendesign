@@ -28,6 +28,11 @@
 
 *{box-sizing:border-box}
 [hidden]{display:none !important}
+/* Uden denne kan man ikke se, hvor man er, når man tabber sig gennem siden.
+   :focus-visible rammer kun tastatur, så et museklik ikke efterlader en ring. */
+:focus-visible{outline:2px solid var(--primary); outline-offset:2px; border-radius:4px}
+.card:focus-visible, .omraade:focus-visible, .btn:focus-visible{outline-offset:3px}
+.seg-btn:focus-visible{outline-offset:-2px}
 /* Ingen op/ned-pile på talfelter — de indbyder til at rulle i dem */
 input[type=number]{-moz-appearance:textfield}
 input[type=number]::-webkit-outer-spin-button,
@@ -76,6 +81,9 @@ p{margin:0 0 1em}
 .step-intro{color:var(--ink-3); max-width:62ch; margin-bottom:28px}
 .grp-title{margin:34px 0 12px; font-family:var(--font-t); font-weight:600; font-size:.78rem; text-transform:uppercase; letter-spacing:.1em; color:var(--ink-3)}
 .grp-hjaelp{font-size:.86rem; color:var(--ink-3); margin:-6px 0 14px; max-width:62ch}
+/* Spørgsmål til kunden — ikke småt versaltryk som .grp-title */
+.sp-title{margin:36px 0 8px; font-family:var(--font-h); font-weight:700; font-size:1.2rem; color:var(--ink); letter-spacing:-.01em}
+.sp-title + .grp-hjaelp{margin-top:0}
 
 /* ---------------- Hero ---------------- */
 .hero{padding-block:24px 8px; max-width:62ch}
@@ -107,7 +115,9 @@ p{margin:0 0 1em}
 .cards-3{grid-template-columns:repeat(3,1fr)}
 .cards-4{grid-template-columns:repeat(4,1fr)}
 @media (max-width:820px){ .cards-3,.cards-4{grid-template-columns:repeat(2,1fr)} }
-@media (max-width:520px){ .cards-2,.cards-3,.cards-4{grid-template-columns:1fr} }
+/* To kolonner holdes også på telefon: én kolonne gav fire illustrationer
+   i fuld bredde og en side, der var otte skærme lang. */
+@media (max-width:520px){ .cards-2{grid-template-columns:1fr} }
 
 .card{
   position:relative; text-align:left; font-family:var(--font-t); cursor:pointer;
@@ -128,13 +138,17 @@ p{margin:0 0 1em}
 .card-pris{color:var(--accent); font-weight:600}
 
 /* Illustrationer */
-.ill{background:var(--flade-3); border-radius:6px; margin-bottom:4px; aspect-ratio:100/70; overflow:hidden}
+/* max-height holder illustrationen fra at være det største på siden,
+   når kortet er bredt */
+.ill{background:var(--flade-3); border-radius:6px; margin-bottom:4px; aspect-ratio:100/70; max-height:170px; overflow:hidden}
 .ill svg{width:100%; height:100%; display:block}
 .ill .hal{fill:none; stroke:var(--linje-2); stroke-width:1.5; stroke-dasharray:3 3}
 .ill .stand{fill:#fff; stroke:var(--accent); stroke-width:2}
 .ill .nabo{fill:var(--linje); stroke:var(--linje); stroke-width:1.5}
 .ill .aaben{stroke:var(--primary); stroke-width:3; fill:none; stroke-linecap:round}
 .ill .glo{fill:var(--primary-lys); stroke:none}
+/* Åben væglinje uden udfyldning — til et rum, der skal have en døråbning */
+.ill .vaeg{fill:none; stroke:var(--accent); stroke-width:2}
 .card.valgt .ill{background:var(--primary-lys)}
 
 /* ---------------- Felter ---------------- */
@@ -272,8 +286,8 @@ p{margin:0 0 1em}
 .anbefaling .mrk{display:block; font-family:var(--font-h); font-weight:600; font-size:.7rem; text-transform:uppercase; letter-spacing:.12em; color:var(--primary); margin-bottom:10px}
 
 /* ---------------- Budget i tre kolonner ---------------- */
-.budget3{display:grid; grid-template-columns:repeat(2,1fr); gap:12px; align-items:start}
-@media (max-width:900px){ .budget3{grid-template-columns:1fr} }
+/* Én kolonne: uden et loft står beløbet en halv skærm fra sit navn */
+.budget{max-width:760px}
 .bkol{background:var(--flade); border:1px solid var(--linje); border-radius:var(--radius); padding:18px; display:flex; flex-direction:column}
 .bkol h3{margin-bottom:2px}
 .bkol-hvem{font-size:.78rem; color:var(--ink-3); margin-bottom:14px}
@@ -289,7 +303,7 @@ p{margin:0 0 1em}
 .bkol-sum{margin-top:auto; padding-top:12px; border-top:2px solid var(--accent); font-family:var(--font-h); font-weight:700; color:var(--ink); display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap}
 .bkol-fod{font-size:.76rem; color:var(--ink-3); margin:12px 0 0; line-height:1.45}
 
-.samlet{background:var(--primary-lys); border:1px solid #cfe2e5; border-radius:var(--radius); padding:20px 22px; margin-top:16px}
+.samlet{background:var(--primary-lys); border:1px solid #cfe2e5; border-radius:var(--radius); padding:20px 22px; margin-top:16px; max-width:760px}
 .samlet h3{font-size:1.25rem}
 .samlet p{margin:0 0 .6em; font-size:.92rem; color:var(--ink-2)}
 .samlet .disclaimer{margin:0}
@@ -305,7 +319,7 @@ p{margin:0 0 1em}
 .tl-sammen{background:var(--primary-lys); color:var(--primary-dyb)}
 .tl-jer{background:var(--flade-3); color:var(--ink-3)}
 .tl-titel{font-family:var(--font-h); font-weight:600; font-size:.98rem; color:var(--ink)}
-.tl-tekst{font-size:.86rem; color:var(--ink-3); margin:2px 0 0}
+.tl-tekst{font-size:.86rem; color:var(--ink-3); margin:2px 0 0; max-width:72ch}
 
 /* ---------------- Opsummering ---------------- */
 .opsummering{background:var(--flade); border:1px solid var(--linje); border-radius:var(--radius); padding:22px; margin-bottom:24px}
