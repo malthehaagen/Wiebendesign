@@ -322,9 +322,9 @@
     var wiebenLinjer = [
       { navn: 'Design og projektledelse', pris: iv.tal(projektstyring()),
         note: 'tegning, møder, bestillinger og koordinering med messearrangøren' },
-      { navn: 'Stand, vægge og gulv', pris: iv.tal(standDele), note: standNote },
-      { navn: 'Områder og udstyr', pris: iv.tal(omraadeSum), note: omraadeNote },
-      { navn: 'Opbygning og transport', pris: montSum,
+      { navn: 'Stand, grafik og materialer', pris: iv.tal(standDele), note: standNote },
+      { navn: 'Indretning og udstyr', pris: iv.tal(omraadeSum), note: omraadeNote },
+      { navn: 'Transport og opbygning', pris: montSum,
         note: 'opbygning, ind- og udbæring, tomgods, nedtagning, kørsel og forsikring — vi står for det hele' }
     ].filter(function (l) { return l.pris[1] > 0; });
 
@@ -516,7 +516,7 @@
     var h = document.getElementById('by-hjaelp');
     if (l.oversoeisk) {
       h.textContent = 'Uden for Europa sender vi standen med speditør, og montørerne flyver. ' +
-        'Vi har lager i USA og har bygget på 72 destinationer på 5 kontinenter — den præcise fragt aftaler vi konkret.';
+        'Vi har lager i USA og erfaring fra messer i mere end 70 lande — den præcise fragt aftaler vi konkret.';
       return;
     }
     if (s.messe.ukendt && !s.messe.km) {
@@ -730,7 +730,7 @@
       var kort2 = el('<div class="cards cards-2"></div>');
       kort2.appendChild(kort({
         titel: 'Brug vores forslag', valgt: false,
-        tekst: 'Vi sætter ' + antal + ' områder op ud fra jeres formål og standens størrelse. Bagefter kan du rette i det hele — det er kun et udgangspunkt.',
+        tekst: 'Vi sætter ' + antal + ' områder op ud fra jeres formål og standens størrelse. Bagefter kan I rette i det hele — det er kun et udgangspunkt.',
         meta: '<span class="card-pris">' + fmtKort(spaend(iv.tal(pris))) + ' kr.</span> for hele messen',
         klik: function () { s.omraader = foreslaaOmraader(); s.omraadeValg = 'forslag'; opdater(); }
       }));

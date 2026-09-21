@@ -169,7 +169,7 @@ window.WD_INDHOLD = {
 
   /* ---------------- Vægge, gulv, lys ---------------- */
   vaegtyper: {
-    print:  { titel: 'Almindelige vægge',  tekst: 'Hvide vægge, hvor jeres billeder og budskaber printes direkte på. Det, de fleste stande er bygget af.', teknik: 'beMatrix rammesystem' },
+    print:  { titel: 'Almindelige vægge',  tekst: 'Hvide vægge, hvor jeres billeder og budskaber printes direkte på. Det, de fleste stande er bygget af.', teknik: 'Autoriseret beMatrix-partner' },
     pixlip: { titel: 'Lysvægge',           tekst: 'Væggene lyser indefra, så billederne står som på en skærm. Koster lidt mere pr. meter, og ingen anden væg trækker blikket på samme måde.', teknik: 'Pixlip backlit' }
   },
   grafikdaekning: {
@@ -230,7 +230,7 @@ window.WD_INDHOLD = {
     bar:         { titel: 'Bar og servering',    tekst: 'Kaffe holder folk stående. Fire minutter mere er forskellen på en hilsen og et lead.', ikon: 'kaffe',
                    stoerrelser: { lille: 'Kaffe ved disken', mellem: 'Bar med køleskab', stor: 'Fuld bar med vask' } },
 
-    depot:       { titel: 'Depot',               tekst: 'Aflåst rum til kasser, jakker og brochurer. Regn med 15–20 % af standens areal.', ikon: 'reol',
+    depot:       { titel: 'Integreret depot',               tekst: 'Aflåst rum til kasser, jakker og brochurer. Regn med 15–20 % af standens areal.', ikon: 'reol',
                    stoerrelser: { lille: 'Kun opbevaring', mellem: 'Med garderobe', stor: 'Med garderobe og køleskab' } }
   },
 

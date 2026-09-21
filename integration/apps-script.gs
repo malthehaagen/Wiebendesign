@@ -131,7 +131,7 @@ function ramme(indhold) {
     indhold +
     '<div style="padding:18px 28px 26px;border-top:1px solid ' + LINJE + ';color:' + GRAA + ';font-size:12px;">' +
     '<p style="margin:0 0 3px;"><strong style="color:#000;">Wieben Design A/S</strong> · Porsborgparken 8B, 9530 Støvring</p>' +
-    '<p style="margin:0;">70 23 11 11 · wd@wiebendesign.dk · 30 års erfaring · 72 destinationer på 5 kontinenter</p>' +
+    '<p style="margin:0;">70 23 11 11 · wd@wiebendesign.dk · 30 års erfaring · messer i mere end 70 lande</p>' +
     '</div></div></div>';
 }
 
