@@ -13,7 +13,7 @@ dem er kode:
 | Teksterne gennemlæst | Mangler — hver sætning er skrevet til lejligheden | Wieben Design |
 | Mailsystemet | Mangler endpoint og verificeret Resend-domæne | `integration/OPSAETNING.md` |
 | Hosting på wiebendesign.dk | Ikke besluttet | Wieben Design |
-| Engelsk version | **Næste etape.** Sproglaget kan bygges nu; oversættelsen venter på, at den danske tekst er godkendt | — |
+| Engelsk version | **I gang.** Se [`docs/engelsk-version.md`](docs/engelsk-version.md) | — |
 
 Overskriften „Prototype“ står stadig i sidens header (`index.html`, `.top-note`).
 Den bør blive der, indtil priserne er bekræftet — det er én linje at fjerne
