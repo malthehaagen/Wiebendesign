@@ -321,15 +321,16 @@ window.WD_PRIS = {
     /* Tomgods: de tomme kasser skal væk fra hallen under messen.
        Kører vi selv, tager vi dem med hjem i bilen, og det koster ikke
        ekstra. Sender vi med speditør, bliver de stående og opbevaret,
-       og det er en regning. Pris pr. lastbillæs — AFLEDT, bør bekræftes. */
+       og det er en regning. Pris for hele læsset — AFLEDT, bør bekræftes. */
     tomgodsPrLaes:   [900, 1800],
     m2PrMontoer:     25,
     minMontoerer:    2,
 
-    /* Wieben Design kører selv i hele Europa, når det kan lade sig gøre.
-       Det er standens STØRRELSE, ikke afstanden, der afgør, hvornår der
-       skal speditør på — AFLEDT, bør bekræftes. */
-    egenkoerselMaxM2: 60,
+    /* Én lastbil tager selv den største stand — oplyst af Wieben Design.
+       Derfor er der ingen størrelse, hvor vi IKKE kan køre selv, og valget
+       mellem egen kørsel og speditør er rent økonomisk: vi tager den
+       billigste af de to. Wieben kører selv i hele Europa, når det kan
+       lade sig gøre. */
     /* Under denne afstand kører vi altid selv — det giver ikke mening at
        flyve til Herning eller København */
     altidEgenKoerselKm: 600,
@@ -337,15 +338,14 @@ window.WD_PRIS = {
        montører med — det skifter fra opgave til opgave. */
     ture:             2,
     koeretidMontoerer: [1, 2],
-    /* Speditør ved store stande: pris pr. lastbillæs, pr. km tur/retur */
-    m2PrLaes:         60,
+    /* Speditør: pris for ét lastbillæs pr. km tur/retur */
     fragtPrKm:        [22, 34],
 
     /* Uden for Europa kører vi ikke selv. Fragten aftales konkret med
        speditøren — tallene her er et udgangspunkt, ikke et tilbud.
        Wieben Design har lager i USA, så nogle opgaver bygges af
        materiel, der allerede står derovre. AFLEDT, bør bekræftes. */
-    oversoeiskFragtPrLaes: [55000, 110000],
+    oversoeiskFragt:  [55000, 110000],
     oversoeiskFlybillet:   9500,
     oversoeiskNaetter:     6,
     oversoeiskDage:        7

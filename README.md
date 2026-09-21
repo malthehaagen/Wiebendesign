@@ -99,8 +99,10 @@ Afledt og markeret som sådan i `pricing.js` — bør bekræftes af Wieben Desig
 - **Montagenormer** — 0,45–0,65 mandtimer pr. m² til opbygning, nedtagning som
   40 % heraf, pakning 0,15 timer pr. m², én montør pr. 25 m² (minimum to).
   Det er beregningens største usikkerhed, og det er den, prisspændet består af
-- **Arbejdsmodel for transport** — egen lastbil op til 450 km, derover speditør
-  og fly til montørerne
+- **Arbejdsmodel for transport** — én lastbil tager selv den største stand
+  (oplyst af Wieben Design), så standens størrelse afgør ikke transportformen.
+  Under 600 km kører vi altid selv; derover tager beregneren den billigste af
+  egen kørsel og speditør med fly til montørerne. Fragt 22–34 kr./km tur/retur
 - **Timenormer for grafisk arbejde** — 0,10–0,18 time pr. m² tryk, når kunden
   leverer logo og billeder, 0,20–0,35 når vi laver det hele fra bunden.
   Selve timeprisen, **750 kr.**, er oplyst af Wieben Design — den står ikke i
@@ -170,9 +172,20 @@ Fonts hentes fra Google Fonts i `index.html`. Skal de selvhostes, er det den ene
 
 **Tallene skal bekræftes.** Ni satser i `pricing.js` er afledte og markeret
 AFLEDT — montagenormerne, ind- og udbæring, tomgods, printprisen,
-backlit-prisen, truss-riggen, produktplatformen, 60 m²-grænsen for speditør og
-fragtprisen. Den hurtigste kontrol er at køre tre afsluttede tilbud gennem
-beregneren og se, om den rammer inden for spændet.
+backlit-prisen, truss-riggen, produktplatformen, 600 km-grænsen for altid at
+køre selv, fragtprisen og timenormerne for grafisk arbejde. Den hurtigste
+kontrol er at køre tre afsluttede tilbud gennem beregneren og se, om den rammer
+inden for spændet.
+
+**Særligt om transportformen.** Fordi én lastbil tager alt, er forskellen mellem
+egen kørsel og speditør kun, om montørerne flyver eller kører med. Flybilletter
+skalerer med antallet af montører, mens lastbilen ikke gør — derfor vinder egen
+kørsel på de store stande og speditør på de små. På 620 km (Hannover) skifter
+den fra speditør til egen kørsel et sted mellem 60 og 100 m². Wieben Design
+siger selv, at de oftest kører selv i hele Europa; holder det også for en lille
+stand langt væk, er det `altidEgenKoerselKm` (600) der skal op — eller
+`koeretidMontoerer`, der fakturerer 1–2 montørers køretid til fuld timepris, der
+skal ned.
 
 **Resten:**
 
@@ -182,7 +195,10 @@ beregneren og se, om den rammer inden for spændet.
   rettet efter firmaets eget site — se [`docs/tone-of-voice.md`](docs/tone-of-voice.md)
 - **Engelsk version**, når den danske ligger fast. Alle tekster ligger samlet i
   `content.js`
-- **Opfølgningen internt**: hvem kontakter leadet, hvor hurtigt og med hvad
+- **Opfølgningen internt**: hvem kontakter leadet, hvor hurtigt og med hvad.
+  Beregneren har ikke længere et „må vi ringe?“-felt — at sende oplægget er
+  samtykke nok til, at I vender tilbage om messen, og både kvitteringen og
+  kundens mail siger, at I gør det. Det løfte skal kunne holdes
 
 ## Efter lancering
 

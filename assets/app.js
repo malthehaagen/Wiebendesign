@@ -226,18 +226,17 @@
     return P.projektstyring.filter(function (t) { return s.stand.m2 <= t.tilM2; })[0].pris;
   }
 
-  /* Hvordan kommer standen frem? Vi kører selv, medmindre den er for stor
-     til bilen, eller turen er så lang, at speditør og fly bliver billigere.
+  /* Hvordan kommer standen frem? Én lastbil tager selv den største stand,
+     så størrelsen afgør ingenting — vi kører selv, medmindre turen er så
+     lang, at speditør og fly til montørerne bliver billigere.
      Både prisen og teksten under byvalget spørger her. */
   function transportmaade() {
     var m = P.montage, m2 = s.stand.m2, km = s.messe.km;
     if (s.messe.oversoeisk) return 'oversoeisk';
-    if (m2 > m.egenkoerselMaxM2) return 'speditoer';
     if (km <= m.altidEgenKoerselKm) return 'egen';
 
     var montoerer = Math.max(m.minMontoerer, Math.ceil(m2 / m.m2PrMontoer));
-    var laes = Math.ceil(m2 / m.m2PrLaes);
-    var fragt = (km * m.fragtPrKm[0] * laes + km * m.fragtPrKm[1] * laes) / 2 + m.flybillet * montoerer;
+    var fragt = (km * m.fragtPrKm[0] + km * m.fragtPrKm[1]) / 2 + m.flybillet * montoerer;
     var koersel = (km / m.kmPrTime) * m.ture * m.timepris *
                     (m.koeretidMontoerer[0] + m.koeretidMontoerer[1]) / 2 +
                   km * m.lastbilPrKm * m.ture + km * m.kmPengePrKm * m.ture +
@@ -258,10 +257,8 @@
 
     /* Uden for Europa kører vi ikke selv — der er kun én vej */
     if (s.messe.oversoeisk) {
-      var laesO = Math.ceil(m2 / m.m2PrLaes);
-      linjer.push({ navn: 'Oversøisk fragt',
-        pris: [m.oversoeiskFragtPrLaes[0] * laesO, m.oversoeiskFragtPrLaes[1] * laesO],
-        note: laesO + (laesO === 1 ? ' forsendelse' : ' forsendelser') + ' — aftales konkret med speditøren' });
+      linjer.push({ navn: 'Oversøisk fragt', pris: m.oversoeiskFragt.slice(),
+        note: 'hele standen i én forsendelse — aftales konkret med speditøren' });
       linjer.push({ navn: 'Montørernes rejse', pris: iv.tal(m.oversoeiskFlybillet * montoerer),
         note: montoerer + ' mand tur/retur' });
       linjer.push({ navn: 'Ophold og fortæring',
@@ -270,12 +267,11 @@
       return linjer;
     }
 
-    var laes = Math.ceil(m2 / m.m2PrLaes);
     var speditoer = {
-      pris: [km * m.fragtPrKm[0] * laes + m.flybillet * montoerer,
-             km * m.fragtPrKm[1] * laes + m.flybillet * montoerer],
+      pris: [km * m.fragtPrKm[0] + m.flybillet * montoerer,
+             km * m.fragtPrKm[1] + m.flybillet * montoerer],
       navn: 'Fragt og montørernes rejse',
-      note: laes + ' lastbillæs, ' + nf.format(km) + ' km med speditør · fly til ' + montoerer + ' mand'
+      note: 'hele standen i én lastbil, ' + nf.format(km) + ' km med speditør · fly til ' + montoerer + ' mand'
     };
     var koeretimer = (km / m.kmPrTime) * m.ture;
     var udlaeg = km * m.lastbilPrKm * m.ture + km * m.kmPengePrKm * m.ture +
@@ -292,8 +288,7 @@
     /* Tomgods: kører vi selv, tager kasserne turen hjem med bilen.
        Sender vi med speditør, skal de opbevares, mens messen kører. */
     if (valgt === speditoer) {
-      linjer.push({ navn: 'Tomgods under messen',
-        pris: [m.tomgodsPrLaes[0] * laes, m.tomgodsPrLaes[1] * laes],
+      linjer.push({ navn: 'Tomgods under messen', pris: m.tomgodsPrLaes.slice(),
         note: 'opbevaring af de tomme kasser' });
     }
 
@@ -1245,8 +1240,7 @@
       kontakt: {
         navn: felter.navn, virksomhed: felter.virksomhed,
         email: felter.email, telefon: felter.telefon || '',
-        budget: felter.budget || '', besked: felter.besked || '',
-        oenskerOpkald: !!felter.opkald
+        budget: felter.budget || '', besked: felter.besked || ''
       },
       messe: { by: s.messe.by, land: land().navn, dato: s.messe.dato, km: s.messe.km, dage: s.team.dage },
       profil: s.profil,
@@ -1312,12 +1306,10 @@
   }
 
   function kvittering(f, data, tilstand) {
-    var opkald = data.kontakt.oenskerOpkald;
     var boks = el('<div class="kvittering"></div>');
     boks.appendChild(el('<strong>Tak — oplægget er på vej til ' + esc(data.kontakt.email) + '</strong>'));
-    boks.appendChild(el('<span>' + (opkald
-      ? 'Vi ringer inden for en arbejdsdag og taler om, hvad der kan lade sig gøre på jeres plads.'
-      : 'I bad os ikke ringe, så vi lader oplægget være næste træk hos jer. Vil I have det vendt igennem, er vi på 70 23 11 11.') + '</span>'));
+    boks.appendChild(el('<span>Vi kigger det igennem og vender tilbage om, hvad der kan lade sig gøre ' +
+      'på jeres plads. Vil I hellere selv tage fat, er vi på 70 23 11 11.</span>'));
     if (tilstand === 'prototype') {
       boks.appendChild(el('<span class="kvit-note">Prototype — der er ikke sat et endpoint op endnu, så mailen bliver ikke sendt. Oplægget ligger i browserens konsol.</span>'));
     }

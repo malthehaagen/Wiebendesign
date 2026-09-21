@@ -236,7 +236,7 @@ window.WD_INDHOLD = {
     bar:         { titel: 'Bar og servering',    tekst: 'Kaffe holder folk stående. Fire minutter mere er forskellen på en hilsen og et lead.', ikon: 'kaffe',
                    stoerrelser: { lille: 'Kaffe ved disken', mellem: 'Bar med køleskab', stor: 'Fuld bar med vask' } },
 
-    depot:       { titel: 'Integreret depot',               tekst: 'Aflåst rum til kasser, jakker og brochurer. Regn med 15–20 % af standens areal.', ikon: 'kasser',
+    depot:       { titel: 'Integreret depot',               tekst: 'Aflåst rum til kasser, jakker og brochurer. På en almindelig stand fylder det 15–20 % af arealet — på de store rækker mindre.', ikon: 'kasser',
                    stoerrelser: { lille: 'Kun opbevaring', mellem: 'Med garderobe', stor: 'Med garderobe og køleskab' } }
   },
 
@@ -306,7 +306,7 @@ window.WD_INDHOLD = {
     { id: 'depot', vaegt: 9,
       naar: s => s.stand.m2 >= 15 && !s.omraader.depot,
       titel: 'Hvor skal kasserne stå?',
-      tekst: 'Afsæt 15–20 % af arealet til aflåst depot. Uden det ender emballage, jakker og brochurekasser bag disken — og det er det første, gæsten ser.' },
+      tekst: 'Afsæt plads til et aflåst depot — 15–20 % af arealet på en stand op til 50 m², mindre på de større. Uden det ender emballage, jakker og brochurekasser bag disken, og det er det første, gæsten ser.' },
 
     { id: 'plads', vaegt: 10,
       naar: s => s.omraadeAreal > s.stand.m2 * 0.75,

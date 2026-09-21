@@ -17,7 +17,7 @@ var AFSENDER      = 'Wieben Design <oplaeg@wiebendesign.dk>';  // kræver verifi
 var SVAR_TIL      = 'wd@wiebendesign.dk';
 var ARK           = 'Leads';                      // fanen i regnearket
 
-var KOLONNER = ['Modtaget', 'Navn', 'Virksomhed', 'E-mail', 'Telefon', 'Ønsker opkald', 'Budgetramme',
+var KOLONNER = ['Modtaget', 'Navn', 'Virksomhed', 'E-mail', 'Telefon', 'Budgetramme',
                 'By', 'Land', 'Messedato', 'Messedage', 'Formål', 'Erfaring', 'Ambition',
                 'm²', 'Åbne sider', 'Vægge', 'Tryk', 'Grafisk arbejde', 'Gulv', 'Belysning',
                 'Områder', 'Estimat fra', 'Estimat til', 'Forventede leads', 'Besked'];
@@ -59,7 +59,7 @@ function gemILead(d) {
   }
   ark.appendRow([
     new Date(), d.kontakt.navn, d.kontakt.virksomhed, d.kontakt.email, d.kontakt.telefon,
-    d.kontakt.oenskerOpkald ? 'JA' : '', d.kontakt.budget || '',
+    d.kontakt.budget || '',
     d.messe.by, d.messe.land, d.messe.dato, d.messe.dage,
     d.profil.formaal, d.profil.erfaring, d.profil.ambition,
     d.stand.m2, d.stand.aabneSider, d.stand.vaegge, d.stand.tryk,
@@ -80,7 +80,7 @@ function sendTilKunde(d) {
 
 function sendTilOs(d) {
   sendMail(MODTAGER,
-    (d.kontakt.oenskerOpkald ? '[RING] ' : '') + 'Nyt oplæg: ' + d.kontakt.virksomhed +
+    'Nyt oplæg: ' + d.kontakt.virksomhed +
       ' — ' + d.stand.m2 + ' m² i ' + d.messe.by,
     vorestMail(d));
 }
@@ -187,9 +187,8 @@ function kundeMail(d) {
       posterTabel(d) +
       '<p style="margin:22px 0 0;padding:14px 16px;background:#eaf3f4;border-radius:8px;font-size:13px;">' +
       'Beløbet dækker standen: materiel, grafik, opbygning, transport og vores arbejde. Messearrangørens egne gebyrer er ikke med — dem aftaler I direkte med messen.</p>' +
-      '<p style="margin:22px 0 0;">' + (d.kontakt.oenskerOpkald
-        ? 'Vi ringer til jer inden for en arbejdsdag.'
-        : 'Vil I vende det med os, er I velkomne til at ringe på 70 23 11 11.') + '</p>' +
+      '<p style="margin:22px 0 0;">Vi kigger oplægget igennem og vender tilbage om, hvad der kan ' +
+      'lade sig gøre på jeres plads. Vil I hellere selv tage fat, er vi på 70 23 11 11.</p>' +
     '</div>');
 }
 
@@ -199,13 +198,9 @@ function vorestMail(d) {
       ' <span style="color:' + GRAA + ';">(' + kr(o.pris) + ' kr.)</span></li>';
   }).join('');
   return ramme(
-    overskrift((d.kontakt.oenskerOpkald ? '📞 ' : '') + d.kontakt.virksomhed,
+    overskrift(d.kontakt.virksomhed,
       d.stand.m2 + ' m² i ' + d.messe.by + ' · ' + kr(d.estimat.fra) + '–' + kr(d.estimat.til) + ' kr.') +
     '<div style="padding:26px 28px;">' +
-      (d.kontakt.oenskerOpkald
-        ? '<p style="margin:0 0 20px;padding:12px 16px;background:#eaf3f4;border-left:3px solid ' + BLAA +
-          ';border-radius:0 8px 8px 0;font-weight:600;">De har bedt om at blive ringet op.</p>'
-        : '<p style="margin:0 0 20px;color:' + GRAA + ';font-size:13px;">De har ikke bedt om at blive ringet op.</p>') +
       '<h2 style="font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:' + BLAA + ';margin:0 0 10px;">Kontakt</h2>' +
       linjer([
         ['Navn', d.kontakt.navn],
