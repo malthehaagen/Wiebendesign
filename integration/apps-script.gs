@@ -172,7 +172,7 @@ function kundeMail(d) {
       d.messe.by + (d.messe.dato ? ' · ' + dansk(d.messe.dato) : '') + ' · ' + d.stand.m2 + ' m²') +
     '<div style="padding:26px 28px;">' +
       '<p style="margin:0 0 20px;">Hej ' + d.kontakt.navn + '</p>' +
-      '<p style="margin:0 0 22px;">Her er det oplæg, I satte sammen. Alle beløb er lejepriser for hele messen, ekskl. moms — og de er et skøn. Den endelige pris lægger vi os først fast på, når vi har tegnet standen.</p>' +
+      '<p style="margin:0 0 22px;">Her er det oplæg, I satte sammen. Alle beløb er lejepriser for hele messen, ekskl. moms — og de er et estimat. Den endelige pris lægger vi os først fast på, når vi har tegnet standen.</p>' +
       '<h2 style="font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:' + BLAA + ';margin:0 0 10px;">Standen</h2>' +
       linjer([
         ['Areal', d.stand.m2 + ' m² med ' + d.stand.aabneSider + (d.stand.aabneSider === 1 ? ' åben side' : ' åbne sider')],

@@ -1003,7 +1003,7 @@
       '<div class="ops-pris"><span>Estimat hos os — leje for hele messen, ekskl. moms</span>' +
       '<strong>' + fmt(r.vist) + '</strong>' +
       '<span>Beløbet dækker standen. Messearrangørens egne gebyrer er ikke med.</span></div>' +
-      '<p class="forbehold">Det er et skøn, ikke et tilbud. Når vi har set standen tegnet, er der typisk noget der skal justeres — måske passer ti stole ikke til pladsen, måske skal væggen stå et andet sted. Det finder vi ud af sammen.</p>';
+      '<p class="forbehold">Det er et estimat, ikke et tilbud. Når vi har set standen tegnet, er der typisk noget der skal justeres — måske passer ti stole ikke til pladsen, måske skal væggen stå et andet sted. Det finder vi ud af sammen.</p>';
   }
 
   function visPrintark() {

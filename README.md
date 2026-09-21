@@ -144,7 +144,7 @@ trængsels-advarsel.
 
 ## Det der IKKE er jeres tal
 
-To af de tre budgetkolonner på trin 4 er markeret som skøn i selve modulet:
+To af de tre budgetkolonner på trin 4 er markeret som estimat i selve modulet:
 
 - **Messecenteret opkræver** (badge: *Anslået*) — arrangørernes standleje varierer
   fra messe til messe. Tallene er markedsniveau.
