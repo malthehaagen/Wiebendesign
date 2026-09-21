@@ -192,6 +192,16 @@
         <label>Virksomhed<input type="text" name="virksomhed" required></label>
         <label>E-mail<input type="email" name="email" required></label>
         <label>Telefon<input type="tel" name="telefon"></label>
+        <label class="full">Har I en budgetramme? <span class="valgfri-mrk">Valgfrit</span>
+          <select name="budget" id="budgetramme">
+            <option value="">Ikke oplyst</option>
+            <option>Under 75.000 kr.</option>
+            <option>75.000–150.000 kr.</option>
+            <option>150.000–300.000 kr.</option>
+            <option>Over 300.000 kr.</option>
+            <option>Det ved vi ikke endnu</option>
+          </select>
+        </label>
         <label class="full">Noget vi skal vide?<textarea name="besked" rows="3"></textarea></label>
       </div>
       <label class="tjek"><input type="checkbox" name="opkald" id="opkald"> <span>I må gerne ringe og tale om, hvad der kan lade sig gøre<em>Ellers hører I kun fra os med oplægget</em></span></label>

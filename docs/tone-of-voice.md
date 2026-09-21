@@ -54,6 +54,42 @@ Sitet lister: specialbyggede elementer, grafik og print, belysning, LED-skærme,
 gulv og materialer, møbler og mødeområder, produktpræsentation, **integreret
 depot**. Beregneren bruger de samme ord, hvor den kan.
 
+## Firmaets eget forløb
+
+Proces-siden deler projektet i fem faser. Beregnerens tidslinje følger dem, så
+kunden genkender rækkefølgen fra sitet:
+
+1. Første dialog & behovsafklaring
+2. Designforslag & plan
+3. Produktion & koordinering
+4. Levering & opbygning
+5. Nedtagning & opbevaring
+
+Formuleringer værd at genbruge: *"Vi forstår før vi bygger"*, *"Vi stiller de
+rigtige spørgsmål"*, *"så I slipper for administrationen"*, *"Når I tager hjem,
+tager vi os af resten"*. Opbevaringen hedder **lagerhotel**.
+
+## Hvad firmaet selv siger om prisen og tiden
+
+Fra FAQ'en, ordret:
+
+> *"Der findes ikke én fast pris på en messestand. Prisen afhænger blandt andet
+> af størrelse, design, materialer, indretning, teknologi og de praktiske
+> forhold omkring messen. Efter en indledende samtale kan vi give jer et
+> konkret tilbud."*
+
+> *"Vi anbefaler at begynde omkring et halvt år før messen eller tidligere. Når
+> messen nærmer sig, kan forskellige bestillingsfrister betyde højere priser og
+> færre valgmuligheder."*
+
+Det sidste er firmaets eget argument for at komme tidligt i gang, og beregneren
+bruger det som en indsigt, når der er under 16 uger til messen.
+
+**Og det vigtigste:** FAQ'en siger, hvad firmaet skal have for at gå i gang —
+*"messen, datoen, standens mål og åbne sider samt jeres mål, ønsker og
+budgetramme."* Beregneren samler alt det. Budgetrammen er et valgfrit felt på
+kontaktformularen, placeret efter prisen, så den ikke låser kunden på forhånd.
+
 ## Det ene sted beregneren bevidst afviger
 
 De faglige tips er mere direkte end sitets tone — *"3-sekundersreglen"*, *"Folk

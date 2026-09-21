@@ -352,6 +352,16 @@ window.WD_INDHOLD = {
       titel: 'Der findes et niveau over almindelige vægge',
       tekst: 'I har sat ambitionen til signatur. Lysvægge lyser indefra, så billederne står som på en skærm hele vejen rundt. Prøv at slå dem til og se, hvad forskellen koster — den er mindre, end de fleste tror.' },
 
+    { id: 'sentIGang', vaegt: 11,
+      naar: s => s.ugerTilMesse !== null && s.ugerTilMesse < 16,
+      titel: 'Der er kort tid til',
+      tekst: 'Der er under fire måneder til messen. Vi anbefaler at gå i gang omkring et halvt år før — når messen nærmer sig, betyder bestillingsfristerne højere priser og færre valgmuligheder. Det kan stadig lade sig gøre, men ring hellere i dag end i næste uge.' },
+
+    { id: 'ingenDato', vaegt: 5,
+      naar: s => s.ugerTilMesse === null,
+      titel: 'Sæt messedatoen på',
+      tekst: 'Skriver I den første messedag ind, regner vi tidsplanen baglæns og viser, hvad der skal ske hvornår — også hvad I selv skal tage stilling til.' },
+
     { id: 'opfoelgning', vaegt: 4,
       naar: () => true,
       titel: 'Messen vindes ugen efter',
@@ -361,19 +371,21 @@ window.WD_INDHOLD = {
   /* ---------------- Tidslinje (uger før messen) ----------------
      hvem: 'os' = Wieben Design klarer det, 'jer' = kunden, 'sammen' = begge.
      Al koordinering med messearrangøren ligger hos os.              */
-  tidslinjeIntro: 'Vi står for al koordinering undervejs — kontakten til messearrangøren, bestillingerne, produktionen og opbygningen. Det, der står som jeres, er det, kun I kan svare på.',
+  tidslinjeIntro: 'Vi holder styr på hele forløbet — den første dialog, designet, produktionen, kontakten til messearrangøren og opbygningen. Det, der står som jeres, er det, kun I kan svare på.',
   tidslinje: [
-    { uger: 32, hvem: 'jer',    titel: 'Book plads og placering',      tekst: 'De gode hjørne- og ø-pladser bliver taget først. Sig til, så rådgiver vi om, hvilken placering der passer til det, I vil opnå.' },
-    { uger: 20, hvem: 'sammen', titel: 'Koncept og designoplæg',       tekst: 'Vi tegner oplægget ud fra jeres formål og budskab. Her træffes de valg, der binder resten.' },
-    { uger: 14, hvem: 'sammen', titel: 'Godkendelse af tegningen',     tekst: 'I godkender den endelige tegning. Derefter reserverer vi materiellet og sætter produktionen i gang.' },
-    { uger: 10, hvem: 'os',     titel: 'El, vand og internet bestilt',  tekst: 'Vi bestiller forsyningerne hos messearrangøren og holder styr på deres frister.' },
-    { uger: 6,  hvem: 'sammen', titel: 'Grafikken skal være klar',     tekst: 'I sender logo, billeder og tekst — vi producerer og monterer. Efter denne dato bliver ændringer dyre.' },
-    { uger: 4,  hvem: 'os',     titel: 'Møbler og udstyr reserveret',  tekst: 'Vi reserverer alt inventar til levering direkte på standen.' },
-    { uger: 3,  hvem: 'jer',    titel: 'Aftal hvordan I følger op',    tekst: 'Hvordan registrerer I et lead på standen, og hvem kontakter dem bagefter? Det afgør, hvad messen er værd.' },
-    { uger: 2,  hvem: 'jer',    titel: 'Inviter jeres kunder',         tekst: 'De vigtigste møder bookes før messen. Standen er rammen, ikke rekrutteringen.' },
-    { uger: 1,  hvem: 'os',     titel: 'Pakning på værkstedet',        tekst: 'Standen pakkes hos os i Støvring og køres afsted.' },
-    { uger: 0,  hvem: 'os',     titel: 'Opbygning og messe',           tekst: 'Vi bygger typisk op 1–2 dage før åbning, er til rådighed under messen og tager ned umiddelbart efter lukning.' },
-    { uger: -1, hvem: 'jer',    titel: 'Følg op på jeres leads',       tekst: 'Alle leads kontaktet inden for fem hverdage. Vi kører standen på lager imens.' }
+    { uger: 32, hvem: 'jer',    titel: 'Book plads og placering',           tekst: 'De gode hjørne- og ø-pladser bliver taget først. Sig til, så rådgiver vi om, hvilken placering der passer til det, I vil opnå.' },
+    { uger: 26, hvem: 'sammen', titel: 'Første dialog og behovsafklaring',  tekst: 'En samtale om messen, jeres virksomhed og det, I vil have ud af standen. Vores opgave er at stille de rigtige spørgsmål, før vi går videre med designet.' },
+    { uger: 20, hvem: 'sammen', titel: 'Designforslag og plan',             tekst: 'Vi omsætter behov og rammer til et designforslag og lægger en tydelig plan for det videre forløb.' },
+    { uger: 14, hvem: 'sammen', titel: 'Godkendelse af designet',           tekst: 'I godkender den endelige tegning. Derefter går produktionen i gang på et afstemt grundlag.' },
+    { uger: 10, hvem: 'os',     titel: 'Bestillinger hos messearrangøren',  tekst: 'Når vi får adgang til messearrangørens system, tager vi os af bestillinger og deadlines, så I slipper for administrationen.' },
+    { uger: 6,  hvem: 'sammen', titel: 'Grafikken skal være klar',          tekst: 'I sender logo, billeder og tekst — vi producerer og monterer. Efter denne dato bliver ændringer dyre.' },
+    { uger: 4,  hvem: 'os',     titel: 'Møbler og udstyr reserveret',       tekst: 'Vi reserverer alt inventar til levering direkte på standen.' },
+    { uger: 3,  hvem: 'jer',    titel: 'Aftal hvordan I følger op',         tekst: 'Hvordan registrerer I et lead på standen, og hvem kontakter dem bagefter? Det afgør, hvad messen er værd.' },
+    { uger: 2,  hvem: 'jer',    titel: 'Inviter jeres kunder',              tekst: 'De vigtigste møder bookes før messen. Standen er rammen, ikke rekrutteringen.' },
+    { uger: 1,  hvem: 'os',     titel: 'Pakning og transport',              tekst: 'Standen pakkes hos os i Støvring, og vi koordinerer indlæsning, transport og aflæsning på messestedet.' },
+    { uger: 0,  hvem: 'os',     titel: 'Opbygning og messedage',            tekst: 'Vi bygger op og gennemgår standen frem mod åbningen. Når I ankommer, er alt på plads.' },
+    { uger: -1, hvem: 'os',     titel: 'Nedtagning og opbevaring',          tekst: 'Vi pakker standen forsvarligt ned og sørger for returtransporten. Elementerne kan opbevares på vores lagerhotel og genbruges til næste messe.' },
+    { uger: -1, hvem: 'jer',    titel: 'Følg op på jeres leads',            tekst: 'Alle leads kontaktet inden for fem hverdage.' }
   ],
 
   hvemLabels: { os: 'Vi klarer det', jer: 'Jeres del', sammen: 'Sammen' },

@@ -17,7 +17,7 @@ var AFSENDER      = 'Wieben Design <oplaeg@wiebendesign.dk>';  // kræver verifi
 var SVAR_TIL      = 'wd@wiebendesign.dk';
 var ARK           = 'Leads';                      // fanen i regnearket
 
-var KOLONNER = ['Modtaget', 'Navn', 'Virksomhed', 'E-mail', 'Telefon', 'Ønsker opkald',
+var KOLONNER = ['Modtaget', 'Navn', 'Virksomhed', 'E-mail', 'Telefon', 'Ønsker opkald', 'Budgetramme',
                 'By', 'Land', 'Messedato', 'Messedage', 'Formål', 'Erfaring', 'Ambition',
                 'm²', 'Åbne sider', 'Vægge', 'Tryk', 'Gulv', 'Belysning',
                 'Områder', 'Estimat fra', 'Estimat til', 'Forventede leads', 'Besked'];
@@ -59,7 +59,7 @@ function gemILead(d) {
   }
   ark.appendRow([
     new Date(), d.kontakt.navn, d.kontakt.virksomhed, d.kontakt.email, d.kontakt.telefon,
-    d.kontakt.oenskerOpkald ? 'JA' : '',
+    d.kontakt.oenskerOpkald ? 'JA' : '', d.kontakt.budget || '',
     d.messe.by, d.messe.land, d.messe.dato, d.messe.dage,
     d.profil.formaal, d.profil.erfaring, d.profil.ambition,
     d.stand.m2, d.stand.aabneSider, d.stand.vaegge, d.stand.tryk, d.stand.gulv, d.stand.belysning,
@@ -210,6 +210,7 @@ function vorestMail(d) {
         ['Virksomhed', d.kontakt.virksomhed],
         ['E-mail', '<a href="mailto:' + d.kontakt.email + '" style="color:' + BLAA + ';">' + d.kontakt.email + '</a>'],
         ['Telefon', d.kontakt.telefon],
+        ['Budgetramme', d.kontakt.budget],
         ['Besked', d.kontakt.besked]
       ]) +
       '<h2 style="font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:' + BLAA + ';margin:26px 0 10px;">Messe og profil</h2>' +

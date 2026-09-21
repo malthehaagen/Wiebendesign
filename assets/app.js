@@ -25,6 +25,7 @@
     tilkoeb: { skilt: false, rigLys: false, beplantning: false, led: false },
     led: 'l',
     omraadeAreal: 0,
+    ugerTilMesse: null,
     sendt: false,
     team: { dage: 3 }
   };
@@ -396,6 +397,14 @@
   /* =====================================================================
      VISNING
      ===================================================================== */
+  /* Hvor mange uger er der til messen? null hvis datoen ikke er sat. */
+  function ugerTilMesse() {
+    if (!s.messe.dato) return null;
+    var d = new Date(s.messe.dato);
+    if (isNaN(d.getTime())) return null;
+    return Math.round((d - new Date()) / (7 * 24 * 60 * 60 * 1000));
+  }
+
   /* Er trinnet i sig selv udfyldt? Kun to trin kræver noget af kunden. */
   function trinUdfyldt(n) {
     if (n === 1) return C.profilSpoergsmaal.every(function (sp) { return s.profil[sp.id]; });
@@ -974,6 +983,7 @@
      ===================================================================== */
   function opdater() {
     s.omraadeAreal = omraadeAreal();
+    s.ugerTilMesse = ugerTilMesse();
     document.getElementById('m2-ud').textContent = s.stand.m2 + ' m²';
     document.getElementById('dage-ud').textContent = s.team.dage + (s.team.dage === 1 ? ' dag' : ' dage');
 
@@ -1139,7 +1149,8 @@
       kontakt: {
         navn: felter.navn, virksomhed: felter.virksomhed,
         email: felter.email, telefon: felter.telefon || '',
-        besked: felter.besked || '', oenskerOpkald: !!felter.opkald
+        budget: felter.budget || '', besked: felter.besked || '',
+        oenskerOpkald: !!felter.opkald
       },
       messe: { by: s.messe.by, land: land().navn, dato: s.messe.dato, km: s.messe.km, dage: s.team.dage },
       profil: s.profil,
