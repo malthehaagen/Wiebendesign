@@ -29,10 +29,31 @@ Ikke "køb nu", ikke "book et møde i dag".
 | Brug | Ikke |
 |---|---|
 | Messer i mere end 70 lande | 72 destinationer på 5 kontinenter |
+| Mere end 30 års erfaring | 30 års erfaring |
 | Autoriseret beMatrix-partner | Hovedforhandler af beMatrix i Danmark |
-| 30 års erfaring | — |
+| Lagerfaciliteter i både Danmark og USA | Lager i USA |
 
-De to højre kolonner stammer fra brancheportaler, ikke fra Wieben Design selv.
+Højre kolonne stammer fra brancheportaler, ikke fra Wieben Design selv. Firmaet
+nævner aldrig selv "5 kontinenter" eller et antal destinationer.
+
+## Firmaets oplysninger, som de står på sitet
+
+Wieben Design A/S · Porsborgparken 8 B, 9530 Støvring · CVR 20099607
++45 70 23 11 11 · wd@wiebendesign.dk
+
+[Privatlivspolitik](https://wiebendesign.dk/privatlivspolitik/) ·
+[Cookiepolitik](https://wiebendesign.dk/cookiepolitik/) ·
+[Handelsbetingelser](https://wiebendesign.dk/handelsbetingelser/)
+
+Bemærk stavemåden **8 B** med mellemrum, og at telefonnummeret står med +45.
+
+## Firmaets værdier
+
+Fra Om os: **overblik, fleksibilitet, kreativitet, ansvar for detaljerne.**
+Selvbeskrivelsen er *"Vi bygger med overblik og omtanke"* og *"et team, der
+samler projektets mange dele"*. Det er den samme pointe som løftet om at tage
+arbejdet fra kunden — beregneren skal lyde som et værktøj, der giver overblik,
+ikke som en konfigurator.
 
 ## Firmaets egen prisstruktur
 
@@ -89,6 +110,26 @@ bruger det som en indsigt, når der er under 16 uger til messen.
 *"messen, datoen, standens mål og åbne sider samt jeres mål, ønsker og
 budgetramme."* Beregneren samler alt det. Budgetrammen er et valgfrit felt på
 kontaktformularen, placeret efter prisen, så den ikke låser kunden på forhånd.
+
+## Ord for de ting beregneren prissætter
+
+| Firmaets ord | Undgå |
+|---|---|
+| LED-skærm, bygget op af **moduler** | LED-væg af fliser |
+| Standgrafik, storformat, stofprint | print på vægge |
+| Lagerhotel | lager, opbevaringsrum |
+| Integreret depot | depot |
+| Specialbyggede elementer | specialbyg |
+
+To pointer fra produktsiderne, beregneren skal have med:
+
+**Grafikken.** *"I kan få hjælp til hele det grafiske arbejde eller blot den
+del, der mangler."* Kunden behøver ikke levere færdige filer — firmaets egne
+grafikere kan lave arbejdet. Tidslinjen siger det nu.
+
+**LED-skærmen.** Firmaet sælger den på virkningen, ikke på teknikken: *"giver
+besøgende en anledning til at stoppe op"*, *"Vi hjælper med at tilpasse
+billeder, film og præsentationer"*. Ikke pitch og pixelafstand.
 
 ## Det ene sted beregneren bevidst afviger
 

@@ -130,8 +130,8 @@ function ramme(indhold) {
     'font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#33393d;font-size:15px;line-height:1.55;">' +
     indhold +
     '<div style="padding:18px 28px 26px;border-top:1px solid ' + LINJE + ';color:' + GRAA + ';font-size:12px;">' +
-    '<p style="margin:0 0 3px;"><strong style="color:#000;">Wieben Design A/S</strong> · Porsborgparken 8B, 9530 Støvring</p>' +
-    '<p style="margin:0;">70 23 11 11 · wd@wiebendesign.dk · 30 års erfaring · messer i mere end 70 lande</p>' +
+    '<p style="margin:0 0 3px;"><strong style="color:#000;">Wieben Design A/S</strong> · Porsborgparken 8 B, 9530 Støvring · CVR 20099607</p>' +
+    '<p style="margin:0;">+45 70 23 11 11 · wd@wiebendesign.dk · Mere end 30 års erfaring · messer i mere end 70 lande</p>' +
     '</div></div></div>';
 }
 

@@ -525,7 +525,7 @@
     var h = document.getElementById('by-hjaelp');
     if (l.oversoeisk) {
       h.textContent = 'Uden for Europa sender vi standen med speditør, og montørerne flyver. ' +
-        'Vi har lager i USA og erfaring fra messer i mere end 70 lande — den præcise fragt aftaler vi konkret.';
+        'Vi har lagerfaciliteter i både Danmark og USA og erfaring fra messer i mere end 70 lande — den præcise fragt aftaler vi konkret.';
       return;
     }
     if (s.messe.ukendt && !s.messe.km) {
@@ -809,7 +809,7 @@
       lv.innerHTML = '';
       P.ledStoerrelser.forEach(function (l) {
         lv.appendChild(kort({
-          titel: l.navn, tekst: l.m2 + ' m² skærmflade · ' + l.fliser + ' fliser',
+          titel: l.navn, tekst: dec(l.m2) + ' m² skærm · ' + l.fliser + ' moduler',
           valgt: s.led === l.id,
           meta: '<span class="card-pris">' + fmtKort(spaend(iv.tal(ledPris(l)))) + ' kr.</span> inkl. styring',
           klik: function () { s.led = l.id; opdater(); }

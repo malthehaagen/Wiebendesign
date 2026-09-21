@@ -240,11 +240,11 @@ window.WD_INDHOLD = {
   tilkoeb: {
     skilt:       { titel: 'Hængende skilt over standen', tekst: 'Jeres navn båret oppe i riggen, så standen kan ses fra den anden ende af hallen.', ikon: 'skaerm' },
     rigLys:      { titel: 'Lys fra riggen',              tekst: 'Projektører hængt over standen. Lyser hele gulvet op i stedet for kun væggene.', ikon: 'lys' },
-    led:         { titel: 'LED-væg',                     tekst: 'En skærmvæg bygget af fliser. Lyser kraftigere end nogen printet flade og kan vise levende billeder.', ikon: 'led' },
+    led:         { titel: 'LED-skærm',                   tekst: 'Vis produkterne i brug med film og demonstrationer. Skærmen bliver en del af standen og giver besøgende en anledning til at stoppe op.', ikon: 'led' },
     beplantning: { titel: 'Beplantning',                 tekst: 'Det billigste greb, der får en stand til at virke færdig.', ikon: 'plante' }
   },
 
-  ledIntro: 'Vælg størrelsen. Styringen indgår altid — en LED-væg kan ikke lejes uden.',
+  ledIntro: 'Skærmen bygges op af moduler og tilpasses jeres plads og det indhold, I vil vise. Styringen indgår altid — skærmen kan ikke lejes uden. Vi hjælper også med at tilpasse billeder, film og præsentationer, så de fungerer på den valgte størrelse.',
 
   /* ---------------- Katalog: navne og beskrivelser ---------------- */
   katalogGrupper: [
@@ -378,13 +378,13 @@ window.WD_INDHOLD = {
     { uger: 20, hvem: 'sammen', titel: 'Designforslag og plan',             tekst: 'Vi omsætter behov og rammer til et designforslag og lægger en tydelig plan for det videre forløb.' },
     { uger: 14, hvem: 'sammen', titel: 'Godkendelse af designet',           tekst: 'I godkender den endelige tegning. Derefter går produktionen i gang på et afstemt grundlag.' },
     { uger: 10, hvem: 'os',     titel: 'Bestillinger hos messearrangøren',  tekst: 'Når vi får adgang til messearrangørens system, tager vi os af bestillinger og deadlines, så I slipper for administrationen.' },
-    { uger: 6,  hvem: 'sammen', titel: 'Grafikken skal være klar',          tekst: 'I sender logo, billeder og tekst — vi producerer og monterer. Efter denne dato bliver ændringer dyre.' },
+    { uger: 6,  hvem: 'sammen', titel: 'Grafikken skal være klar',          tekst: 'I sender logo, billeder og tekst. Vores grafikere tilpasser materialet til fladerne — eller laver hele det grafiske arbejde, hvis I ikke har det liggende. Efter denne dato bliver ændringer dyre.' },
     { uger: 4,  hvem: 'os',     titel: 'Møbler og udstyr reserveret',       tekst: 'Vi reserverer alt inventar til levering direkte på standen.' },
     { uger: 3,  hvem: 'jer',    titel: 'Aftal hvordan I følger op',         tekst: 'Hvordan registrerer I et lead på standen, og hvem kontakter dem bagefter? Det afgør, hvad messen er værd.' },
     { uger: 2,  hvem: 'jer',    titel: 'Inviter jeres kunder',              tekst: 'De vigtigste møder bookes før messen. Standen er rammen, ikke rekrutteringen.' },
     { uger: 1,  hvem: 'os',     titel: 'Pakning og transport',              tekst: 'Standen pakkes hos os i Støvring, og vi koordinerer indlæsning, transport og aflæsning på messestedet.' },
     { uger: 0,  hvem: 'os',     titel: 'Opbygning og messedage',            tekst: 'Vi bygger op og gennemgår standen frem mod åbningen. Når I ankommer, er alt på plads.' },
-    { uger: -1, hvem: 'os',     titel: 'Nedtagning og opbevaring',          tekst: 'Vi pakker standen forsvarligt ned og sørger for returtransporten. Elementerne kan opbevares på vores lagerhotel og genbruges til næste messe.' },
+    { uger: -1, hvem: 'os',     titel: 'Nedtagning og opbevaring',          tekst: 'Vi pakker standen forsvarligt ned og sørger for returtransporten. Elementerne kan stå på vores lagerhotel, så de ikke optager plads hos jer — og så er de samlet ét sted, når I skal bruge dem igen.' },
     { uger: -1, hvem: 'jer',    titel: 'Følg op på jeres leads',            tekst: 'Alle leads kontaktet inden for fem hverdage.' }
   ],
 

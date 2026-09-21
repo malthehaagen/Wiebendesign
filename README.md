@@ -161,10 +161,9 @@ beregneren og se, om den rammer inden for spændet.
   b.appendChild(el('<span class="ill"><img src="assets/img/' + id + '.jpg" alt=""></span>'));
   ```
 - **Endpointet skal sættes op** — se `integration/OPSAETNING.md`
-- **Persondata**: samtykketekst og link til privatlivspolitik på formularen
 - **Hosting**: hvordan modulet lægges på wiebendesign.dk
-- **Teksterne** bør gennemlæses af Wieben Design. De er skrevet uden adgang til
-  firmaets eget site — se Baggrund
+- **Teksterne** bør gennemlæses af Wieben Design. Tone, påstande og ordvalg er
+  rettet efter firmaets eget site — se [`docs/tone-of-voice.md`](docs/tone-of-voice.md)
 - **Engelsk version**, når den danske ligger fast. Alle tekster ligger samlet i
   `content.js`
 - **Opfølgningen internt**: hvem kontakter leadet, hvor hurtigt og med hvad
