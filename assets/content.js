@@ -177,6 +177,12 @@ window.WD_INDHOLD = {
     delvis: { titel: 'De vigtigste',           tekst: 'Tryk der hvor folk kigger — cirka halvdelen af væggene.' },
     fuld:   { titel: 'Det hele',               tekst: 'Tryk på alle vægflader.' }
   },
+  grafikarbejde: {
+    klar:   { titel: 'Vi har tryklare filer', tekst: 'I leverer grafikken færdig i de rigtige mål. Vi kontrollerer filerne og tilpasser til fladerne.' },
+    delvis: { titel: 'Vi har logo og billeder', tekst: 'I har materialet, men det skal sættes op. Vores grafikere tilpasser format, proportioner og opsætning til standens flader.' },
+    alt:    { titel: 'Vi skal have hjælp til det hele', tekst: 'Vi udvikler grafikken fra bunden ud fra jeres visuelle identitet — fra idé og skitse til tryklar fil.' }
+  },
+
   gulv: {
     taeppe: { titel: 'Tæppe',         tekst: 'Med blødt underlag. Det mest almindelige valg — farven aftaler vi med jer.' },
     vinyl:  { titel: 'Vinyl',         tekst: 'Glat gulv. Skarpt og lyst udtryk.' },

@@ -26,6 +26,7 @@
     led: 'l',
     omraadeAreal: 0,
     ugerTilMesse: null,
+    grafikarbejde: 'delvis',
     sendt: false,
     team: { dage: 3 }
   };
@@ -84,6 +85,20 @@
       omkreds: side * 4,
       vaegAreal: lbm * s.stand.vaeghoejde
     };
+  }
+
+  /* Timerne til at gøre grafikken klar — ikke produktionen af printet.
+     Uden print er der intet at sætte op. */
+  function grafikarbejde() {
+    var g = geometri();
+    var printM2 = g.vaegAreal * P.grafikdaekning[s.stand.grafik];
+    if (!printM2) return { timer: [0, 0], pris: [0, 0] };
+    var n = P.grafikarbejde.niveauer[s.grafikarbejde] || P.grafikarbejde.niveauer.delvis;
+    var timer = [
+      Math.max(n.minTimer[0], printM2 * n.timerPrM2[0]),
+      Math.max(n.minTimer[1], printM2 * n.timerPrM2[1])
+    ];
+    return { timer: timer, pris: iv.gang(timer, P.grafikarbejde.timepris) };
   }
 
   function hoejde(m) {
@@ -302,7 +317,9 @@
     var tavle = elTavle();
 
     /* Detaljerne bruges til at bygge noterne, men vises ikke som egne linjer */
-    var standDele = v.konstruktion + v.print + gulvpris() + belysningspris() + tavle.leje;
+    var ga = grafikarbejde();
+    var standDele = v.konstruktion + v.print + gulvpris() + belysningspris() + tavle.leje +
+                    (ga.pris[0] + ga.pris[1]) / 2;
     var omraadeSum = omr.reduce(function (a, l) { return a + l.pris; }, 0) +
                      tilk.reduce(function (a, l) { return a + l.pris; }, 0);
     var mont = montage();
@@ -311,6 +328,7 @@
     var standNote = [
       dec(Math.round(g.vaegLbm * 10) / 10) + ' meter ' + (s.stand.vaegtype === 'pixlip' ? 'lysvæg' : 'væg'),
       v.print ? Math.round(g.vaegAreal * P.grafikdaekning[s.stand.grafik]) + ' m² tryk' : null,
+      ga.timer[1] ? 'grafisk arbejde ' + Math.round(ga.timer[0]) + '\u2013' + Math.round(ga.timer[1]) + ' timer' : null,
       C.gulv[s.stand.gulv].titel.toLowerCase() + (s.stand.haevet ? ', hævet' : ''),
       C.belysning[s.stand.belysning].titel.toLowerCase(),
       'strøm'
@@ -612,6 +630,26 @@
     document.getElementById('grafik-hjaelp').textContent = C.grafikdaekning[s.stand.grafik].tekst +
       (vaegpris().print ? ' · ' + fmtKort(iv.tal(vaegpris().print)) + ' kr.' : '');
 
+    var gab = document.getElementById('grafikarbejde-blok');
+    gab.hidden = s.stand.grafik === 'ingen';
+    if (!gab.hidden) {
+      var gav = document.getElementById('grafikarbejde');
+      gav.innerHTML = '';
+      Object.keys(C.grafikarbejde).forEach(function (id) {
+        var t = C.grafikarbejde[id];
+        var gemt = s.grafikarbejde;
+        s.grafikarbejde = id;
+        var ga2 = grafikarbejde();
+        s.grafikarbejde = gemt;
+        gav.appendChild(kort({
+          titel: t.titel, tekst: t.tekst, valgt: s.grafikarbejde === id,
+          meta: '<span class="card-pris">' + fmtKort(spaend(ga2.pris)) + ' kr.</span> · anslået ' +
+                Math.round(ga2.timer[0]) + '–' + Math.round(ga2.timer[1]) + ' timer',
+          klik: function () { s.grafikarbejde = id; opdater(); }
+        }));
+      });
+    }
+
     var g = document.getElementById('gulv');
     g.innerHTML = '';
     Object.keys(C.gulv).forEach(function (id) {
@@ -905,7 +943,8 @@
       linje('Areal', s.stand.m2 + ' m²') +
       linje('Åbne sider', s.stand.aabneSider) +
       linje('Vægge', C.vaegtyper[s.stand.vaegtype].titel + ', ' + dec(Math.round(g.vaegLbm * 10) / 10) + ' meter i ' + String(s.stand.vaeghoejde).replace('.', ',') + ' m højde') +
-      linje('Tryk på væggene', C.grafikdaekning[s.stand.grafik].titel) +
+      linje('Tryk på væggene', C.grafikdaekning[s.stand.grafik].titel +
+        (s.stand.grafik !== 'ingen' ? ' · ' + C.grafikarbejde[s.grafikarbejde].titel.toLowerCase() : '')) +
       linje('Gulv', C.gulv[s.stand.gulv].titel + (s.stand.haevet ? ', hævet' : '')) +
       linje('Belysning', C.belysning[s.stand.belysning].titel) +
       linje('Forventede leads', r.leads[0] + '–' + r.leads[1]) +
@@ -931,7 +970,8 @@
     var rk = [
       ['Areal', s.stand.m2 + ' m² med ' + s.stand.aabneSider + (s.stand.aabneSider === 1 ? ' åben side' : ' åbne sider')],
       ['Vægge', C.vaegtyper[s.stand.vaegtype].titel + ', ' + dec(Math.round(g.vaegLbm * 10) / 10) + ' meter i ' + String(s.stand.vaeghoejde).replace('.', ',') + ' meters højde'],
-      ['Tryk på væggene', C.grafikdaekning[s.stand.grafik].titel],
+      ['Tryk på væggene', C.grafikdaekning[s.stand.grafik].titel +
+        (s.stand.grafik !== 'ingen' ? ' \u00b7 ' + C.grafikarbejde[s.grafikarbejde].titel.toLowerCase() : '')],
       ['Gulv', C.gulv[s.stand.gulv].titel + (s.stand.haevet ? ', hævet' : '')],
       ['Belysning', C.belysning[s.stand.belysning].titel],
       ['Områder', omr.length ? omr.map(function (l) { return (l.antal > 1 ? l.antal + ' × ' : '') + l.navn; }).join(', ') : 'Ingen valgt'],
@@ -1035,6 +1075,7 @@
       localStorage.setItem(GEM, JSON.stringify({
         profil: s.profil, messe: s.messe, stand: s.stand,
         omraader: s.omraader, omraadeValg: s.omraadeValg, omraaderRoert: s.omraaderRoert,
+        grafikarbejde: s.grafikarbejde,
         tilkoeb: s.tilkoeb, led: s.led, team: s.team
       }));
     } catch (e) { /* privat browsing */ }
@@ -1045,7 +1086,7 @@
       var raa = localStorage.getItem(GEM);
       if (!raa) return;
       var g = JSON.parse(raa);
-      ['profil', 'messe', 'stand', 'omraader', 'omraadeValg', 'tilkoeb', 'led', 'team'].forEach(function (k) { if (g[k]) s[k] = g[k]; });
+      ['profil', 'messe', 'stand', 'omraader', 'omraadeValg', 'tilkoeb', 'led', 'grafikarbejde', 'team'].forEach(function (k) { if (g[k]) s[k] = g[k]; });
       if (g.omraaderRoert) s.omraaderRoert = true;
       /* Gemt tilstand kan stamme fra en tidligere version, hvor et område
          bare var et tal. Bring den på nuværende form frem for at knække. */
@@ -1160,6 +1201,7 @@
         vaegmeter: Math.round(g.vaegLbm * 10) / 10,
         vaeghoejde: s.stand.vaeghoejde,
         tryk: C.grafikdaekning[s.stand.grafik].titel,
+        grafiskArbejde: s.stand.grafik === 'ingen' ? 'Ingen' : C.grafikarbejde[s.grafikarbejde].titel,
         gulv: C.gulv[s.stand.gulv].titel + (s.stand.haevet ? ', hævet' : ''),
         belysning: C.belysning[s.stand.belysning].titel
       },

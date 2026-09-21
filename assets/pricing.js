@@ -79,6 +79,27 @@ window.WD_PRIS = {
   /* Over denne højde skal messens højdegrænse tjekkes først */
   friHoejde: 3,
 
+  /* -------------------------------------------------------------------
+     GRAFISK ARBEJDE — timerne, ikke produktionen.
+     Står IKKE i tilbudsarket. Arkets eneste timesats er 652 kr., og den
+     dækker montørarbejde: værksted, kørsel, rejse, opbygning. Der findes
+     ingen sats for grafikerarbejde, så både satsen og normtallene her er
+     PLACEHOLDERE og skal bekræftes af Wieben Design.
+
+     Sitet siger: "I kan få hjælp til hele det grafiske arbejde eller blot
+     den del, der mangler." Derfor tre niveauer efter, hvad kunden selv
+     kommer med. Timerne vokser med printarealet, fordi flere og større
+     flader er mere at sætte op.
+     ------------------------------------------------------------------- */
+  grafikarbejde: {
+    timepris: 650,
+    niveauer: {
+      klar:   { timerPrM2: [0, 0],          minTimer: [1, 2] },
+      delvis: { timerPrM2: [0.10, 0.18],    minTimer: [3, 4] },
+      alt:    { timerPrM2: [0.20, 0.35],    minTimer: [6, 8] }
+    }
+  },
+
   /* Grafikdækning af vægarealet */
   grafikdaekning: { ingen: 0, delvis: 0.45, fuld: 1 },
 
