@@ -101,7 +101,7 @@ I `assets/config.js`:
 
 | | |
 |---|---|
-| `kraevEmailForOplaeg` | `true` betyder, at PDF-knappen først dukker op, når oplægget er sendt. Det er sådan, leadet opstår. |
+| `kraevEmailForOplaeg` | Står på `false`. PDF'en kan hentes frit, men står som det stille alternativ under afsend-knappen. Prisen er alligevel synlig hele vejen i prisbjælken, så PDF'en indeholder ikke noget nyt — en lås på den koster mere i troværdighed end den henter i mailadresser. Sæt den til `true`, hvis I vil prøve det modsatte af. |
 | `kraevEmailForPris` | `true` skjuler prisen, indtil kunden har afleveret sin mail. **Vi fraråder det** — prisen undervejs er det, der holder folk i gang. Men den er der, hvis I vil prøve det af. |
 
 ## Persondata

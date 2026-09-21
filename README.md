@@ -72,6 +72,14 @@ i [`integration/OPSAETNING.md`](integration/OPSAETNING.md).
 Uden et endpoint kører modulet videre som prototype: flowet virker, men intet
 bliver sendt.
 
+**Oplægssiden er ikke en lås.** Afsend-knappen er den primære handling, og
+PDF'en står som et stille alternativ under den („Vil I helst kigge på det selv
+først?“). Grunden er, at prisen er synlig i prisbjælken hele vejen igennem —
+PDF'en indeholder altså ikke noget, kunden ikke har set, og en lås på den koster
+mere i troværdighed end den henter i mailadresser. Det er én linje i
+`config.js` (`kraevEmailForOplaeg`), hvis I vil prøve det modsatte af — men
+uden måling på siden kan forskellen ikke aflæses.
+
 ## Priserne
 
 Beregningen bygger på **Wieben Designs egne priser**, udtrukket af firmaets

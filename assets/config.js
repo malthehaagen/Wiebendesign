@@ -13,8 +13,14 @@ window.WD_CONFIG = {
 
   /* Skal kunden aflevere sin mail for at få oplægget som PDF?
      true  = PDF-knappen dukker først op, når oplægget er sendt
-     false = PDF'en kan hentes frit */
-  kraevEmailForOplaeg: true,
+     false = PDF'en kan hentes frit, men står som det stille alternativ
+             under afsend-knappen
+
+     Står på false. Prisen er alligevel synlig hele vejen i prisbjælken, så
+     PDF'en indeholder ikke noget, kunden ikke har set — og en lås på den
+     koster mere i troværdighed end den henter i mailadresser. Vil I prøve
+     det modsatte af, er det denne ene linje, der skal skiftes. */
+  kraevEmailForOplaeg: false,
 
   /* Skal prisen skjules, indtil kunden har afleveret sin mail?
      Vi fraråder det: prisen undervejs er det, der holder folk i gang.

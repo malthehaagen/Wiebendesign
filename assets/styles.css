@@ -354,6 +354,10 @@ p{margin:0 0 1em}
   border:1px solid var(--linje-2); border-radius:var(--radius); background:var(--flade); color:var(--ink);
 }
 .form-row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+/* Almindeligt tekstafsnit, ikke flex — knapperne skal flyde med teksten */
+.alternativer{font-size:.85rem; color:var(--ink-3); margin:12px 0 0}
+.alternativer .btn{font-size:.85rem; padding:4px 6px}
+.alt-skil{color:var(--linje-2); margin-inline:2px}
 .disclaimer{font-size:.78rem; color:var(--ink-3); margin:14px 0 0}
 /* Opkaldsfeltet er væk, så det skal stå tydeligt — ikke som grå småtryk —
    at det at sende oplægget betyder, at Wieben vender tilbage. */

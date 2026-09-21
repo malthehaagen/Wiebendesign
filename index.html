@@ -191,8 +191,8 @@
     <div id="opsummering" class="opsummering"></div>
 
     <form id="kontakt" class="kontakt" novalidate>
-      <h3>Få oplægget tilsendt</h3>
-      <p>Fortæl os kort, hvem I er, så sender vi oplægget som PDF — med pris, indhold og tidslinje, I kan tage med videre internt. Så ser vi på mulighederne og tager dialogen derfra.</p>
+      <h3>Lad os se på mulighederne</h3>
+      <p>Fortæl os kort, hvem I er. Så kigger vi oplægget igennem og vender tilbage med, hvad der kan lade sig gøre på præcis jeres plads — og I får det hele som PDF med pris, indhold og tidslinje, I kan tage med videre internt. Det forpligter jer ikke til noget.</p>
       <div class="form-grid">
         <label>Navn<input type="text" name="navn" required></label>
         <label>Virksomhed<input type="text" name="virksomhed" required></label>
@@ -214,14 +214,19 @@
       <p class="persondata">Vi bruger kun jeres oplysninger til det, og vi videregiver dem ikke. I kan altid bede os om at slette dem. Læs mere i vores <a href="https://wiebendesign.dk/privatlivspolitik/" target="_blank" rel="noopener">privatlivspolitik</a>.</p>
       <div class="form-row">
         <button type="submit" class="btn btn-primary btn-lg">Send oplægget til mig</button>
-        <button type="button" class="btn" id="print">Hent som PDF nu</button>
-        <button type="button" class="btn btn-tekst" id="nulstil">Start forfra</button>
       </div>
+      <p class="alternativer">Vil I helst kigge på det selv først?
+        <button type="button" class="btn btn-tekst" id="print">Hent oplægget som PDF</button>
+      </p>
       <p class="disclaimer" id="prototypenote" hidden>Prototype — formularen sender ikke data nogen steder hen endnu.</p>
     </form>
 
+    <!-- "Start forfra" sletter alt og hører derfor til navigationen,
+         ikke ved siden af en harmløs download. Den ligger uden for
+         formularen, så den også er der, når kvitteringen har afløst den. -->
     <div class="nav-row">
       <button class="btn" data-goto="4">Tilbage</button>
+      <button type="button" class="btn btn-tekst" id="nulstil">Start forfra</button>
     </div>
   </section>
 

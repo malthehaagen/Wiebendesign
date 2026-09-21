@@ -1335,14 +1335,6 @@
     var pdf = el('<button type="button" class="btn">Hent oplægget som PDF</button>');
     pdf.onclick = function () { window.print(); };
     knapper.appendChild(pdf);
-    /* Formularen er væk nu, så uden denne er der ingen vej til en ny stand */
-    var igen = el('<button type="button" class="btn btn-tekst">Regn på en anden stand</button>');
-    igen.onclick = function () {
-      if (!window.confirm('Sletter alle jeres valg og starter forfra. Er I sikre?')) return;
-      try { localStorage.removeItem(GEM); } catch (e) { /* ignorer */ }
-      location.reload();
-    };
-    knapper.appendChild(igen);
     boks.appendChild(knapper);
     f.replaceWith(boks);
     s.sendt = true;
