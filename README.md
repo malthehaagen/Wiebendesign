@@ -1,4 +1,24 @@
-# Standberegner — Wieben Design (prototype)
+# Standberegner — Wieben Design
+
+## Status
+
+**Den danske version er færdigbygget (21. september 2026).** Beregneren er
+gennemtestet og godkendt til gennemgang. Herfra venter fire ting, og ingen af
+dem er kode:
+
+| | Status | Hvem |
+|---|---|---|
+| Dansk version | **Færdig** | — |
+| Priserne bekræftet | Mangler — se *Hvad der mangler før produktion* | Wieben Design |
+| Teksterne gennemlæst | Mangler — hver sætning er skrevet til lejligheden | Wieben Design |
+| Mailsystemet | Mangler endpoint og verificeret Resend-domæne | `integration/OPSAETNING.md` |
+| Hosting på wiebendesign.dk | Ikke besluttet | Wieben Design |
+| Engelsk version | Venter på at den danske tekst ligger fast | — |
+
+Overskriften „Prototype“ står stadig i sidens header (`index.html`, `.top-note`).
+Den bør blive der, indtil priserne er bekræftet — det er én linje at fjerne
+på lanceringsdagen.
+
 
 > ## Om prisdata i dette repo
 >
@@ -226,11 +246,11 @@ Chromium under udviklingen. Det, der er kontrolleret:
 | Mails | Begge skabeloner: balanceret HTML, formaterede beløb, ingen `undefined` |
 | Layout | Ti bredder fra 390 til 1440 px: intet vandret overløb, ingen knapper der stabler sig |
 
-**Ikke testet:** Safari og Firefox. Kun Chromium var tilgængeligt under
-udviklingen. Beregneren bruger `aspect-ratio`, `:focus-visible`,
-`focus({preventScroll})` og `scrollTo({behavior})`, som alle kræver
-Safari 15.4 / iOS 15.4 (marts 2022) eller nyere. Åbn den på en iPhone og en
-Mac, før den lægges på sitet.
+**Delvist testet:** kun Chromium var tilgængeligt under udviklingen. Wieben
+Design har efterfølgende gennemset beregneren på mobil uden bemærkninger.
+Firefox og desktop-Safari er ikke prøvet. Beregneren bruger `aspect-ratio`,
+`:focus-visible`, `focus({preventScroll})` og `scrollTo({behavior})`, som alle
+kræver Safari 15.4 / iOS 15.4 (marts 2022) eller nyere.
 
 ## Efter lancering
 

@@ -17,7 +17,7 @@ window.WD_PRIS = {
     enhed: 'ekskl. moms',
     grundlag: 'Lejepris pr. messe',
     kilde: 'docs/prisgrundlag.md',
-    opdateret: '2026-09-10',
+    opdateret: '2026-09-21',
     afrunding: 250,
 
     /* Spændet på det viste totalbeløb. Enkeltposterne er faste lejepriser,
