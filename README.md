@@ -13,7 +13,7 @@ dem er kode:
 | Teksterne gennemlæst | Mangler — hver sætning er skrevet til lejligheden | Wieben Design |
 | Mailsystemet | Mangler endpoint og verificeret Resend-domæne | `integration/OPSAETNING.md` |
 | Hosting på wiebendesign.dk | Ikke besluttet | Wieben Design |
-| Engelsk version | **I gang.** Se [`docs/engelsk-version.md`](docs/engelsk-version.md) | — |
+| Engelsk version | **Færdig.** Se [`docs/engelsk-version.md`](docs/engelsk-version.md) | — |
 
 Overskriften „Prototype“ står stadig i sidens header (`index.html`, `.top-note`).
 Den bør blive der, indtil priserne er bekræftet — det er én linje at fjerne
@@ -70,6 +70,8 @@ assets/pricing.js     ALLE PRISER — den eneste fil, der skal rettes for at æn
 assets/data.js        Sprogneutralt: illustrationer, byer og afstande, betingelser
 assets/tekst-da.js    Brugerfladens tekster på dansk
 assets/indhold-da.js  Indholdet på dansk: stand, områder, faglige tip, tidslinje
+assets/tekst-en.js    Brugerfladens tekster på engelsk — samme nøgler som -da
+assets/indhold-en.js  Indholdet på engelsk — samme nøgler som -da
 assets/app.js         Beregning, rådgivningslogik og visning
 assets/styles.css     Design. Farver og fonts ligger som variabler øverst
 assets/config.js      Endpoint og til/fra-knapper. Ingen hemmeligheder her

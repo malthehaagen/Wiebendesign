@@ -11,6 +11,17 @@ window.WD_CONFIG = {
      som prototype: intet bliver sendt, men flowet virker. */
   endpoint: '',
 
+  /* Faste adresser pr. sprog. Sæt dem, når beregneren ligger på
+     wiebendesign.dk med samme opdeling som sitet:
+
+       sprogStier: { da: '/standberegner/', en: '/en/stand-calculator/' }
+
+     Står de tomme, skifter sprogvælgeren med ?lang=en i stedet. Det virker
+     uanset hosting — også når filen åbnes direkte — men to rigtige
+     adresser er bedre: så kan jeres engelske side linke direkte til den
+     engelske beregner, og begge kan findes af søgemaskiner. */
+  sprogStier: null,
+
   /* Skal kunden aflevere sin mail for at få oplægget som PDF?
      true  = PDF-knappen dukker først op, når oplægget er sendt
      false = PDF'en kan hentes frit, men står som det stille alternativ

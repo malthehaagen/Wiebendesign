@@ -307,6 +307,10 @@ window.WD_TEKST.da = {
     bundNote:     'Beløbene er uforpligtende estimater beregnet på Wieben Designs egne lejepriser og erstattes af et konkret tilbud. <a href="https://wiebendesign.dk/privatlivspolitik/" target="_blank" rel="noopener">Privatlivspolitik</a> · <a href="https://wiebendesign.dk/handelsbetingelser/" target="_blank" rel="noopener">Handelsbetingelser</a>'
   },
 
+  /* Valutaen. Dansk sætter "kr." efter tallet; engelsk sætter "DKK" foran.
+     Derfor en skabelon og ikke et suffiks. */
+  valuta: '{tal} kr.',
+
   /* ---------------- Enheder ---------------- */
   enhed: {
     m2:     '{tal} m²',

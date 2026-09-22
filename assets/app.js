@@ -10,11 +10,53 @@
   var D = window.WD_DATA || {};
 
   /* ---------- Sproglag ----------
-     Sproget er dansk indtil den engelske fil findes; så sættes SPROG af
-     adressen (/en/) eller ?lang=. Alt andet her behøver ikke vide det.  */
-  var SPROG = 'da';
-  var T = (window.WD_TEKST || {})[SPROG] || {};
+     Adressen bestemmer sproget: /en/ i stien, eller ?lang=en. Et eksplicit
+     ?lang= vinder over stien, så man kan fremtvinge et sprog på en hvilken
+     som helst hosting — også når siden åbnes som en fil.               */
+  var SPROGENE = window.WD_TEKST || {};
+  function findSprog() {
+    var q = (location.search.match(/[?&]lang=([a-z]{2})/) || [])[1];
+    if (q && SPROGENE[q]) return q;
+    if (/(^|\/)en(\/|$)/.test(location.pathname) && SPROGENE.en) return 'en';
+    return 'da';
+  }
+  var SPROG = findSprog();
+  var T = SPROGENE[SPROG] || SPROGENE.da || {};
   var C = T.indhold || {};
+
+  /* Adressen for et andet sprog. Er der sat faste stier op i config.js,
+     bruges de — ellers ?lang=, som virker uanset hosting. */
+  function sprogAdresse(kode) {
+    var stier = K.sprogStier;
+    if (stier && stier[kode]) return stier[kode];
+    var u = location.pathname + location.search;
+    u = u.replace(/([?&])lang=[a-z]{2}&?/g, '$1').replace(/[?&]$/, '');
+    if (kode === 'da') return u || location.pathname;
+    return u + (u.indexOf('?') === -1 ? '?' : '&') + 'lang=' + kode;
+  }
+
+  /* Sprogvælgeren er links og ikke knapper: så kan de åbnes i en ny fane
+     og findes af søgemaskiner, hvilket er hele pointen med to adresser. */
+  function visSprogvalg() {
+    var v = document.getElementById('sprogvalg');
+    if (!v) return;
+    var koder = Object.keys(SPROGENE);
+    if (koder.length < 2) { v.hidden = true; return; }
+    v.hidden = false;
+    v.innerHTML = '';
+    koder.forEach(function (kode) {
+      var navn = (SPROGENE[kode] || {}).kode || kode;
+      if (kode === SPROG) {
+        v.appendChild(el('<span class="sprog-valgt" aria-current="true">' + esc(navn.toUpperCase()) + '</span>'));
+      } else {
+        var a = el('<a class="sprog-link" href="' + esc(sprogAdresse(kode)) + '"></a>');
+        a.textContent = navn.toUpperCase();
+        a.setAttribute('hreflang', kode);
+        a.title = (SPROGENE[kode] || {}).navn || kode;
+        v.appendChild(a);
+      }
+    });
+  }
 
   /* Slår en tekst op og erstatter {navn} med værdier. Hedder tx og ikke t,
      fordi flere løkker i filen bruger "var t" om et indholdsobjekt.
@@ -84,10 +126,12 @@
   function afrund(v) { var r = P.meta.afrunding || 250; return Math.round(v / r) * r; }
   var nf = new Intl.NumberFormat(T.locale || 'da-DK');
   function kr(v) { return nf.format(afrund(v)); }
+  /* Valutaen står i sprogfilen: dansk sætter "kr." efter tallet, engelsk
+     sætter "DKK" foran. Derfor en skabelon og ikke et suffiks. */
+  function medValuta(tal) { return tx('valuta', { tal: tal }); }
   function fmt(a) {
-    if (!a || (!a[0] && !a[1])) return '—';
-    if (afrund(a[0]) === afrund(a[1])) return kr(a[0]) + ' kr.';
-    return kr(a[0]) + '–' + kr(a[1]) + ' kr.';
+    if (!a || (!a[0] && !a[1])) return tx('oplaeg.intet');
+    return medValuta(fmtKort(a));
   }
   function fmtKort(a) {
     if (!a) return '—';
@@ -678,7 +722,7 @@
       v.appendChild(kort({
         fokus: 'vaegtype:' + id,
         svg: D.svg[id], titel: t.titel, tekst: t.tekst, valgt: s.stand.vaegtype === id,
-        meta: '<span class="card-pris">' + fmtKort(spaend(iv.tal(pris.konstruktion + pris.print))) + ' kr.</span> ' + esc(tx('standen.forStanden')) +
+        meta: '<span class="card-pris">' + medValuta(fmtKort(spaend(iv.tal(pris.konstruktion + pris.print)))) + '</span> ' + esc(tx('standen.forStanden')) +
               '<span class="card-teknik">' + esc(t.teknik) + '</span>',
         klik: function () {
           s.stand.vaegtype = id;
@@ -740,7 +784,7 @@
         gav.appendChild(kort({
           fokus: 'grafikarbejde:' + id,
           titel: t.titel, tekst: t.tekst, valgt: s.grafikarbejde === id,
-          meta: '<span class="card-pris">' + fmtKort(spaend(ga2.pris)) + ' kr.</span> · ' +
+          meta: '<span class="card-pris">' + medValuta(fmtKort(spaend(ga2.pris))) + '</span> · ' +
                 esc(tx('standen.anslaaetTimer', { fra: Math.round(ga2.timer[0]), til: Math.round(ga2.timer[1]) })),
           klik: function () { s.grafikarbejde = id; opdater(); }
         }));
@@ -754,7 +798,7 @@
       g.appendChild(kort({
         fokus: 'gulv:' + id,
         titel: t.titel, tekst: t.tekst, valgt: s.stand.gulv === id,
-        meta: '<span class="card-pris">' + fmtKort(spaend(iv.tal(P.gulv[id] * s.stand.m2))) + ' kr.</span> · ' +
+        meta: '<span class="card-pris">' + medValuta(fmtKort(spaend(iv.tal(P.gulv[id] * s.stand.m2)))) + '</span> · ' +
               esc(tx('standen.prM2', { pris: nf.format(P.gulv[id]) })),
         klik: function () { s.stand.gulv = id; opdater(); }
       }));
@@ -767,7 +811,7 @@
         fokus: 'haevet:' + par[0],
         titel: t.titel, tekst: t.tekst, valgt: s.stand.haevet === par[1],
         meta: par[1]
-          ? '<span class="card-pris">' + fmtKort(spaend(iv.tal(P.haevetGulv * s.stand.m2))) + ' kr.</span> ' + esc(tx('standen.oveniGulvet'))
+          ? '<span class="card-pris">' + medValuta(fmtKort(spaend(iv.tal(P.haevetGulv * s.stand.m2)))) + '</span> ' + esc(tx('standen.oveniGulvet'))
           : esc(tx('standen.ingenUdgift')),
         klik: function () { s.stand.haevet = par[1]; opdater(); }
       }));
@@ -782,7 +826,7 @@
         fokus: 'belysning:' + id,
         titel: t.titel, tekst: t.tekst, valgt: s.stand.belysning === id,
         meta: '<span class="card-pris">' +
-              fmtKort(spaend(iv.tal(Math.ceil(s.stand.m2 / def.m2PrSpot) * def.prSpot))) + ' kr.</span> · ' +
+              medValuta(fmtKort(spaend(iv.tal(Math.ceil(s.stand.m2 / def.m2PrSpot) * def.prSpot)))) + '</span> · ' +
               esc(tx('standen.spots', { antal: Math.ceil(s.stand.m2 / def.m2PrSpot) })),
         klik: function () { s.stand.belysning = id; opdater(); }
       }));
@@ -830,7 +874,7 @@
 
         var beskrivelse = t.stoerrelser[vr.id];
         k.appendChild(el('<span class="card-meta"><span class="card-pris">' +
-          fmtKort(spaend(iv.tal(omraadePris(id, vr.id)))) + ' kr.</span>' +
+          medValuta(fmtKort(spaend(iv.tal(omraadePris(id, vr.id))))) + '</span>' +
           (beskrivelse ? ' · ' + esc(beskrivelse) : '') + ' · ' + vr.m2 + ' m²</span>'));
 
         var st = el('<span class="stepper"></span>');
@@ -880,7 +924,7 @@
         fokus: 'startvalg:forslag',
         titel: tx('omraade.brugForslag'), valgt: false,
         tekst: tx('omraade.brugForslagTekst', { antal: antal }),
-        meta: '<span class="card-pris">' + fmtKort(spaend(iv.tal(pris))) + ' kr.</span> ' + esc(tx('omraade.forHeleMessen')),
+        meta: '<span class="card-pris">' + medValuta(fmtKort(spaend(iv.tal(pris)))) + '</span> ' + esc(tx('omraade.forHeleMessen')),
         klik: function () { s.omraader = foreslaaOmraader(); s.omraadeValg = 'forslag'; opdater(); }
       }));
       kort2.appendChild(kort({
@@ -938,7 +982,7 @@
       v.appendChild(kort({
         fokus: 'tilkoeb:' + id,
         svg: D.svg[t.ikon], titel: t.titel, tekst: t.tekst, valgt: til,
-        meta: '<span class="card-pris">' + fmtKort(spaend(iv.tal(pris || 0))) + ' kr.</span>' +
+        meta: '<span class="card-pris">' + medValuta(fmtKort(spaend(iv.tal(pris || 0)))) + '</span>' +
               (id === 'led' ? ' · ' + esc(ledValgt().navn) : ''),
         klik: function () { s.tilkoeb[id] = !s.tilkoeb[id]; opdater(); }
       }));
@@ -955,7 +999,7 @@
           fokus: 'led:' + l.id,
           titel: l.navn, tekst: tx('omraade.ledTekst', { areal: dec(l.m2), fliser: l.fliser }),
           valgt: s.led === l.id,
-          meta: '<span class="card-pris">' + fmtKort(spaend(iv.tal(ledPris(l)))) + ' kr.</span> ' + esc(tx('omraade.ledMeta')),
+          meta: '<span class="card-pris">' + medValuta(fmtKort(spaend(iv.tal(ledPris(l))))) + '</span> ' + esc(tx('omraade.ledMeta')),
           klik: function () { s.led = l.id; opdater(); }
         }));
       });
@@ -999,7 +1043,7 @@
         fmtKort(spaend(l.pris)) + '</span></li>'));
     });
     k.appendChild(ul);
-    k.appendChild(el('<div class="bkol-sum"><span>' + esc(tx('post.ialt')) + '</span><span>' + fmtKort(r.vist) + ' kr.</span></div>'));
+    k.appendChild(el('<div class="bkol-sum"><span>' + esc(tx('post.ialt')) + '</span><span>' + medValuta(fmtKort(r.vist)) + '</span></div>'));
     k.appendChild(el('<p class="bkol-fod">' + esc(tx('budget.fod')) + '</p>'));
     v.appendChild(k);
 
@@ -1106,9 +1150,9 @@
 
     document.getElementById('pa-pris').innerHTML =
       r.wiebenLinjer.map(function (l) {
-        return '<tr><td>' + esc(l.navn) + '<span>' + esc(l.note) + '</span></td><td>' + fmtKort(spaend(l.pris)) + ' kr.</td></tr>';
+        return '<tr><td>' + esc(l.navn) + '<span>' + esc(l.note) + '</span></td><td>' + fmtKort(spaend(l.pris)) + '</td></tr>';
       }).join('') +
-      '<tr class="pa-sum"><td>' + esc(tx('post.ialt')) + '</td><td>' + fmtKort(r.vist) + ' kr.</td></tr>';
+      '<tr class="pa-sum"><td>' + esc(tx('post.ialt')) + '</td><td>' + medValuta(fmtKort(r.vist)) + '</td></tr>';
 
     document.getElementById('pa-tidslinje-intro').textContent = C.tidslinjeIntro;
     document.getElementById('pa-tidslinje').innerHTML = D.tidslinje.map(function (t) {
@@ -1133,13 +1177,13 @@
     bar.hidden = s.trin < 2 || (K.kraevEmailForPris && !s.sendt);
     if (bar.hidden) return;
     var r = beregn();
-    document.getElementById('prisbar-belob').textContent = fmt(r.vist).replace(' kr.', '');
+    document.getElementById('prisbar-belob').textContent = fmtKort(r.vist);
     var h = '<ul>';
     r.wiebenLinjer.forEach(function (l) {
       h += '<li><span>' + esc(l.navn) + (l.note ? '<em>' + esc(l.note) + '</em>' : '') +
         '</span><span>' + fmtKort(spaend(l.pris)) + '</span></li>';
     });
-    h += '<li class="sum"><span>' + esc(tx('post.ialt')) + '</span><span>' + fmtKort(r.vist) + ' kr.</span></li></ul>' +
+    h += '<li class="sum"><span>' + esc(tx('post.ialt')) + '</span><span>' + medValuta(fmtKort(r.vist)) + '</span></li></ul>' +
       '<p class="disclaimer">' + esc(tx('prisbar.forbehold')) + '</p>';
     document.getElementById('prisbar-detalje').innerHTML = h;
   }
@@ -1531,6 +1575,7 @@
   }
 
   fyldTekster();
+  visSprogvalg();
   hent();
   bind();
   document.getElementById('m2').value = s.stand.m2;

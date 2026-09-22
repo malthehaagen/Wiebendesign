@@ -61,6 +61,17 @@ p{margin:0 0 1em}
 .logo{height:34px; width:auto; display:block}
 .brand-sub{font-family:var(--font-h); font-weight:600; color:var(--ink-3); font-size:.92rem; border-left:1px solid var(--linje-2); padding-left:14px}
 .top-note{margin:0; color:var(--ink-3); font-size:.78rem; letter-spacing:.06em; text-transform:uppercase}
+.top-hoejre{display:flex; align-items:center; gap:16px; flex-wrap:wrap}
+/* Sprogvælgeren: det aktive sprog er ikke et link */
+.sprogvalg{display:flex; align-items:center; gap:2px; border:1px solid var(--linje-2); border-radius:99px; overflow:hidden}
+.sprogvalg .sprog-valgt,
+.sprogvalg .sprog-link{
+  font-family:var(--font-t); font-size:.74rem; font-weight:700; letter-spacing:.06em;
+  padding:5px 11px; text-decoration:none;
+}
+.sprogvalg .sprog-valgt{background:var(--primary); color:#fff}
+.sprogvalg .sprog-link{color:var(--ink-3); background:var(--flade)}
+.sprogvalg .sprog-link:hover{color:var(--primary); background:var(--flade-3)}
 
 /* ---------------- Trinvisning ---------------- */
 .steps{background:var(--flade); border-bottom:1px solid var(--linje); overflow-x:auto}

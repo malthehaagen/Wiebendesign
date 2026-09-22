@@ -76,13 +76,45 @@ direkte, så beregneren taler som resten af sitet.
    hele filen til engelsk, var betingelserne blevet duplikeret — og skulle
    rettes to steder for evigt.
 
-## Tilbage
+4. ~~Oversæt.~~ **Gjort.** `assets/tekst-en.js` (224 nøgler) og
+   `assets/indhold-en.js` (364 nøgler) — nøjagtig samme nøgler som de danske.
+   Wieben Design gav den danske tekst fri til oversættelse med forbehold for
+   smårettelser senere.
+5. ~~Sprogvalg og knap.~~ **Gjort.** Se nedenfor.
 
-4. **Oversæt** til `assets/tekst-en.js` og `assets/indhold-en.js` — først når
-   den danske tekst er godkendt af Wieben Design, ellers oversætter vi noget,
-   der bliver lavet om. Omfanget er nu kendt: 228 nøgler i `tekst-da.js`
-   (85 `ui` + 143 flade) og indholdet i `indhold-da.js`.
-5. **Sprogvalg og knap**, som besluttet ovenfor.
+## Sprogvalget i praksis
+
+Adressen bestemmer sproget: **`/en/` i stien, eller `?lang=en`.** Et eksplicit
+`?lang=` vinder over stien, så man kan fremtvinge et sprog på en hvilken som
+helst hosting — også når filen åbnes direkte fra disken.
+
+Sprogvælgeren i headeren er **links, ikke knapper**. Det er med vilje: links kan
+åbnes i en ny fane og findes af søgemaskiner, og det sidste er hele pointen med
+to adresser.
+
+Så længe `sprogStier` i `config.js` står på `null`, skifter vælgeren med
+`?lang=en`. Når beregneren ligger på sitet, sættes de rigtige adresser:
+
+```js
+sprogStier: { da: '/standberegner/', en: '/en/stand-calculator/' }
+```
+
+Kundens udfyldning ligger i localStorage på samme domæne og **overlever et
+sprogskift**. Testet: 72 m² i Verona med 6 områder beholdt alt, og prisen var
+samme tal i engelsk format (169.000 → 169,000).
+
+## Valutaen
+
+`kr.` stod hardkodet 13 steder i `app.js`. Den er nu en skabelon i sprogfilen,
+fordi dansk sætter enheden *efter* tallet og engelsk *foran*:
+
+| | |
+|---|---|
+| dansk | `valuta: '{tal} kr.'` |
+| engelsk | `valuta: 'DKK {tal}'` |
+
+Kontrolleret maskinelt: hver dansk nøgle med „kr.“ har DKK i sin engelske
+pendant, og alle pladsholdere matcher på begge sider.
 
 ## Testes til sidst
 
