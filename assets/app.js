@@ -29,6 +29,25 @@
     });
   }
 
+  /* Fylder de faste tekster i markuppen. data-t sætter tekst, data-t-html
+     tillader <strong> og <a> fra vores egen sprogfil (aldrig kundeinput),
+     og -alt/-aria/-placeholder sætter den tilsvarende attribut.
+     Teksten står kun i sprogfilen, så der er én kilde — og en engelsk
+     bruger ser ikke dansk blinke forbi, før den er fyldt ind. */
+  function fyldTekster() {
+    [['data-t', 'tekst'], ['data-t-html', 'html'], ['data-t-alt', 'alt'],
+     ['data-t-aria', 'aria-label'], ['data-t-placeholder', 'placeholder']
+    ].forEach(function (par) {
+      Array.prototype.forEach.call(document.querySelectorAll('[' + par[0] + ']'), function (e) {
+        var v = tx(e.getAttribute(par[0]));
+        if (par[1] === 'tekst') e.textContent = v;
+        else if (par[1] === 'html') e.innerHTML = v;
+        else e.setAttribute(par[1], v);
+      });
+    });
+    document.documentElement.lang = T.htmlLang || 'da';
+  }
+
   var TRIN = T.trin || [];
   var GEM = 'wd-standberegner-v5';
 
@@ -62,7 +81,7 @@
   };
 
   function afrund(v) { var r = P.meta.afrunding || 250; return Math.round(v / r) * r; }
-  var nf = new Intl.NumberFormat('da-DK');
+  var nf = new Intl.NumberFormat(T.locale || 'da-DK');
   function kr(v) { return nf.format(afrund(v)); }
   function fmt(a) {
     if (!a || (!a[0] && !a[1])) return '—';
@@ -74,7 +93,7 @@
     if (afrund(a[0]) === afrund(a[1])) return kr(a[0]);
     return kr(a[0]) + '–' + kr(a[1]);
   }
-  function dec(v) { return v.toLocaleString('da-DK', { maximumFractionDigits: 1 }); }
+  function dec(v) { return v.toLocaleString(T.locale || 'da-DK', { maximumFractionDigits: 1 }); }
   function el(h) { var d = document.createElement('div'); d.innerHTML = h.trim(); return d.firstElementChild; }
   function esc(t) {
     return String(t).replace(/[&<>"]/g, function (c) {
@@ -1502,6 +1521,7 @@
     opdater();
   }
 
+  fyldTekster();
   hent();
   bind();
   document.getElementById('m2').value = s.stand.m2;

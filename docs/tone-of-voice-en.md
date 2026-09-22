@@ -125,6 +125,43 @@ adapt the artwork to fit the format, surface and production method"*, *"We
 adjust the format, proportions and layout so your graphics work where they will
 be used"*.
 
+## Om firmaet — sitets egne engelske formuleringer
+
+Fra Om os-siden:
+
+| Dansk | Engelsk, ordret fra sitet |
+|---|---|
+| Vi bygger med overblik og omtanke | **We build with clarity and care** |
+| et team, der samler projektets mange dele | The team bringing the whole project together |
+| Mere end 30 års erfaring | **Over 30 years of trade show experience** / *For more than 30 years* |
+| messer i mere end 70 lande | We have supported clients at exhibitions in **more than 70 countries** |
+| lagerfaciliteter i både Danmark og USA | **warehouse facilities in both Denmark and the United States** |
+
+Bemærk **"the United States"**, ikke "USA". Kunden hedder **"client"**.
+
+Beregnerens forsidelinje bliver derfor:
+**"Over 30 years of trade show experience · exhibitions in more than 70 countries"**
+
+### Værdierne
+
+Dansk: overblik, fleksibilitet, kreativitet, ansvar for detaljerne.
+Engelsk, sitets egne: **CLARITY, FLEXIBILITY, CREATIVITY, RESPONSIBILITY**.
+
+Nyttige vendinger derfra:
+- *"We create a clear path through each project, so you always know what is
+  happening, what comes next, and who is responsible."* — det er nøjagtig
+  beregnerens løfte om overblik.
+- *"We explore the possibilities and develop a solution that gives your business
+  a distinct expression while still working in practice."*
+- *"solutions that work in practice and a process that remains clear and
+  manageable from start to finish"*
+
+### Endnu en blød afslutning
+
+> "Tell us what you're working on. Share a little about your next trade show,
+> showroom, or project. We'll talk through what you need and how we can best
+> help."
+
 ## Hvad der IKKE skal oversættes
 
 - **Bynavne.** Herning, Milano, København bliver som de er. Landenavne skal

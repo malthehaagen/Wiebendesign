@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Standberegner — Wieben Design</title>
+<title data-t="ui.titel">Standberegner — Wieben Design</title>
 <meta name="description" content="Form jeres messestand og få et prisestimat, en sammensat løsning og en plan frem mod messedagen.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,218 +15,218 @@
 <header class="top">
   <div class="wrap top-inner">
     <div class="brand">
-      <img src="assets/logo.png" alt="Wieben Design" class="logo">
-      <span class="brand-sub">Standberegner</span>
+      <img src="assets/logo.png" alt="Wieben Design" data-t-alt="ui.logoAlt" class="logo">
+      <span class="brand-sub" data-t="ui.brandSub"></span>
     </div>
-    <p class="top-note">Prototype</p>
+    <p class="top-note" data-t="ui.prototype"></p>
   </div>
 </header>
 
-<nav class="steps" id="steps" aria-label="Trin"></nav>
+<nav class="steps" id="steps" data-t-aria="ui.trinNav"></nav>
 
 <main class="wrap" id="main">
 
   <!-- ============ TRIN 0: INTRO ============ -->
   <section class="step" data-step="0">
     <div class="hero">
-      <p class="eyebrow">Mere end 30 års erfaring · messer i mere end 70 lande</p>
-      <h1>Hvad skal jeres messestand kunne?</h1>
-      <p class="lead">Svar på nogle få spørgsmål om jeres brand, produkter og mål. Undervejs får I vores erfaring med, hvad der virker på en stand — og til sidst en sammensat løsning, en pris og en plan frem mod messedagen.</p>
+      <p class="eyebrow" data-t="ui.heroEyebrow"></p>
+      <h1 data-t="ui.heroTitel"></h1>
+      <p class="lead" data-t="ui.heroLead"></p>
       <ul class="hero-list">
-        <li><strong>4 minutter</strong> fra start til færdigt estimat</li>
-        <li><strong>Vores egne priser</strong> — beregnet på det materiel, vi rent faktisk lejer ud</li>
-        <li><strong>Hele standen</strong> — materiel, grafik, opbygning og transport i ét tal</li>
+        <li data-t-html="ui.heroPunkt1"></li>
+        <li data-t-html="ui.heroPunkt2"></li>
+        <li data-t-html="ui.heroPunkt3"></li>
       </ul>
-      <button class="btn btn-primary btn-lg" data-goto="1">Kom i gang</button>
+      <button class="btn btn-primary btn-lg" data-goto="1" data-t="ui.heroKnap"></button>
     </div>
   </section>
 
   <!-- ============ TRIN 1: PROFIL ============ -->
   <section class="step" data-step="1" hidden>
-    <h2 class="step-title">Jeres messeprofil</h2>
-    <p class="step-intro">Standen er et middel. Vi starter med målet.</p>
+    <h2 class="step-title" data-t="ui.profilTitel"></h2>
+    <p class="step-intro" data-t="ui.profilIntro"></p>
     <div id="profil"></div>
 
     <div class="nav-row">
-      <button class="btn" data-goto="0">Tilbage</button>
-      <button class="btn btn-primary" data-goto="2" id="videre-profil">Videre</button>
+      <button class="btn" data-goto="0" data-t="ui.tilbage"></button>
+      <button class="btn btn-primary" data-goto="2" id="videre-profil" data-t="ui.videre"></button>
     </div>
   </section>
 
   <!-- ============ TRIN 2: STANDEN ============ -->
   <section class="step" data-step="2" hidden>
-    <h2 class="step-title">Standen</h2>
+    <h2 class="step-title" data-t="ui.standenTitel"></h2>
     <div id="anbefaling" class="anbefaling"></div>
 
     <div class="field">
-      <span class="field-label">Hvor holdes messen?</span>
+      <span class="field-label" data-t="ui.hvorMesse"></span>
       <div class="stedvalg">
         <div class="stedvalg-kol">
-          <label for="land">Land</label>
+          <label for="land" data-t="ui.land"></label>
           <select id="land" class="select"></select>
         </div>
         <div class="stedvalg-kol">
-          <label for="by">By</label>
+          <label for="by" data-t="ui.by"></label>
           <select id="by" class="select"></select>
         </div>
         <div class="stedvalg-kol">
-          <label for="messedato">Første messedag</label>
+          <label for="messedato" data-t="ui.foersteDag"></label>
           <input type="date" id="messedato" class="select">
         </div>
       </div>
       <p class="field-hjaelp" id="by-hjaelp"></p>
       <div class="stedvalg-kol km-manuel" id="km-manuel" hidden>
-        <label for="km">Cirka hvor langt er der fra Støvring?</label>
+        <label for="km" data-t="ui.hvorLangt"></label>
         <div class="field-row">
-          <input type="number" id="km" class="select" min="0" step="10" placeholder="F.eks. 700" inputmode="numeric" autocomplete="off">
-          <span class="enhed">km hver vej</span>
+          <input type="number" id="km" class="select" min="0" step="10" data-t-placeholder="ui.kmEksempel" inputmode="numeric" autocomplete="off">
+          <span class="enhed" data-t="ui.kmHverVej"></span>
         </div>
       </div>
     </div>
 
-    <h3 class="grp-title">Størrelse og varighed</h3>
+    <h3 class="grp-title" data-t="ui.stoerrelse"></h3>
     <div class="sliders">
       <div class="slider-box">
-        <label for="m2">Areal</label>
+        <label for="m2" data-t="ui.areal"></label>
         <input type="range" id="m2" min="6" max="200" step="1" value="24">
         <output id="m2-ud">24 m²</output>
         <p class="field-hjaelp" id="m2-hjaelp"></p>
       </div>
       <div class="slider-box">
-        <label for="dage">Messedage</label>
+        <label for="dage" data-t="ui.messedage"></label>
         <input type="range" id="dage" min="1" max="8" step="1" value="3">
         <output id="dage-ud">3 dage</output>
       </div>
     </div>
 
-    <h3 class="sp-title">Hvor mange sider af standen er åbne?</h3>
-    <p class="grp-hjaelp">Antallet af åbne sider afgør, hvor mange vægge vi skal bygge — og dermed en stor del af prisen.</p>
+    <h3 class="sp-title" data-t="ui.sider"></h3>
+    <p class="grp-hjaelp" data-t="ui.siderHjaelp"></p>
     <div id="aabneSider" class="cards cards-4"></div>
     <p class="field-hjaelp" id="vaeg-hjaelp"></p>
 
-    <h3 class="grp-title">Vægge og grafik</h3>
+    <h3 class="grp-title" data-t="ui.vaeggeGrafik"></h3>
     <div id="vaegtyper" class="cards cards-2"></div>
     <div class="valgrow">
       <div class="valgblok">
-        <label class="field-label" for="vaeghoejde">Væghøjde</label>
+        <label class="field-label" for="vaeghoejde" data-t="ui.vaeghoejde"></label>
         <div class="seg" id="vaeghoejde"></div>
         <p class="field-hjaelp" id="hoejde-hjaelp"></p>
       </div>
       <div class="valgblok">
-        <label class="field-label">Grafikdækning</label>
+        <label class="field-label" data-t="ui.grafikdaekning"></label>
         <div class="seg" id="grafik"></div>
         <p class="field-hjaelp" id="grafik-hjaelp"></p>
       </div>
     </div>
 
     <div id="grafikarbejde-blok">
-      <h3 class="sp-title">Hvor langt er I med grafikken?</h3>
-      <p class="grp-hjaelp">I kan få hjælp til hele det grafiske arbejde eller blot den del, der mangler. Det afgør, hvor mange timer der går med at gøre materialet klar til fladerne.</p>
+      <h3 class="sp-title" data-t="ui.grafikTitel"></h3>
+      <p class="grp-hjaelp" data-t="ui.grafikHjaelp"></p>
       <div id="grafikarbejde" class="cards cards-3"></div>
     </div>
 
-    <h3 class="grp-title">Gulv</h3>
+    <h3 class="grp-title" data-t="ui.gulv"></h3>
     <div id="gulv" class="cards cards-3"></div>
-    <h3 class="sp-title">Skal gulvet hæves?</h3>
-    <p class="grp-hjaelp">Et hævet gulv giver plads til kabler under gulvet og markerer tydeligt, hvor jeres stand begynder.</p>
+    <h3 class="sp-title" data-t="ui.haevetTitel"></h3>
+    <p class="grp-hjaelp" data-t="ui.haevetHjaelp"></p>
     <div id="haevet" class="cards cards-2"></div>
 
-    <h3 class="grp-title">Belysning</h3>
+    <h3 class="grp-title" data-t="ui.belysning"></h3>
     <div id="belysning" class="cards cards-3"></div>
 
     <div id="indsigter-2" class="indsigter"></div>
 
     <div class="nav-row">
-      <button class="btn" data-goto="1">Tilbage</button>
-      <button class="btn btn-primary" data-goto="3">Videre til inventar</button>
+      <button class="btn" data-goto="1" data-t="ui.tilbage"></button>
+      <button class="btn btn-primary" data-goto="3" data-t="ui.videreInventar"></button>
     </div>
   </section>
 
   <!-- ============ TRIN 3: OMRÅDER ============ -->
   <section class="step" data-step="3" hidden>
-    <h2 class="step-title">Hvad skal standen kunne?</h2>
-    <p class="step-intro">Vælg de områder, jeres stand skal have — og hvor mange af hver.</p>
-    <p class="forbehold">Det er et udgangspunkt, ikke en plantegning. Når vi tegner standen, finder vi ud af, hvad der rent faktisk kan være, og hvordan områderne skal ligge i forhold til hinanden.</p>
+    <h2 class="step-title" data-t="ui.omraaderTitel"></h2>
+    <p class="step-intro" data-t="ui.omraaderIntro"></p>
+    <p class="forbehold" data-t="ui.omraaderForbehold"></p>
     <div id="startvalg" class="startvalg"></div>
 
     <div id="omraadedel" hidden>
       <div id="omraader"></div>
       <p class="field-hjaelp" id="areal-hjaelp"></p>
 
-      <h3 class="sp-title">Skal der være noget af det her?</h3>
+      <h3 class="sp-title" data-t="ui.tilkoebTitel"></h3>
       <div id="tilkoeb" class="cards cards-4"></div>
     </div>
     <div id="led-valg" class="ledvalg" hidden>
-      <h4>Hvor stor skal LED-væggen være?</h4>
+      <h4 data-t="ui.ledTitel"></h4>
       <p class="grp-hjaelp" id="led-intro"></p>
       <div id="led-stoerrelser" class="cards cards-4"></div>
     </div>
 
     <div id="indsigter-3" class="indsigter"></div>
     <div class="nav-row">
-      <button class="btn" data-goto="2">Tilbage</button>
-      <button class="btn btn-primary" data-goto="4" id="videre-omraader">Videre til planen</button>
+      <button class="btn" data-goto="2" data-t="ui.tilbage"></button>
+      <button class="btn btn-primary" data-goto="4" id="videre-omraader" data-t="ui.viderePlanen"></button>
     </div>
   </section>
 
   <!-- ============ TRIN 4: MESSEKLAR ============ -->
   <section class="step" data-step="4" hidden>
-    <h2 class="step-title">Messeklar</h2>
-    <p class="step-intro">Hvad standen koster hos os, og hvad der sker hvornår.</p>
-    <p class="forbehold">Alt herunder er et estimat. Også vores egne tal: den endelige pris afhænger af, hvordan standen faktisk kommer til at se ud, og hvor lang tid den tager at bygge. Beregningen er et sted at starte samtalen fra — ikke et tilbud.</p>
+    <h2 class="step-title" data-t="ui.messeklarTitel"></h2>
+    <p class="step-intro" data-t="ui.messeklarIntro"></p>
+    <p class="forbehold" data-t="ui.messeklarForbehold"></p>
     <div id="budget" class="budget"></div>
     <div id="samlet" class="samlet"></div>
-    <h3 class="grp-title">Tidslinje frem mod messen</h3>
+    <h3 class="grp-title" data-t="ui.tidslinjeTitel"></h3>
     <p class="grp-hjaelp" id="tidslinje-intro"></p>
     <div id="tidslinje" class="tidslinje"></div>
     <div class="nav-row">
-      <button class="btn" data-goto="3">Tilbage</button>
-      <button class="btn btn-primary" data-goto="5">Se opsummering</button>
+      <button class="btn" data-goto="3" data-t="ui.tilbage"></button>
+      <button class="btn btn-primary" data-goto="5" data-t="ui.seOpsummering"></button>
     </div>
   </section>
 
   <!-- ============ TRIN 5: OPLÆG ============ -->
   <section class="step" data-step="5" hidden>
-    <h2 class="step-title">Jeres oplæg</h2>
+    <h2 class="step-title" data-t="ui.oplaegTitel"></h2>
     <div id="opsummering" class="opsummering"></div>
 
     <form id="kontakt" class="kontakt" novalidate>
-      <h3>Lad os se på mulighederne</h3>
-      <p>Fortæl os kort, hvem I er. Så kigger vi oplægget igennem og vender tilbage med, hvad der kan lade sig gøre på præcis jeres plads — og I får det hele som PDF med pris, indhold og tidslinje, I kan tage med videre internt. Det forpligter jer ikke til noget.</p>
+      <h3 data-t="ui.formTitel"></h3>
+      <p data-t="ui.formIntro"></p>
       <div class="form-grid">
-        <label>Navn<input type="text" name="navn" required></label>
-        <label>Virksomhed<input type="text" name="virksomhed" required></label>
-        <label>E-mail<input type="email" name="email" required></label>
-        <label>Telefon<input type="tel" name="telefon"></label>
-        <label class="full"><span>Har I en budgetramme? <span class="valgfri-mrk">Valgfrit</span></span>
+        <label><span data-t="ui.navn"></span><input type="text" name="navn" required></label>
+        <label><span data-t="ui.virksomhed"></span><input type="text" name="virksomhed" required></label>
+        <label><span data-t="ui.email"></span><input type="email" name="email" required></label>
+        <label><span data-t="ui.telefon"></span><input type="tel" name="telefon"></label>
+        <label class="full"><span><span data-t="ui.budgetLabel"></span> <span class="valgfri-mrk" data-t="ui.valgfrit"></span></span>
           <select name="budget" id="budgetramme">
-            <option value="">Ikke oplyst</option>
-            <option>Under 75.000 kr.</option>
-            <option>75.000–150.000 kr.</option>
-            <option>150.000–300.000 kr.</option>
-            <option>Over 300.000 kr.</option>
-            <option>Det ved vi ikke endnu</option>
+            <option value="" data-t="ui.budgetTom"></option>
+            <option data-t="ui.budget1"></option>
+            <option data-t="ui.budget2"></option>
+            <option data-t="ui.budget3"></option>
+            <option data-t="ui.budget4"></option>
+            <option data-t="ui.budget5"></option>
           </select>
         </label>
-        <label class="full">Noget vi skal vide?<textarea name="besked" rows="3"></textarea></label>
+        <label class="full"><span data-t="ui.besked"></span><textarea name="besked" rows="3"></textarea></label>
       </div>
-      <p class="samtykke"><span class="samtykke-mrk">Når I sender</span> får I oplægget som PDF i indbakken, og <strong>vi vender tilbage om jeres messe</strong> — en mail eller et opkald om, hvad der kan lade sig gøre på jeres plads.</p>
-      <p class="persondata">Vi bruger kun jeres oplysninger til det, og vi videregiver dem ikke. I kan altid bede os om at slette dem. Læs mere i vores <a href="https://wiebendesign.dk/privatlivspolitik/" target="_blank" rel="noopener">privatlivspolitik</a>.</p>
+      <p class="samtykke"><span class="samtykke-mrk" data-t="ui.samtykkeMrk"></span> <span data-t-html="ui.samtykke"></span></p>
+      <p class="persondata" data-t-html="ui.persondata"></p>
       <div class="form-row">
-        <button type="submit" class="btn btn-primary btn-lg">Send oplægget til mig</button>
+        <button type="submit" class="btn btn-primary btn-lg" data-t="ui.sendKnap"></button>
       </div>
-      <p class="alternativer">Vil I helst kigge på det selv først?
-        <button type="button" class="btn btn-tekst" id="print">Hent oplægget som PDF</button>
+      <p class="alternativer"><span data-t="ui.selvFoerst"></span>
+        <button type="button" class="btn btn-tekst" id="print" data-t="send.hentPdf"></button>
       </p>
-      <p class="disclaimer" id="prototypenote" hidden>Prototype — formularen sender ikke data nogen steder hen endnu.</p>
+      <p class="disclaimer" id="prototypenote" hidden data-t="ui.prototypeNote"></p>
     </form>
 
     <!-- "Start forfra" sletter alt og hører derfor til navigationen,
          ikke ved siden af en harmløs download. Den ligger uden for
          formularen, så den også er der, når kvitteringen har afløst den. -->
     <div class="nav-row">
-      <button class="btn" data-goto="4">Tilbage</button>
-      <button type="button" class="btn btn-tekst" id="nulstil">Start forfra</button>
+      <button class="btn" data-goto="4" data-t="ui.tilbage"></button>
+      <button type="button" class="btn btn-tekst" id="nulstil" data-t="ui.startForfra"></button>
     </div>
   </section>
 
@@ -236,11 +236,11 @@
 <div class="prisbar" id="prisbar" hidden>
   <div class="wrap prisbar-inner">
     <div class="prisbar-tal">
-      <span class="prisbar-label">Estimat, Wieben Design</span>
+      <span class="prisbar-label" data-t="ui.prisbarLabel"></span>
       <strong id="prisbar-belob" aria-live="polite" aria-atomic="true">—</strong>
-      <span class="prisbar-note">kr. ekskl. moms</span>
+      <span class="prisbar-note" data-t="ui.prisbarNote"></span>
     </div>
-    <button class="btn btn-ghost" id="prisbar-toggle" aria-expanded="false">Se specifikation</button>
+    <button class="btn btn-ghost" id="prisbar-toggle" aria-expanded="false" data-t="prisbar.seSpec"></button>
   </div>
   <div class="prisbar-detalje wrap" id="prisbar-detalje" hidden></div>
 </div>
@@ -248,36 +248,36 @@
 <!-- ============ PDF-ARK — vises kun ved print ============ -->
 <section id="printark" aria-hidden="true">
   <header class="pa-top">
-    <img src="assets/logo.png" alt="Wieben Design">
+    <img src="assets/logo.png" alt="Wieben Design" data-t-alt="ui.logoAlt">
     <div class="pa-top-tekst">
-      <h1>Oplæg til messestand</h1>
+      <h1 data-t="ui.arkTitel"></h1>
       <p id="pa-undertitel"></p>
     </div>
   </header>
   <section class="pa-blok">
-    <h2>Standen</h2>
+    <h2 data-t="ui.arkStanden"></h2>
     <dl id="pa-konfiguration" class="pa-liste"></dl>
   </section>
   <section class="pa-blok">
-    <h2>Pris</h2>
+    <h2 data-t="ui.arkPris"></h2>
     <table id="pa-pris" class="pa-tabel"></table>
-    <p class="pa-note">Alle beløb er lejepriser for hele messen, ekskl. moms, og er et estimat. Den endelige pris afhænger af standens opbygning og fastlægges, når der ligger en godkendt tegning. Beløbet dækker standen; messearrangørens egne gebyrer er ikke med.</p>
+    <p class="pa-note" data-t="ui.arkNote"></p>
   </section>
   <section class="pa-blok pa-bryd">
-    <h2>Frem mod messen</h2>
+    <h2 data-t="ui.arkFrem"></h2>
     <p class="pa-note" id="pa-tidslinje-intro"></p>
     <table id="pa-tidslinje" class="pa-tabel"></table>
   </section>
   <footer class="pa-bund">
-    <p><strong>Wieben Design A/S</strong> · Porsborgparken 8 B, 9530 Støvring · CVR 20099607</p>
-    <p>+45 70 23 11 11 · wd@wiebendesign.dk · Fra idé til færdig messestand — i Danmark og på messer verden over</p>
+    <p><strong data-t="ui.firma"></strong> <span data-t="ui.adresse"></span></p>
+    <p data-t="ui.arkFod"></p>
   </footer>
 </section>
 
 <footer class="bund">
   <div class="wrap">
-    <p><strong>Wieben Design A/S</strong> · Porsborgparken 8 B, 9530 Støvring · +45 70 23 11 11 · wd@wiebendesign.dk · CVR 20099607</p>
-    <p class="disclaimer">Beløbene er uforpligtende estimater beregnet på Wieben Designs egne lejepriser og erstattes af et konkret tilbud. <a href="https://wiebendesign.dk/privatlivspolitik/" target="_blank" rel="noopener">Privatlivspolitik</a> · <a href="https://wiebendesign.dk/handelsbetingelser/" target="_blank" rel="noopener">Handelsbetingelser</a></p>
+    <p><strong data-t="ui.firma"></strong> <span data-t="ui.bundAdresse"></span></p>
+    <p class="disclaimer" data-t-html="ui.bundNote"></p>
   </div>
 </footer>
 

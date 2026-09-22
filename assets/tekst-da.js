@@ -205,6 +205,108 @@ window.WD_TEKST.da = {
     konsol:      'Oplæg klar til afsendelse:'
   },
 
+  /* ---------------- Faste tekster i index.html ----------------
+     Fyldes ind via data-t (tekst) og data-t-html (må indeholde <strong>).
+     Teksten står IKKE også i markuppen: én kilde, og ingen dansk tekst der
+     blinker forbi, før den engelske udgave er fyldt ind.               */
+  ui: {
+    titel:        'Standberegner — Wieben Design',
+    logoAlt:      'Wieben Design',
+    brandSub:     'Standberegner',
+    prototype:    'Prototype',
+    trinNav:      'Trin',
+
+    heroEyebrow:  'Mere end 30 års erfaring · messer i mere end 70 lande',
+    heroTitel:    'Hvad skal jeres messestand kunne?',
+    heroLead:     'Svar på nogle få spørgsmål om jeres brand, produkter og mål. Undervejs får I vores erfaring med, hvad der virker på en stand — og til sidst en sammensat løsning, en pris og en plan frem mod messedagen.',
+    heroPunkt1:   '<strong>4 minutter</strong> fra start til færdigt estimat',
+    heroPunkt2:   '<strong>Vores egne priser</strong> — beregnet på det materiel, vi rent faktisk lejer ud',
+    heroPunkt3:   '<strong>Hele standen</strong> — materiel, grafik, opbygning og transport i ét tal',
+    heroKnap:     'Kom i gang',
+
+    tilbage:      'Tilbage',
+    videre:       'Videre',
+
+    profilTitel:  'Jeres messeprofil',
+    profilIntro:  'Standen er et middel. Vi starter med målet.',
+
+    standenTitel: 'Standen',
+    hvorMesse:    'Hvor holdes messen?',
+    land:         'Land',
+    by:           'By',
+    foersteDag:   'Første messedag',
+    hvorLangt:    'Cirka hvor langt er der fra Støvring?',
+    kmEksempel:   'F.eks. 700',
+    kmHverVej:    'km hver vej',
+    stoerrelse:   'Størrelse og varighed',
+    areal:        'Areal',
+    messedage:    'Messedage',
+    sider:        'Hvor mange sider af standen er åbne?',
+    siderHjaelp:  'Antallet af åbne sider afgør, hvor mange vægge vi skal bygge — og dermed en stor del af prisen.',
+    vaeggeGrafik: 'Vægge og grafik',
+    vaeghoejde:   'Væghøjde',
+    grafikdaekning: 'Grafikdækning',
+    grafikTitel:  'Hvor langt er I med grafikken?',
+    grafikHjaelp: 'I kan få hjælp til hele det grafiske arbejde eller blot den del, der mangler. Det afgør, hvor mange timer der går med at gøre materialet klar til fladerne.',
+    gulv:         'Gulv',
+    haevetTitel:  'Skal gulvet hæves?',
+    haevetHjaelp: 'Et hævet gulv giver plads til kabler under gulvet og markerer tydeligt, hvor jeres stand begynder.',
+    belysning:    'Belysning',
+    videreInventar: 'Videre til inventar',
+
+    omraaderTitel: 'Hvad skal standen kunne?',
+    omraaderIntro: 'Vælg de områder, jeres stand skal have — og hvor mange af hver.',
+    omraaderForbehold: 'Det er et udgangspunkt, ikke en plantegning. Når vi tegner standen, finder vi ud af, hvad der rent faktisk kan være, og hvordan områderne skal ligge i forhold til hinanden.',
+    tilkoebTitel:  'Skal der være noget af det her?',
+    ledTitel:      'Hvor stor skal LED-væggen være?',
+    viderePlanen:  'Videre til planen',
+
+    messeklarTitel: 'Messeklar',
+    messeklarIntro: 'Hvad standen koster hos os, og hvad der sker hvornår.',
+    messeklarForbehold: 'Alt herunder er et estimat. Også vores egne tal: den endelige pris afhænger af, hvordan standen faktisk kommer til at se ud, og hvor lang tid den tager at bygge. Beregningen er et sted at starte samtalen fra — ikke et tilbud.',
+    tidslinjeTitel: 'Tidslinje frem mod messen',
+    seOpsummering:  'Se opsummering',
+
+    oplaegTitel:  'Jeres oplæg',
+    formTitel:    'Lad os se på mulighederne',
+    formIntro:    'Fortæl os kort, hvem I er. Så kigger vi oplægget igennem og vender tilbage med, hvad der kan lade sig gøre på præcis jeres plads — og I får det hele som PDF med pris, indhold og tidslinje, I kan tage med videre internt. Det forpligter jer ikke til noget.',
+    navn:         'Navn',
+    virksomhed:   'Virksomhed',
+    email:        'E-mail',
+    telefon:      'Telefon',
+    budgetLabel:  'Har I en budgetramme?',
+    valgfrit:     'Valgfrit',
+    budgetTom:    'Ikke oplyst',
+    budget1:      'Under 75.000 kr.',
+    budget2:      '75.000–150.000 kr.',
+    budget3:      '150.000–300.000 kr.',
+    budget4:      'Over 300.000 kr.',
+    budget5:      'Det ved vi ikke endnu',
+    besked:       'Noget vi skal vide?',
+    samtykkeMrk:  'Når I sender',
+    samtykke:     'får I oplægget som PDF i indbakken, og <strong>vi vender tilbage om jeres messe</strong> — en mail eller et opkald om, hvad der kan lade sig gøre på jeres plads.',
+    persondata:   'Vi bruger kun jeres oplysninger til det, og vi videregiver dem ikke. I kan altid bede os om at slette dem. Læs mere i vores <a href="https://wiebendesign.dk/privatlivspolitik/" target="_blank" rel="noopener">privatlivspolitik</a>.',
+    sendKnap:     'Send oplægget til mig',
+    selvFoerst:   'Vil I helst kigge på det selv først?',
+    prototypeNote: 'Prototype — formularen sender ikke data nogen steder hen endnu.',
+    startForfra:  'Start forfra',
+
+    prisbarLabel: 'Estimat, Wieben Design',
+    prisbarNote:  'kr. ekskl. moms',
+
+    arkTitel:     'Oplæg til messestand',
+    arkStanden:   'Standen',
+    arkPris:      'Pris',
+    arkNote:      'Alle beløb er lejepriser for hele messen, ekskl. moms, og er et estimat. Den endelige pris afhænger af standens opbygning og fastlægges, når der ligger en godkendt tegning. Beløbet dækker standen; messearrangørens egne gebyrer er ikke med.',
+    arkFrem:      'Frem mod messen',
+
+    firma:        'Wieben Design A/S',
+    adresse:      '· Porsborgparken 8 B, 9530 Støvring · CVR 20099607',
+    arkFod:       '+45 70 23 11 11 · wd@wiebendesign.dk · Fra idé til færdig messestand — i Danmark og på messer verden over',
+    bundAdresse:  '· Porsborgparken 8 B, 9530 Støvring · +45 70 23 11 11 · wd@wiebendesign.dk · CVR 20099607',
+    bundNote:     'Beløbene er uforpligtende estimater beregnet på Wieben Designs egne lejepriser og erstattes af et konkret tilbud. <a href="https://wiebendesign.dk/privatlivspolitik/" target="_blank" rel="noopener">Privatlivspolitik</a> · <a href="https://wiebendesign.dk/handelsbetingelser/" target="_blank" rel="noopener">Handelsbetingelser</a>'
+  },
+
   /* ---------------- Enheder ---------------- */
   enhed: {
     m2:     '{tal} m²',

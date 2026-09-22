@@ -49,15 +49,22 @@ direkte, så beregneren taler som resten af sitet.
   `{navn}`-pladsholdere, ikke som fragmenter. Filen er gyldig JavaScript og
   indlæses ikke af noget endnu, så beregneren er uændret.
 
+- **`index.html` er omlagt.** 89 tekststeder har nu `data-t`-nøgler, og
+  `fyldTekster()` i `app.js` fylder dem fra sprogfilen. Fire varianter:
+  `data-t` (tekst), `data-t-html` (må have `<strong>` og `<a>` fra vores egen
+  fil, aldrig kundeinput), samt `data-t-alt`, `data-t-aria` og
+  `data-t-placeholder` til attributter. `<html lang>` og talformatet
+  (`Intl.NumberFormat`, `toLocaleString`) følger også sproget.
+
+  Teksten står **kun** i sprogfilen, ikke også i markuppen. Én kilde — og en
+  engelsk besøgende ser ikke dansk blinke forbi, før JavaScript har fyldt ind.
+  Beregneren virker i forvejen ikke uden JavaScript.
+
 ## Næste skridt, i rækkefølge
 
-1. **Kobl `tekst-da.js` til `app.js`.** Tilføj en `t(nøgle, værdier)`-hjælper,
-   der slår op og erstatter `{navn}`. Erstat derefter de ~166 strenge i
-   `app.js` med `t()`-kald. Kør hele testsuiten efter — udskriften skal være
-   *identisk* med i dag. Det er kontrollen på, at intet er tabt.
-2. **`index.html`.** Giv de statiske tekstnoder `data-t="nøgle"` og fyld dem
-   fra sproglaget ved indlæsning.
-3. **`content.js`.** Fold den ind i sproglaget. Pas på: `svg` og bylisten er
+1. ~~Kobl `tekst-da.js` til `app.js`.~~ **Gjort.**
+2. ~~`index.html`.~~ **Gjort.**
+3. **`content.js` — næste opgave.** Fold den ind i sproglaget. Pas på: `svg` og bylisten er
    sprogneutrale og skal ud i en datafil, mens landenavne skal oversættes.
 4. **Oversæt** til `assets/tekst-en.js` — først når den danske tekst er
    godkendt af Wieben Design, ellers oversætter vi noget, der bliver lavet om.
