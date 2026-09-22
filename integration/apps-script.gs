@@ -114,14 +114,23 @@ function doPost(e) {
     if (!data || !data.kontakt || !data.kontakt.email) {
       return svar({ ok: false, fejl: 'Mangler kontaktoplysninger' });
     }
+    /* Leadet gemmes først — det er det, der ikke må gå tabt. Derefter
+       sendes de to mails hver for sig, så en fejl i den ene ikke stopper
+       den anden og ikke får kunden til at tro, at intet blev sendt. */
     gemILead(data);
-    sendTilKunde(data);
-    sendTilOs(data);
+    proev(function () { sendTilKunde(data); }, 'mail til kunden');
+    proev(function () { sendTilOs(data); }, 'besked til os');
     return svar({ ok: true });
   } catch (fejl) {
     console.error(fejl);
     return svar({ ok: false, fejl: String(fejl && fejl.message || fejl) });
   }
+}
+
+/* Kører opgaven og logger, hvis den fejler, i stedet for at afbryde. */
+function proev(opgave, hvad) {
+  try { opgave(); }
+  catch (fejl) { console.error(hvad + ' fejlede: ' + fejl); }
 }
 
 function doGet() {
@@ -176,20 +185,34 @@ function sendTilOs(d) {
  */
 function sendMail(til, emne, html) {
   var noegle = PropertiesService.getScriptProperties().getProperty('RESEND_API_KEY');
-  if (!noegle) {
-    MailApp.sendEmail({ to: til, subject: emne, htmlBody: html, name: 'Wieben Design' });
+  if (!noegle) { viaGoogle(til, emne, html); return; }
+
+  var svar;
+  try {
+    svar = UrlFetchApp.fetch('https://api.resend.com/emails', {
+      method: 'post',
+      contentType: 'application/json',
+      headers: { Authorization: 'Bearer ' + noegle },
+      payload: JSON.stringify({ from: AFSENDER, to: [til], reply_to: SVAR_TIL, subject: emne, html: html }),
+      muteHttpExceptions: true
+    });
+  } catch (fejl) {
+    console.error('Resend kunne ikke n\u00e5s: ' + fejl);
+    viaGoogle(til, emne, html);
     return;
   }
-  var svar = UrlFetchApp.fetch('https://api.resend.com/emails', {
-    method: 'post',
-    contentType: 'application/json',
-    headers: { Authorization: 'Bearer ' + noegle },
-    payload: JSON.stringify({ from: AFSENDER, to: [til], reply_to: SVAR_TIL, subject: emne, html: html }),
-    muteHttpExceptions: true
-  });
+
   if (svar.getResponseCode() >= 300) {
-    throw new Error('Resend svarede ' + svar.getResponseCode() + ': ' + svar.getContentText());
+    /* Den hyppigste årsag er, at domænet endnu ikke er verificeret — det kan
+       tage timer efter DNS er lagt ind. Så skal kunden ikke se en fejl:
+       mailen går gennem Google i stedet, og årsagen står i scriptets log. */
+    console.error('Resend svarede ' + svar.getResponseCode() + ': ' + svar.getContentText());
+    viaGoogle(til, emne, html);
   }
+}
+
+function viaGoogle(til, emne, html) {
+  MailApp.sendEmail({ to: til, subject: emne, htmlBody: html, name: 'Wieben Design' });
 }
 
 /* ---------- Skabeloner ---------- */

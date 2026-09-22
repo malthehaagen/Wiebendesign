@@ -57,30 +57,110 @@ komme fra wiebendesign.dk, så fortsæt.
 > den gamle version videre. Vælg *Administrer udrulninger* og rediger den
 > eksisterende, så beholder I den samme adresse.
 
-## 4. Resend (valgfrit, men anbefalet)
+## 4. Resend
 
 Uden Resend kommer mailen fra jeres Google-konto. Det virker, men afsenderen er
-en gmail-adresse, og der er et loft på 100 mails i døgnet på en privat konto.
+en gmail-adresse. Med Resend kommer den fra `oplaeg@wiebendesign.dk`.
 
-Med Resend kommer den fra `oplaeg@wiebendesign.dk`.
+> **Har I allerede en Resend-konto til et andet projekt?** Tre ting er
+> anderledes for jer — læs afsnittet *Hvis I deler konto med et andet
+> projekt* længere nede, **før** I går i gang med trin 1.
 
-1. Opret en konto på [resend.com](https://resend.com). Gratisplanen giver
-   **3.000 mails om måneden med højst 100 om dagen** og **ét domæne**. Der skal
-   ikke kort på, og den udløber ikke.
-2. Tilføj `wiebendesign.dk` under *Domains*, og læg de DNS-poster ind, Resend
-   beder om. Det kan tage nogle timer, før den står som verificeret.
-3. Lav en API-nøgle under *API Keys*.
-4. I Apps Script: **Projektindstillinger → Scriptegenskaber → Tilføj egenskab**
+### Trin for trin
 
-   | Navn | Værdi |
-   |---|---|
-   | `RESEND_API_KEY` | nøglen fra Resend |
+**1. Log ind på [resend.com](https://resend.com)**
+Opret en konto, hvis I ikke har en. Der skal ikke kort på.
 
-5. Lav en ny udrulning.
+**2. Tilføj domænet**
+*Domains → Add Domain →* skriv `wiebendesign.dk` → *Add*.
 
-Scriptet opdager selv nøglen og skifter over. Er den ikke sat, falder den
-tilbage til Googles egen afsendelse — så I kan komme i gang uden at vente på
-DNS.
+**3. Læg DNS-posterne ind**
+Resend viser nu 3–4 poster (typisk én MX og et par TXT). De skal ind hos den,
+der styrer jeres DNS — ofte webbureauet eller jeres hostingudbyder. Kopiér dem
+én for én; værdierne skal stå præcis som Resend skriver dem.
+
+**4. Vent**
+Tryk *Verify* i Resend. Står der stadig *Pending*, så vent og prøv igen.
+Det tager som regel under en time, men kan tage op til et døgn.
+**I kan roligt gå videre imens** — se *Mens I venter* nedenfor.
+
+**5. Lav en API-nøgle**
+*API Keys → Create API Key*. Giv den et navn, I kan kende igen, f.eks.
+`standberegner`. Vælg **Sending access**, ikke Full access. Kopiér nøglen —
+den vises kun én gang.
+
+**6. Læg nøglen i Apps Script**
+Åbn scriptet → **Projektindstillinger** (tandhjulet) → rul ned til
+**Scriptegenskaber** → *Tilføj scriptegenskab*:
+
+| Navn | Værdi |
+|---|---|
+| `RESEND_API_KEY` | nøglen fra trin 5 |
+
+Tryk **Gem scriptegenskaber**.
+
+**7. Lav en ny udrulning**
+*Udrul → Administrer udrulninger →* blyanten → **Version: Ny version** →
+*Udrul*. Uden dette kører den gamle kode videre.
+
+**8. Prøv det af**
+Send et oplæg fra beregneren til jer selv. Tjek derefter:
+
+- kom mailen fra `oplaeg@wiebendesign.dk` og ikke fra en gmail-adresse?
+- står der en række i regnearket?
+- fik `wd@wiebendesign.dk` beskeden?
+- står mailen under *Logs* i Resend?
+
+### Mens I venter på DNS
+
+**Der går ikke noget galt, hvis I sætter nøglen ind, før domænet er
+verificeret.** Scriptet opdager, at Resend afviser (typisk 403 *domain not
+verified*), og sender mailen gennem Google i stedet. Kunden mærker intet,
+leadet gemmes, og årsagen står i scriptets **Udførsler**-log.
+
+Det samme gælder, hvis Resend er nede eller nøglen er forkert. De tre
+situationer er afprøvet:
+
+| Hvad sker der | Leadet gemt | Kunden ser | Mailen sendes |
+|---|---|---|---|
+| Resend virker | ja | kvittering | via Resend |
+| Domænet ikke verificeret endnu | ja | kvittering | via Google |
+| Resend kan ikke nås | ja | kvittering | via Google |
+
+Leadet gemmes **før** mailene sendes, og de to mails sendes hver for sig — så
+en fejl i den ene stopper ikke den anden.
+
+### Hvis I deler konto med et andet projekt
+
+**1. Gratisplanen giver ét domæne.** Bruger det andet projekt allerede det
+   ene, kan `wiebendesign.dk` ikke tilføjes gratis. I har tre veje:
+   opgradér planen, brug en separat Resend-konto til dette, eller kør videre
+   på Googles afsendelse indtil videre (sæt bare ikke nøglen ind).
+
+   Er `wiebendesign.dk` **allerede** verificeret på kontoen, kan I springe
+   trin 2–4 over.
+
+**2. Loftet deles.** Måneds- og døgnloftet gælder hele kontoen, ikke pr.
+   domæne. Beregnerens forbrug lægges oven i det andet projekts.
+
+**3. Lav en ny nøgle — genbrug ikke den anden.** Så kan I slå netop denne
+   fra uden at røre det andet projekt, og I kan se i Resends log, hvad der
+   kommer hvorfra.
+
+> **Tallene skal tjekkes.** Da dette blev skrevet gav gratisplanen 3.000 mails
+> om måneden med højst 100 om dagen og ét domæne. Den slags ændrer sig — kig
+> på Resends prisside, før I regner med tallene.
+
+### Hvis noget driller
+
+| Symptom | Sandsynlig årsag |
+|---|---|
+| Mailen kommer fra en gmail-adresse | Nøglen er ikke sat, eller der er ikke lavet ny udrulning |
+| Ingenting sker | Endpointet i `config.js` peger forkert, eller udrulningen er ikke sat til *Alle* |
+| Mail til jer, men ikke til kunden | Kundens adresse er forkert, eller mailen ligger i spam |
+| Resend viser intet under *Logs* | Nøglen hører til en anden konto end det verificerede domæne |
+
+Alt hvad scriptet fanger, står under **Udførsler** i Apps Script. Start der.
 
 ### To sprog
 
