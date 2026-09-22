@@ -17,10 +17,95 @@ var AFSENDER      = 'Wieben Design <oplaeg@wiebendesign.dk>';  // kræver verifi
 var SVAR_TIL      = 'wd@wiebendesign.dk';
 var ARK           = 'Leads';                      // fanen i regnearket
 
-var KOLONNER = ['Modtaget', 'Navn', 'Virksomhed', 'E-mail', 'Telefon', 'Budgetramme',
+var KOLONNER = ['Modtaget', 'Sprog', 'Navn', 'Virksomhed', 'E-mail', 'Telefon', 'Budgetramme',
                 'By', 'Land', 'Messedato', 'Messedage', 'Formål', 'Erfaring', 'Ambition',
                 'm²', 'Åbne sider', 'Vægge', 'Tryk', 'Grafisk arbejde', 'Gulv', 'Belysning',
                 'Områder', 'Estimat fra', 'Estimat til', 'Forventede leads', 'Besked'];
+
+/* ---------- Sprog ----------
+   Beregneren findes på dansk og engelsk, og kundens valg følger med i
+   feltet "sprog". Indholdet i oplægget er allerede oversat af beregneren;
+   det er rammen om det, der står her. Falder sproget udenfor, bruges dansk.
+   --------------------------------------------------------------------- */
+var TEKST = {
+  da: {
+    kundeEmne:    'Jeres oplæg til messestand',
+    kundeTitel:   'Jeres oplæg til messestand',
+    hej:          'Hej {navn}',
+    indledning:   'Her er det oplæg, I satte sammen. Alle beløb er lejepriser for hele messen, ekskl. moms — og de er et estimat. Den endelige pris lægger vi os først fast på, når vi har tegnet standen.',
+    standen:      'Standen',
+    pris:         'Pris',
+    areal:        'Areal',
+    arealVaerdi:  '{m2} m² med {sider} åbne sider',
+    arealEn:      '{m2} m² med 1 åben side',
+    vaegge:       'Vægge',
+    vaeggeVaerdi: '{type}, {meter} meter',
+    tryk:         'Tryk',
+    grafisk:      'Grafisk arbejde',
+    gulv:         'Gulv',
+    belysning:    'Belysning',
+    omraader:     'Områder',
+    ingenValgt:   'Ingen valgt',
+    ialt:         'I alt',
+    daekker:      'Beløbet dækker standen: materiel, grafik, opbygning, transport og vores arbejde. Messearrangørens egne gebyrer er ikke med — dem aftaler I direkte med messen.',
+    afslutning:   'Vi kigger oplægget igennem og vender tilbage om, hvad der kan lade sig gøre på jeres plads. Vil I hellere selv tage fat, er vi på 70 23 11 11.',
+    valuta:       '{tal} kr.',
+    valutaSpaend: '{fra}–{til} kr.',
+    vorestEmne:   'Nyt oplæg: {virksomhed} — {m2} m² i {by}',
+    kontakt:      'Kontakt',
+    messeProfil:  'Messe og profil',
+    navn:         'Navn', virksomhed: 'Virksomhed', email: 'E-mail', telefon: 'Telefon',
+    budget:       'Budgetramme', besked: 'Besked', sted: 'Sted', dato: 'Dato',
+    formaal:      'Formål', erfaring: 'Erfaring', ambition: 'Ambition',
+    estimat:      'Estimat', ikkeOplyst: 'ikke oplyst', dage: 'dage',
+    fodAdresse:   '· Porsborgparken 8 B, 9530 Støvring · CVR 20099607',
+    fodLinje:     '+45 70 23 11 11 · wd@wiebendesign.dk · Mere end 30 års erfaring · messer i mere end 70 lande'
+  },
+  en: {
+    kundeEmne:    'Your exhibition stand summary',
+    kundeTitel:   'Your exhibition stand summary',
+    hej:          'Hello {navn}',
+    indledning:   'Here is the summary you put together. All amounts are rental prices for the whole show, excl. VAT — and they are an estimate. We settle the final price once we have drawn the stand.',
+    standen:      'The stand',
+    pris:         'Price',
+    areal:        'Area',
+    arealVaerdi:  '{m2} m² with {sider} open sides',
+    arealEn:      '{m2} m² with 1 open side',
+    vaegge:       'Walls',
+    vaeggeVaerdi: '{type}, {meter} meters',
+    tryk:         'Print',
+    grafisk:      'Graphic work',
+    gulv:         'Flooring',
+    belysning:    'Lighting',
+    omraader:     'Areas',
+    ingenValgt:   'None selected',
+    ialt:         'Total',
+    daekker:      'The amount covers the stand: materials, graphics, installation, transport and our work. The show organizer\u2019s own fees are not included — you arrange those directly with the show.',
+    afslutning:   'We will look the summary over and come back to you about what is possible on your space. If you would rather get in touch yourself, we are on +45 70 23 11 11.',
+    valuta:       'DKK {tal}',
+    valutaSpaend: 'DKK {fra}–{til}',
+    vorestEmne:   'New summary: {virksomhed} — {m2} m² in {by}',
+    kontakt:      'Contact',
+    messeProfil:  'Show and profile',
+    navn:         'Name', virksomhed: 'Company', email: 'Email', telefon: 'Phone',
+    budget:       'Budget range', besked: 'Message', sted: 'Location', dato: 'Date',
+    formaal:      'Goal', erfaring: 'Experience', ambition: 'Ambition',
+    estimat:      'Estimate', ikkeOplyst: 'not stated', dage: 'days',
+    fodAdresse:   '· Porsborgparken 8 B, 9530 Støvring, Denmark · CVR 20099607',
+    fodLinje:     '+45 70 23 11 11 · wd@wiebendesign.dk · Over 30 years of trade show experience · exhibitions in more than 70 countries',
+    /* Kun her: beskeden til jer selv er altid på dansk, også for et
+       engelsk lead — det er jeres interne mail. Men sproget står i emnet,
+       så den der svarer ved, hvad kunden skrev på. */
+    internt: true
+  }
+};
+
+function T(d) { return TEKST[(d && d.sprog) || 'da'] || TEKST.da; }
+function flet(skabelon, v) {
+  return String(skabelon).replace(/\{(\w+)\}/g, function (helt, navn) {
+    return v[navn] === undefined || v[navn] === null ? helt : String(v[navn]);
+  });
+}
 
 /* ---------- Indgang ---------- */
 function doPost(e) {
@@ -58,7 +143,7 @@ function gemILead(d) {
     ark.setFrozenRows(1);
   }
   ark.appendRow([
-    new Date(), d.kontakt.navn, d.kontakt.virksomhed, d.kontakt.email, d.kontakt.telefon,
+    new Date(), (d.sprog || 'da').toUpperCase(), d.kontakt.navn, d.kontakt.virksomhed, d.kontakt.email, d.kontakt.telefon,
     d.kontakt.budget || '',
     d.messe.by, d.messe.land, d.messe.dato, d.messe.dage,
     d.profil.formaal, d.profil.erfaring, d.profil.ambition,
@@ -74,14 +159,14 @@ function gemILead(d) {
 /* ---------- Mails ---------- */
 function sendTilKunde(d) {
   sendMail(d.kontakt.email,
-    'Jeres oplæg til messestand i ' + d.messe.by,
+    T(d).kundeEmne + ' — ' + d.messe.by,
     kundeMail(d));
 }
 
 function sendTilOs(d) {
   sendMail(MODTAGER,
-    'Nyt oplæg: ' + d.kontakt.virksomhed +
-      ' — ' + d.stand.m2 + ' m² i ' + d.messe.by,
+    flet(T(d).vorestEmne, { virksomhed: d.kontakt.virksomhed, m2: d.stand.m2, by: d.messe.by }) +
+      (d.sprog === 'en' ? ' [EN]' : ''),
     vorestMail(d));
 }
 
@@ -110,29 +195,47 @@ function sendMail(til, emne, html) {
 /* ---------- Skabeloner ---------- */
 var BLAA = '#3D8A95', MOERK = '#1F4E59', GRAA = '#6a737a', LINJE = '#dfe6e8';
 
-function kr(n) {
-  return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+/* Tusindtalsseparator efter sprog: dansk bruger punktum, engelsk komma */
+function kr(n, d) {
+  var sep = (d && d.sprog === 'en') ? ',' : '.';
+  return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, sep);
+}
+/* Beløb med valuta. Dansk sætter "kr." efter tallet, engelsk "DKK" foran —
+   og et spænd skal have enheden om hele spændet, ikke om det første tal. */
+function belob(n, d) { return flet(T(d).valuta, { tal: kr(n, d) }); }
+function spaend(fra, til, d) {
+  return flet(T(d).valutaSpaend, { fra: kr(fra, d), til: kr(til, d) });
+}
+/* Decimaltal: dansk komma, engelsk punktum */
+function tal(v, d) {
+  return (d && d.sprog === 'en') ? String(v) : String(v).replace('.', ',');
 }
 
-var MAANEDER = ['januar', 'februar', 'marts', 'april', 'maj', 'juni',
-                'juli', 'august', 'september', 'oktober', 'november', 'december'];
+var MAANEDER = {
+  da: ['januar', 'februar', 'marts', 'april', 'maj', 'juni',
+       'juli', 'august', 'september', 'oktober', 'november', 'december'],
+  en: ['January', 'February', 'March', 'April', 'May', 'June',
+       'July', 'August', 'September', 'October', 'November', 'December']
+};
 
-/** 2027-01-26 bliver til 26. januar 2027 */
-function dansk(iso) {
+/** 2027-01-26 bliver til 26. januar 2027 — eller 26 January 2027 */
+function dansk(iso, d) {
   if (!iso) return '';
-  var d = new Date(iso);
-  if (isNaN(d.getTime())) return iso;
-  return d.getDate() + '. ' + MAANEDER[d.getMonth()] + ' ' + d.getFullYear();
+  var dato = new Date(iso);
+  if (isNaN(dato.getTime())) return iso;
+  var en = d && d.sprog === 'en';
+  var m = (MAANEDER[en ? 'en' : 'da'])[dato.getMonth()];
+  return dato.getDate() + (en ? ' ' : '. ') + m + ' ' + dato.getFullYear();
 }
 
-function ramme(indhold) {
+function ramme(indhold, d) {
   return '<div style="margin:0;padding:24px 12px;background:#F4F7F8;">' +
     '<div style="max-width:600px;margin:0 auto;background:#fff;border-radius:10px;overflow:hidden;' +
     'font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#33393d;font-size:15px;line-height:1.55;">' +
     indhold +
     '<div style="padding:18px 28px 26px;border-top:1px solid ' + LINJE + ';color:' + GRAA + ';font-size:12px;">' +
-    '<p style="margin:0 0 3px;"><strong style="color:#000;">Wieben Design A/S</strong> · Porsborgparken 8 B, 9530 Støvring · CVR 20099607</p>' +
-    '<p style="margin:0;">+45 70 23 11 11 · wd@wiebendesign.dk · Mere end 30 års erfaring · messer i mere end 70 lande</p>' +
+    '<p style="margin:0 0 3px;"><strong style="color:#000;">Wieben Design A/S</strong> ' + T(d).fodAdresse + '</p>' +
+    '<p style="margin:0;">' + T(d).fodLinje + '</p>' +
     '</div></div></div>';
 }
 
@@ -149,12 +252,12 @@ function posterTabel(d) {
       '<td style="padding:9px 0;border-bottom:1px solid ' + LINJE + ';">' + p.navn +
       '<div style="color:' + GRAA + ';font-size:12px;margin-top:2px;">' + p.note + '</div></td>' +
       '<td style="padding:9px 0;border-bottom:1px solid ' + LINJE + ';text-align:right;white-space:nowrap;font-weight:600;">' +
-      kr(p.fra) + '–' + kr(p.til) + ' kr.</td></tr>';
+      spaend(p.fra, p.til, d) + '</td></tr>';
   }).join('');
   return '<table style="width:100%;border-collapse:collapse;font-size:14px;">' + raekker +
-    '<tr><td style="padding:12px 0 0;border-top:2px solid ' + MOERK + ';font-weight:700;font-size:17px;">I alt</td>' +
+    '<tr><td style="padding:12px 0 0;border-top:2px solid ' + MOERK + ';font-weight:700;font-size:17px;">' + T(d).ialt + '</td>' +
     '<td style="padding:12px 0 0;border-top:2px solid ' + MOERK + ';text-align:right;font-weight:700;font-size:17px;white-space:nowrap;">' +
-    kr(d.estimat.fra) + '–' + kr(d.estimat.til) + ' kr.</td></tr></table>';
+    spaend(d.estimat.fra, d.estimat.til, d) + '</td></tr></table>';
 }
 
 function linjer(par) {
@@ -166,41 +269,44 @@ function linjer(par) {
 }
 
 function kundeMail(d) {
-  var omr = d.omraader.map(function (o) { return (o.antal > 1 ? o.antal + ' × ' : '') + o.navn; }).join(' · ') || 'Ingen valgt';
+  var t = T(d);
+  var omr = d.omraader.map(function (o) { return (o.antal > 1 ? o.antal + ' × ' : '') + o.navn; }).join(' · ') || t.ingenValgt;
   return ramme(
-    overskrift('Jeres oplæg til messestand',
-      d.messe.by + (d.messe.dato ? ' · ' + dansk(d.messe.dato) : '') + ' · ' + d.stand.m2 + ' m²') +
+    overskrift(t.kundeTitel,
+      d.messe.by + (d.messe.dato ? ' · ' + dansk(d.messe.dato, d) : '') + ' · ' + d.stand.m2 + ' m²') +
     '<div style="padding:26px 28px;">' +
-      '<p style="margin:0 0 20px;">Hej ' + d.kontakt.navn + '</p>' +
-      '<p style="margin:0 0 22px;">Her er det oplæg, I satte sammen. Alle beløb er lejepriser for hele messen, ekskl. moms — og de er et estimat. Den endelige pris lægger vi os først fast på, når vi har tegnet standen.</p>' +
-      '<h2 style="font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:' + BLAA + ';margin:0 0 10px;">Standen</h2>' +
+      '<p style="margin:0 0 20px;">' + flet(t.hej, { navn: d.kontakt.navn }) + '</p>' +
+      '<p style="margin:0 0 22px;">' + t.indledning + '</p>' +
+      '<h2 style="font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:' + BLAA + ';margin:0 0 10px;">' + t.standen + '</h2>' +
       linjer([
-        ['Areal', d.stand.m2 + ' m² med ' + d.stand.aabneSider + (d.stand.aabneSider === 1 ? ' åben side' : ' åbne sider')],
-        ['Vægge', d.stand.vaegge + ', ' + String(d.stand.vaegmeter).replace('.', ',') + ' meter'],
-        ['Tryk', d.stand.tryk],
-        ['Grafisk arbejde', d.stand.grafiskArbejde],
-        ['Gulv', d.stand.gulv],
-        ['Belysning', d.stand.belysning],
-        ['Områder', omr]
+        [t.areal, flet(d.stand.aabneSider === 1 ? t.arealEn : t.arealVaerdi, { m2: d.stand.m2, sider: d.stand.aabneSider })],
+        [t.vaegge, flet(t.vaeggeVaerdi, { type: d.stand.vaegge, meter: tal(d.stand.vaegmeter, d) })],
+        [t.tryk, d.stand.tryk],
+        [t.grafisk, d.stand.grafiskArbejde],
+        [t.gulv, d.stand.gulv],
+        [t.belysning, d.stand.belysning],
+        [t.omraader, omr]
       ]) +
-      '<h2 style="font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:' + BLAA + ';margin:26px 0 10px;">Pris</h2>' +
+      '<h2 style="font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:' + BLAA + ';margin:26px 0 10px;">' + t.pris + '</h2>' +
       posterTabel(d) +
-      '<p style="margin:22px 0 0;padding:14px 16px;background:#eaf3f4;border-radius:8px;font-size:13px;">' +
-      'Beløbet dækker standen: materiel, grafik, opbygning, transport og vores arbejde. Messearrangørens egne gebyrer er ikke med — dem aftaler I direkte med messen.</p>' +
-      '<p style="margin:22px 0 0;">Vi kigger oplægget igennem og vender tilbage om, hvad der kan ' +
-      'lade sig gøre på jeres plads. Vil I hellere selv tage fat, er vi på 70 23 11 11.</p>' +
-    '</div>');
+      '<p style="margin:22px 0 0;padding:14px 16px;background:#eaf3f4;border-radius:8px;font-size:13px;">' + t.daekker + '</p>' +
+      '<p style="margin:22px 0 0;">' + t.afslutning + '</p>' +
+    '</div>', d);
 }
 
 function vorestMail(d) {
   var omr = d.omraader.map(function (o) {
     return '<li style="margin-bottom:3px;">' + (o.antal > 1 ? o.antal + ' × ' : '') + o.navn +
-      ' <span style="color:' + GRAA + ';">(' + kr(o.pris) + ' kr.)</span></li>';
+      ' <span style="color:' + GRAA + ';">(' + belob(o.pris, d) + ')</span></li>';
   }).join('');
   return ramme(
     overskrift(d.kontakt.virksomhed,
-      d.stand.m2 + ' m² i ' + d.messe.by + ' · ' + kr(d.estimat.fra) + '–' + kr(d.estimat.til) + ' kr.') +
+      d.stand.m2 + ' m² i ' + d.messe.by + ' · ' + spaend(d.estimat.fra, d.estimat.til, d)) +
     '<div style="padding:26px 28px;">' +
+      (d.sprog === 'en'
+        ? '<p style="margin:0 0 20px;padding:12px 16px;background:#eaf3f4;border-left:3px solid ' + BLAA +
+          ';border-radius:0 8px 8px 0;font-weight:600;">Leadet er udfyldt p\u00e5 engelsk \u2014 svar p\u00e5 engelsk.</p>'
+        : '') +
       '<h2 style="font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:' + BLAA + ';margin:0 0 10px;">Kontakt</h2>' +
       linjer([
         ['Navn', d.kontakt.navn],
@@ -213,7 +319,7 @@ function vorestMail(d) {
       '<h2 style="font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:' + BLAA + ';margin:26px 0 10px;">Messe og profil</h2>' +
       linjer([
         ['Sted', d.messe.by + ', ' + d.messe.land + ' (' + d.messe.km + ' km)'],
-        ['Dato', (dansk(d.messe.dato) || 'ikke oplyst') + ' · ' + d.messe.dage + ' dage'],
+        ['Dato', (dansk(d.messe.dato, d) || 'ikke oplyst') + ' · ' + d.messe.dage + ' dage'],
         ['Formål', d.profil.formaal],
         ['Erfaring', d.profil.erfaring],
         ['Ambition', d.profil.ambition]
@@ -233,5 +339,5 @@ function vorestMail(d) {
       posterTabel(d) +
       '<p style="margin:18px 0 0;color:' + GRAA + ';font-size:13px;">Forventede leads: ' +
       d.leads.fra + '–' + d.leads.til + '. Rækken ligger også i regnearket.</p>' +
-    '</div>');
+    '</div>', d);
 }

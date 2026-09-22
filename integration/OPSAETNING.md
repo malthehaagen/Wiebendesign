@@ -82,6 +82,21 @@ Scriptet opdager selv nøglen og skifter over. Er den ikke sat, falder den
 tilbage til Googles egen afsendelse — så I kan komme i gang uden at vente på
 DNS.
 
+### To sprog
+
+Beregneren findes på dansk og engelsk, og kundens valg følger med i feltet
+`sprog`. Scriptet bruger det tre steder:
+
+- **Kundens mail** sendes på kundens eget sprog — emne, overskrifter, beløb og
+  dato. Dansk skriver `5.250–8.500 kr.` og `26. januar 2027`; engelsk skriver
+  `DKK 5,250–8,500` og `26 January 2027`.
+- **Beskeden til jer** bliver på dansk, også for et engelsk lead — det er jeres
+  interne mail. Men emnet får `[EN]` bagpå, og øverst i mailen står der
+  „Leadet er udfyldt på engelsk — svar på engelsk“, så den der svarer ved det.
+- **Regnearket** har en kolonne `Sprog` med DA eller EN.
+
+Teksterne til mailene står samlet i `TEKST` øverst i `apps-script.gs`.
+
 ## 5. Prøv det af
 
 Udfyld beregneren og send et oplæg til jer selv. Tjek tre ting:
@@ -101,6 +116,7 @@ I `assets/config.js`:
 
 | | |
 |---|---|
+| `sprogStier` | Faste adresser pr. sprog, f.eks. `{ da: '/standberegner/', en: '/en/stand-calculator/' }`. Står den `null`, skifter sprogvælgeren med `?lang=en`. |
 | `kraevEmailForOplaeg` | Står på `false`. PDF'en kan hentes frit, men står som det stille alternativ under afsend-knappen. Prisen er alligevel synlig hele vejen i prisbjælken, så PDF'en indeholder ikke noget nyt — en lås på den koster mere i troværdighed end den henter i mailadresser. Sæt den til `true`, hvis I vil prøve det modsatte af. |
 | `kraevEmailForPris` | `true` skjuler prisen, indtil kunden har afleveret sin mail. **Vi fraråder det** — prisen undervejs er det, der holder folk i gang. Men den er der, hvis I vil prøve det af. |
 

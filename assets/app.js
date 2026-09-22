@@ -1489,6 +1489,9 @@
     var felter = Object.fromEntries(new FormData(f).entries());
     return {
       modtaget: new Date().toISOString(),
+      /* Serveren skal vide, hvilket sprog kunden udfyldte på — ellers får
+         en engelsk kunde en dansk mail med engelsk indhold i. */
+      sprog: SPROG,
       kontakt: {
         navn: felter.navn, virksomhed: felter.virksomhed,
         email: felter.email, telefon: felter.telefon || '',
