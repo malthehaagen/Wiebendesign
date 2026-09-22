@@ -221,16 +221,19 @@ skal ned.
 
 **Resten:**
 
-- **Endpointet skal sættes op** — se `integration/OPSAETNING.md`
-- **Hosting**: hvordan modulet lægges på wiebendesign.dk
+- **Resend-domænet** er ikke verificeret endnu. Indtil det er, sender Google
+  mailene — de virker, men afsenderen er en gmail-adresse og ikke
+  `wd@wiebendesign.dk`. Se `integration/OPSAETNING.md`
+- **`MODTAGER` i `apps-script.gs`** står midlertidigt på en privat adresse,
+  mens der testes. Den skal tilbage til `wd@wiebendesign.dk`
+- **Hosting**: hvordan modulet lægges på wiebendesign.dk. Derefter skal
+  `sprogStier` i `config.js` udfyldes, og „Prototype“ fjernes fra headeren
+- **Linkene til privatlivspolitik og handelsbetingelser** i `tekst-da.js` og
+  `tekst-en.js` peger på `wiebendesign.dk/privatlivspolitik/` og
+  `/handelsbetingelser/`. De er ikke kontrolleret — findes siderne ikke på de
+  adresser, skal linkene rettes
 - **Teksterne** bør gennemlæses af Wieben Design. Tone, påstande og ordvalg er
   rettet efter firmaets eget site — se [`docs/tone-of-voice.md`](docs/tone-of-voice.md)
-- **Engelsk version**, når den danske tekst ligger fast. Bemærk, at teksterne
-  IKKE ligger samlet ét sted: `content.js` har ca. 430 strenge, men `app.js`
-  har 88 danske strenge hardkodet i logikken og `index.html` omkring 100 i
-  markuppen. En engelsk version kræver derfor først, at de strenge trækkes ud
-  i et sproglag — det arbejde afhænger ikke af, hvad teksten til sidst kommer
-  til at sige, og kan derfor gøres før godkendelsen
 - **Opfølgningen internt**: hvem kontakter leadet, hvor hurtigt og med hvad.
   Beregneren har ikke længere et „må vi ringe?“-felt — at sende oplægget er
   samtykke nok til, at I vender tilbage om messen, og både kvitteringen og
