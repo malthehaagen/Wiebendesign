@@ -17,6 +17,24 @@ var AFSENDER      = 'Wieben Design <oplaeg@wiebendesign.dk>';  // kræver verifi
 var SVAR_TIL      = 'wd@wiebendesign.dk';
 var ARK           = 'Leads';                      // fanen i regnearket
 
+/* ---------- Værn mod misbrug ----------
+   Endpointet er åbent — det skal det være, for browseren kalder det, og
+   adressen står i sidens JavaScript. Derfor kan enhver sende data ind:
+   rækker i regnearket og mails til vilkårlige adresser fra jeres konto.
+
+   Tre spærrer, i den rækkefølge de virker:
+     1. et lokkefelt i formularen, som kun robotter udfylder
+     2. et loft pr. mailadresse, så den samme ikke kan bombarderes
+     3. et loft i alt pr. time, så en storm ikke tømmer jeres mailkvote
+
+   Rammer nogen et loft, svarer vi stadig "ok" udadtil. En angriber skal
+   ikke kunne se forskel og finde grænsen. Årsagen står i Udførsler-loggen.
+   ------------------------------------------------------------------- */
+var MAKS_PR_MAIL   = 3;    // samme adresse pr. time
+var MAKS_I_ALT     = 40;   // alle indsendelser pr. time
+var MAKS_TEGN      = { navn: 120, virksomhed: 160, email: 200, telefon: 60,
+                       budget: 60, besked: 2000 };
+
 var KOLONNER = ['Modtaget', 'Sprog', 'Navn', 'Virksomhed', 'E-mail', 'Telefon', 'Budgetramme',
                 'By', 'Land', 'Messedato', 'Messedage', 'Formål', 'Erfaring', 'Ambition',
                 'm²', 'Åbne sider', 'Vægge', 'Tryk', 'Grafisk arbejde', 'Gulv', 'Belysning',
@@ -114,6 +132,25 @@ function doPost(e) {
     if (!data || !data.kontakt || !data.kontakt.email) {
       return svar({ ok: false, fejl: 'Mangler kontaktoplysninger' });
     }
+
+    /* Lokkefeltet er tomt hos mennesker. Er der skrevet i det, er det en
+       robot — vi svarer venligt og gemmer ingenting. */
+    if (data.website) {
+      console.warn('Lokkefeltet var udfyldt — indsendelsen er kasseret.');
+      return svar({ ok: true });
+    }
+
+    data.kontakt.email = String(data.kontakt.email).trim();
+    if (!gyldigMail(data.kontakt.email)) {
+      return svar({ ok: false, fejl: 'Mailadressen ser ikke rigtig ud' });
+    }
+
+    if (!harPlads(data.kontakt.email)) {
+      console.warn('Loft ramt for ' + data.kontakt.email + ' — indsendelsen er kasseret.');
+      return svar({ ok: true });
+    }
+
+    klip(data.kontakt);
     /* Leadet gemmes først — det er det, der ikke må gå tabt. Derefter
        sendes de to mails hver for sig, så en fejl i den ene ikke stopper
        den anden og ikke får kunden til at tro, at intet blev sendt. */
@@ -124,6 +161,41 @@ function doPost(e) {
   } catch (fejl) {
     console.error(fejl);
     return svar({ ok: false, fejl: String(fejl && fejl.message || fejl) });
+  }
+}
+
+function gyldigMail(m) {
+  return typeof m === 'string' && m.length <= MAKS_TEGN.email && /^[^@\s]+@[^@\s.]+\.[^@\s]{2,}$/.test(m);
+}
+
+/* Kapper for lange felter, så en enkelt indsendelse ikke kan fylde
+   regnearket eller mailen med tusindvis af tegn. */
+function klip(kontakt) {
+  Object.keys(MAKS_TEGN).forEach(function (felt) {
+    if (typeof kontakt[felt] === 'string' && kontakt[felt].length > MAKS_TEGN[felt]) {
+      kontakt[felt] = kontakt[felt].slice(0, MAKS_TEGN[felt]) + '\u2026';
+    }
+  });
+}
+
+/* Tæller indsendelser i et rullende vindue på en time. CacheService
+   glemmer selv posterne bagefter, så der er intet at rydde op i.
+   Apps Script får ikke afsenderens IP, så vi tæller på mailadressen
+   og på det samlede antal. */
+function harPlads(email) {
+  var cache = CacheService.getScriptCache();
+  var laas = LockService.getScriptLock();
+  try { laas.waitLock(5000); } catch (fejl) { return true; }  /* hellere slippe igennem end afvise en ægte kunde */
+  try {
+    var pr = 'mail_' + Utilities.base64EncodeWebSafe(email.toLowerCase()).slice(0, 40);
+    var antalPr = Number(cache.get(pr) || 0);
+    var antalAlt = Number(cache.get('i_alt') || 0);
+    if (antalPr >= MAKS_PR_MAIL || antalAlt >= MAKS_I_ALT) return false;
+    cache.put(pr, String(antalPr + 1), 3600);
+    cache.put('i_alt', String(antalAlt + 1), 3600);
+    return true;
+  } finally {
+    laas.releaseLock();
   }
 }
 

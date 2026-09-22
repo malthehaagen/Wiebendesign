@@ -11,7 +11,7 @@ dem er kode:
 | Dansk version | **Færdig** | — |
 | Priserne bekræftet | Mangler — se *Hvad der mangler før produktion* | Wieben Design |
 | Teksterne gennemlæst | Mangler — hver sætning er skrevet til lejligheden | Wieben Design |
-| Mailsystemet | Mangler endpoint og verificeret Resend-domæne | `integration/OPSAETNING.md` |
+| Mailsystemet | Endpointet er sat op og står i `config.js`. Mangler verificeret Resend-domæne — indtil da sender Google mailene | `integration/OPSAETNING.md` |
 | Hosting på wiebendesign.dk | Ikke besluttet | Wieben Design |
 | Engelsk version | **Færdig.** Se [`docs/engelsk-version.md`](docs/engelsk-version.md) | — |
 
@@ -246,6 +246,7 @@ Chromium under udviklingen. Det, der er kontrolleret:
 | Bredt gennemløb | Hvert formål × ambition, 17 arealer, alle væghøjder × vægtyper × grafikniveauer, 17 lande × 74 byer + „en anden by“ + „et andet land“, 1–8 messedage, alle tilkøb, alle LED-størrelser, hvert område i hver størrelse, tom stand |
 | Tallene | 32 konfigurationer: totalen skal være den samme i prisbjælken, dens specifikation, på trin 4, i samlet-boksen, i opsummeringen og i PDF-arket — og posterne skal summere til den |
 | Formularen | Seks slags ondsindet input (script-tags, billed-handlers, SVG-onload, 600 tegn), tom formular, ugyldig e-mail, dobbeltklik på afsend |
+| Værnet mod misbrug | Lokkefeltet (robot kasseres, kunden ikke), ugyldig mailadresse, samme adresse otte gange i træk, tres forskellige adresser, 50.000 tegn i hvert felt |
 | Gemt tilstand | Genindlæsning på hvert trin, 78 ødelagte tilstande (gammelt format, håndredigeret, tilfældigt skrald), localStorage slået fra, spring til låste trin |
 | Tastatur | Hele forløbet fra forside til afsendt oplæg uden mus — fokus må aldrig falde til `<body>` |
 | HTML | Dublerede id, links uden tekst, billeder uden alt, knapper uden navn, felter uden label, overskriftsorden |
@@ -264,7 +265,7 @@ kræver Safari 15.4 / iOS 15.4 (marts 2022) eller nyere.
 
 **Rigtige fotos på valgkortene.** Besluttet udskudt til efter lancering: arbejdet
 med at finde, beskære og godkende billeder vejer for nu tungere end det, de
-tilføjer. De indbyggede SVG-illustrationer i `WD_INDHOLD.svg` fungerer indtil da.
+tilføjer. De indbyggede SVG-illustrationer i `WD_DATA.svg` (`assets/data.js`) fungerer indtil da.
 
 Når billederne skal ind, læg dem i `assets/img/` og skift den linje i `app.js`,
 hvor `<span class="ill">` bygges:

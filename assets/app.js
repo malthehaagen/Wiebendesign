@@ -1497,6 +1497,8 @@
         email: felter.email, telefon: felter.telefon || '',
         budget: felter.budget || '', besked: felter.besked || ''
       },
+      /* Lokkefeltet. Tomt hos mennesker; udfyldt hos robotter. */
+      website: felter.website || '',
       messe: { by: s.messe.by, land: landNavn(), dato: s.messe.dato, km: s.messe.km, dage: s.team.dage },
       profil: s.profil,
       stand: {

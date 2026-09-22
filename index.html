@@ -213,6 +213,14 @@
         </label>
         <label class="full"><span data-t="ui.besked"></span><textarea name="besked" rows="3"></textarea></label>
       </div>
+      <!-- Lokkefelt. Et menneske ser det aldrig — en robot udfylder alt, den
+           finder, og afslører sig selv. Skjult med position og ikke med
+           display:none, fordi nogle robotter springer skjulte felter over.
+           aria-hidden og tabindex holder det ude af skærmlæsere og tabulator. -->
+      <div class="lokkefelt" aria-hidden="true">
+        <label for="website">Website</label>
+        <input type="text" name="website" id="website" tabindex="-1" autocomplete="off">
+      </div>
       <p class="samtykke"><span class="samtykke-mrk" data-t="ui.samtykkeMrk"></span> <span data-t-html="ui.samtykke"></span></p>
       <p class="persondata" data-t-html="ui.persondata"></p>
       <div class="form-row">

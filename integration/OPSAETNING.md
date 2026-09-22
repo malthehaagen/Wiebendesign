@@ -213,6 +213,40 @@ Går noget galt, viser siden en fejl til kunden med jeres telefonnummer, og
 
 ---
 
+## 6. Værn mod misbrug
+
+Endpointet er åbent — det skal det være, for kunden skal kunne sende uden
+at logge ind. Derfor har scriptet tre spærrer indbygget. I skal ikke gøre
+noget for at slå dem til; de er der allerede.
+
+**Lokkefeltet.** Formularen har et felt, der hedder `website`. Det er
+skubbet uden for skærmen og springes over med tabulator, så intet menneske
+ser det eller kan udfylde det. Automatiske robotter udfylder alt, hvad de
+kan finde. Er der skrevet i feltet, kasseres indsendelsen — og scriptet
+svarer alligevel "tak", så afsenderen ikke kan regne ud, hvad der afslørede
+den.
+
+**Loftet.** Samme mailadresse kan sende **3 oplæg i timen**, og der tages
+imod **40 i alt pr. time**. Rammer en indsendelse loftet, bliver den
+kasseret med samme venlige svar. Tællerne nulstilles af sig selv efter en
+time.
+
+**Længderne.** Navn, firma, mail, telefon, budget og besked bliver klippet
+af, hvis de er længere end en rigtig kunde ville skrive — beskeden ved
+2.000 tegn, de øvrige før. Det holder regnearket og mailen læselige, uanset
+hvad der sendes.
+
+Derudover afvises en indsendelse med en mailadresse, der ikke ligner en
+mailadresse. Det er den eneste af de fire, kunden får en fejl at se på —
+resten sker i stilhed, og årsagen står i Apps Script under **Udførelser**.
+
+Bliver I alligevel ramt af noget, der slipper igennem, er den hurtige
+udvej at trykke **Udrul → Administrer udrulninger → Arkivér** i Apps
+Script. Så er endpointet lukket med det samme, og beregneren falder
+tilbage til at vise prisen uden at sende noget.
+
+---
+
 ## Hvad I kan skrue på
 
 I `assets/config.js`:
@@ -222,6 +256,15 @@ I `assets/config.js`:
 | `sprogStier` | Faste adresser pr. sprog, f.eks. `{ da: '/standberegner/', en: '/en/stand-calculator/' }`. Står den `null`, skifter sprogvælgeren med `?lang=en`. |
 | `kraevEmailForOplaeg` | Står på `false`. PDF'en kan hentes frit, men står som det stille alternativ under afsend-knappen. Prisen er alligevel synlig hele vejen i prisbjælken, så PDF'en indeholder ikke noget nyt — en lås på den koster mere i troværdighed end den henter i mailadresser. Sæt den til `true`, hvis I vil prøve det modsatte af. |
 | `kraevEmailForPris` | `true` skjuler prisen, indtil kunden har afleveret sin mail. **Vi fraråder det** — prisen undervejs er det, der holder folk i gang. Men den er der, hvis I vil prøve det af. |
+
+Øverst i `apps-script.gs` (husk en **ny udrulning** bagefter):
+
+| | |
+|---|---|
+| `MODTAGER` | Hvem den interne besked går til. Skal stå på `wd@wiebendesign.dk`, før I linker til beregneren. |
+| `MAKS_PR_MAIL` | Hvor mange oplæg samme mailadresse må sende pr. time. Står på `3`. |
+| `MAKS_I_ALT` | Hvor mange oplæg der i alt tages imod pr. time. Står på `40`. Hæv det, hvis en kampagne giver mere trafik, end I regnede med. |
+| `MAKS_TEGN` | Hvor lange felterne må være, før de klippes af. |
 
 ## Persondata
 
