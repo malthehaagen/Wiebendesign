@@ -64,10 +64,24 @@ direkte, så beregneren taler som resten af sitet.
 
 1. ~~Kobl `tekst-da.js` til `app.js`.~~ **Gjort.**
 2. ~~`index.html`.~~ **Gjort.**
-3. **`content.js` — næste opgave.** Fold den ind i sproglaget. Pas på: `svg` og bylisten er
-   sprogneutrale og skal ud i en datafil, mens landenavne skal oversættes.
-4. **Oversæt** til `assets/tekst-en.js` — først når den danske tekst er
-   godkendt af Wieben Design, ellers oversætter vi noget, der bliver lavet om.
+3. ~~`content.js`.~~ **Gjort.** Delt i to:
+   - `assets/data.js` (`WD_DATA`) — sprogneutralt: illustrationerne, byerne med
+     afstand og broafgift, de faglige tips vægt og betingelse (`naar`), og
+     tidslinjens uger og ansvar. Intet at oversætte.
+   - `assets/indhold-da.js` (`WD_TEKST.da.indhold`) — alle tekster, med
+     landenavne, og tip og tidslinjepunkter koblet på via id.
+
+   Delingen var nødvendig, fordi de faglige tip blandede tekst med kode:
+   hvert tip havde en `naar`-funktion ved siden af sin titel. Havde vi kopieret
+   hele filen til engelsk, var betingelserne blevet duplikeret — og skulle
+   rettes to steder for evigt.
+
+## Tilbage
+
+4. **Oversæt** til `assets/tekst-en.js` og `assets/indhold-en.js` — først når
+   den danske tekst er godkendt af Wieben Design, ellers oversætter vi noget,
+   der bliver lavet om. Omfanget er nu kendt: 228 nøgler i `tekst-da.js`
+   (85 `ui` + 143 flade) og indholdet i `indhold-da.js`.
 5. **Sprogvalg og knap**, som besluttet ovenfor.
 
 ## Testes til sidst

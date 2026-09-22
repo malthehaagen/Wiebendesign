@@ -67,7 +67,9 @@ npx http-server . -p 8080
 ```
 index.html            Sidens struktur (trin, felter, beholdere)
 assets/pricing.js     ALLE PRISER — den eneste fil, der skal rettes for at ændre tal
-assets/content.js     Tekster, messer, faglige indsigter, tidslinje, illustrationer
+assets/data.js        Sprogneutralt: illustrationer, byer og afstande, betingelser
+assets/tekst-da.js    Brugerfladens tekster på dansk
+assets/indhold-da.js  Indholdet på dansk: stand, områder, faglige tip, tidslinje
 assets/app.js         Beregning, rådgivningslogik og visning
 assets/styles.css     Design. Farver og fonts ligger som variabler øverst
 assets/config.js      Endpoint og til/fra-knapper. Ingen hemmeligheder her

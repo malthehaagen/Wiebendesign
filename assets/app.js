@@ -7,13 +7,14 @@
 
   var P = window.WD_PRIS;
   var K = window.WD_CONFIG || {};
-  var C = window.WD_INDHOLD;
+  var D = window.WD_DATA || {};
 
   /* ---------- Sproglag ----------
      Sproget er dansk indtil den engelske fil findes; så sættes SPROG af
      adressen (/en/) eller ?lang=. Alt andet her behøver ikke vide det.  */
   var SPROG = 'da';
   var T = (window.WD_TEKST || {})[SPROG] || {};
+  var C = T.indhold || {};
 
   /* Slår en tekst op og erstatter {navn} med værdier. Hedder tx og ikke t,
      fordi flere løkker i filen bruger "var t" om et indholdsobjekt.
@@ -473,10 +474,11 @@
 
   function indsigter(maks) {
     var ud = [];
-    C.indsigter.forEach(function (i) {
+    D.indsigter.forEach(function (i) {
       var ok = false;
       try { ok = i.naar(s); } catch (e) { ok = false; }
-      if (ok) ud.push(i);
+      var tekst = (C.indsigter || {})[i.id];
+      if (ok && tekst) ud.push({ id: i.id, vaegt: i.vaegt, titel: tekst.titel, tekst: tekst.tekst });
     });
     ud.sort(function (a, b) { return b.vaegt - a.vaegt; });
     return ud.slice(0, maks || 3);
@@ -582,7 +584,12 @@
   }
 
   function land(id) {
-    return C.lande.filter(function (l) { return l.id === (id || s.messe.land); })[0] || C.lande[0];
+    return D.lande.filter(function (l) { return l.id === (id || s.messe.land); })[0] || D.lande[0];
+  }
+  /* Byerne står i data.js, men landets navn skal oversættes */
+  function landNavn(id) {
+    var l = land(id);
+    return (C.landenavne || {})[l.id] || l.id;
   }
   /* Skriver kunden selv afstanden ind, kender vi ikke ruten. Men skal man
      over en bro til hver by i landet, skal man det også til den, kunden
@@ -598,9 +605,9 @@
   function visSted() {
     var lv = document.getElementById('land');
     if (!lv.options.length) {
-      C.lande.forEach(function (l) {
+      D.lande.forEach(function (l) {
         var o = document.createElement('option');
-        o.value = l.id; o.textContent = l.navn;
+        o.value = l.id; o.textContent = landNavn(l.id);
         lv.appendChild(o);
       });
     }
@@ -645,7 +652,7 @@
       var a = C.aabneSider[n];
       v.appendChild(kort({
         fokus: 'sider:' + n,
-        svg: C.svg['sider' + n], titel: a.titel, tekst: a.tekst,
+        svg: D.svg['sider' + n], titel: a.titel, tekst: a.tekst,
         valgt: s.stand.aabneSider === n,
         klik: function () { s.stand.aabneSider = n; opdater(); }
       }));
@@ -670,7 +677,7 @@
       s.stand.vaegtype = gemt;
       v.appendChild(kort({
         fokus: 'vaegtype:' + id,
-        svg: C.svg[id], titel: t.titel, tekst: t.tekst, valgt: s.stand.vaegtype === id,
+        svg: D.svg[id], titel: t.titel, tekst: t.tekst, valgt: s.stand.vaegtype === id,
         meta: '<span class="card-pris">' + fmtKort(spaend(iv.tal(pris.konstruktion + pris.print))) + ' kr.</span> ' + esc(tx('standen.forStanden')) +
               '<span class="card-teknik">' + esc(t.teknik) + '</span>',
         klik: function () {
@@ -802,7 +809,7 @@
         var valgt = { antal: Number(gemt.antal) || 0, variant: gemt.variant || standardVariant(id) };
         var vr = variant(id, valgt.variant);
         var k = el('<div class="omraade' + (valgt.antal ? ' valgt' : '') + '"></div>');
-        k.appendChild(el('<span class="ill">' + C.svg[t.ikon] + '</span>'));
+        k.appendChild(el('<span class="ill">' + D.svg[t.ikon] + '</span>'));
         k.appendChild(el('<span class="card-titel">' + esc(t.titel) + '</span>'));
         k.appendChild(el('<span class="card-tekst">' + esc(t.tekst) + '</span>'));
 
@@ -930,7 +937,7 @@
       }
       v.appendChild(kort({
         fokus: 'tilkoeb:' + id,
-        svg: C.svg[t.ikon], titel: t.titel, tekst: t.tekst, valgt: til,
+        svg: D.svg[t.ikon], titel: t.titel, tekst: t.tekst, valgt: til,
         meta: '<span class="card-pris">' + fmtKort(spaend(iv.tal(pris || 0))) + ' kr.</span>' +
               (id === 'led' ? ' · ' + esc(ledValgt().navn) : ''),
         klik: function () { s.tilkoeb[id] = !s.tilkoeb[id]; opdater(); }
@@ -1011,7 +1018,8 @@
     var intro = document.getElementById('tidslinje-intro');
     if (intro) intro.textContent = C.tidslinjeIntro;
     var dato = s.messe.dato ? new Date(s.messe.dato) : null;
-    C.tidslinje.forEach(function (t) {
+    D.tidslinje.forEach(function (t) {
+      var txt = (C.tidslinje || {})[t.id] || { titel: '', tekst: '' };
       var p = el('<div class="tl-punkt"></div>');
       var naar;
       if (dato && !isNaN(dato)) {
@@ -1026,8 +1034,8 @@
       if (t.uger <= 6) p.classList.add('naer');
       p.appendChild(el('<div class="tl-dato">' + esc(naar) +
         '<span class="tl-hvem tl-' + t.hvem + '">' + esc(C.hvemLabels[t.hvem]) + '</span></div>'));
-      p.appendChild(el('<div class="tl-titel">' + esc(t.titel) + '</div>'));
-      p.appendChild(el('<p class="tl-tekst">' + esc(t.tekst) + '</p>'));
+      p.appendChild(el('<div class="tl-titel">' + esc(txt.titel) + '</div>'));
+      p.appendChild(el('<p class="tl-tekst">' + esc(txt.tekst) + '</p>'));
       v.appendChild(p);
     });
   }
@@ -1040,7 +1048,7 @@
 
     document.getElementById('opsummering').innerHTML =
       '<dl class="ops-grid">' +
-      linje(tx('oplaeg.sted'), (s.messe.by || land().navn) + (s.messe.by ? ', ' + land().navn : '') +
+      linje(tx('oplaeg.sted'), (s.messe.by || landNavn()) + (s.messe.by ? ', ' + landNavn() : '') +
         (s.messe.dato ? ' · ' + new Date(s.messe.dato).toLocaleDateString(T.locale) : '')) +
       linje(tx('oplaeg.formaal'), (C.profilSpoergsmaal[0].valg.filter(function (x) { return x.id === s.profil.formaal; })[0] || {}).titel || tx('oplaeg.intet')) +
       linje(tx('oplaeg.areal'), tx('enhed.m2', { tal: s.stand.m2 })) +
@@ -1070,7 +1078,7 @@
   function visPrintark() {
     var r = beregn(), g = geometri();
     var dato = s.messe.dato ? new Date(s.messe.dato) : null;
-    var sted = (s.messe.by || land().navn) + (s.messe.by ? ', ' + land().navn : '');
+    var sted = (s.messe.by || landNavn()) + (s.messe.by ? ', ' + landNavn() : '');
     document.getElementById('pa-undertitel').textContent =
       sted + (dato && !isNaN(dato) ? ' · ' + dato.toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' }) : '') +
       ' · ' + tx('ark.udarbejdet', { dato: new Date().toLocaleDateString(T.locale) });
@@ -1103,7 +1111,8 @@
       '<tr class="pa-sum"><td>' + esc(tx('post.ialt')) + '</td><td>' + fmtKort(r.vist) + ' kr.</td></tr>';
 
     document.getElementById('pa-tidslinje-intro').textContent = C.tidslinjeIntro;
-    document.getElementById('pa-tidslinje').innerHTML = C.tidslinje.map(function (t) {
+    document.getElementById('pa-tidslinje').innerHTML = D.tidslinje.map(function (t) {
+      var txt = (C.tidslinje || {})[t.id] || { titel: '', tekst: '' };
       var naar;
       if (dato && !isNaN(dato)) {
         var d = new Date(dato.getTime());
@@ -1114,8 +1123,8 @@
           ? tx(t.uger === 1 ? 'tidslinje.ugeFoer' : 'tidslinje.ugerFoer', { uger: t.uger })
           : tx(t.uger === 0 ? 'tidslinje.messeugen' : 'tidslinje.ugenEfter');
       }
-      return '<tr><td class="pa-naar">' + esc(naar) + '</td><td>' + esc(t.titel) +
-             '<span>' + esc(t.tekst) + '</span></td><td class="pa-hvem">' + esc(C.hvemLabels[t.hvem]) + '</td></tr>';
+      return '<tr><td class="pa-naar">' + esc(naar) + '</td><td>' + esc(txt.titel) +
+             '<span>' + esc(txt.tekst) + '</span></td><td class="pa-hvem">' + esc(C.hvemLabels[t.hvem]) + '</td></tr>';
     }).join('');
   }
 
@@ -1298,7 +1307,7 @@
       });
 
       /* Sted */
-      var landIder = C.lande.map(function (l) { return l.id; });
+      var landIder = D.lande.map(function (l) { return l.id; });
       s.messe.land = iListe(s.messe.land, landIder, 'dk');
       var byNavne = land().byer.map(function (b) { return b.navn; });
       if (!s.messe.ukendt) {
@@ -1441,7 +1450,7 @@
         email: felter.email, telefon: felter.telefon || '',
         budget: felter.budget || '', besked: felter.besked || ''
       },
-      messe: { by: s.messe.by, land: land().navn, dato: s.messe.dato, km: s.messe.km, dage: s.team.dage },
+      messe: { by: s.messe.by, land: landNavn(), dato: s.messe.dato, km: s.messe.km, dage: s.team.dage },
       profil: s.profil,
       stand: {
         m2: s.stand.m2, aabneSider: s.stand.aabneSider,
