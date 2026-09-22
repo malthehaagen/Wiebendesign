@@ -33,6 +33,15 @@ Fire tekststykker og tre tal i én sætning. Det kan ikke oversættes stykke for
 stykke, fordi engelsk har en anden ordstilling. Hver sætning skal være én
 nøgle med pladsholdere.
 
+## Sproget
+
+Wieben Designs engelske sider er gennemgået, og retningslinjerne står i
+[`docs/tone-of-voice-en.md`](tone-of-voice-en.md). De vigtigste:
+**"exhibition stand", aldrig "booth"**; **amerikansk stavning** (color, meter,
+authorized); **"you/your"** i éntal; treklangen er **"your brand, products, and
+goals"**; og sitets egne navne på prisposterne og de fem procesfaser bruges
+direkte, så beregneren taler som resten af sitet.
+
 ## Gjort
 
 - **`assets/tekst-da.js`** er oprettet: 143 nøgler, der dækker brugerfladens

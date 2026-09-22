@@ -8,7 +8,28 @@
   var P = window.WD_PRIS;
   var K = window.WD_CONFIG || {};
   var C = window.WD_INDHOLD;
-  var TRIN = ['Start', 'Profil', 'Standen', 'Områder', 'Messeklar', 'Oplæg'];
+
+  /* ---------- Sproglag ----------
+     Sproget er dansk indtil den engelske fil findes; så sættes SPROG af
+     adressen (/en/) eller ?lang=. Alt andet her behøver ikke vide det.  */
+  var SPROG = 'da';
+  var T = (window.WD_TEKST || {})[SPROG] || {};
+
+  /* Slår en tekst op og erstatter {navn} med værdier. Hedder tx og ikke t,
+     fordi flere løkker i filen bruger "var t" om et indholdsobjekt.
+     En manglende nøgle vises som ⟨sti⟩ — så er den umulig at overse,
+     både i browseren og i testene. */
+  function tx(sti, v) {
+    var dele = sti.split('.'), x = T, i;
+    for (i = 0; i < dele.length; i++) x = x && x[dele[i]];
+    if (typeof x !== 'string') return '\u27e8' + sti + '\u27e9';
+    if (!v) return x;
+    return x.replace(/\{(\w+)\}/g, function (helt, navn) {
+      return v[navn] === undefined || v[navn] === null ? helt : String(v[navn]);
+    });
+  }
+
+  var TRIN = T.trin || [];
   var GEM = 'wd-standberegner-v5';
 
   var s = {
@@ -252,26 +273,26 @@
     var vaerksted = iv.tal(Math.max(4, m2 * m.vaerkstedPrM2));
     var indUd = [Math.max(2, m2 * m.indUdbaeringPrM2[0]), Math.max(3, m2 * m.indUdbaeringPrM2[1])];
     var timer = iv.sum([op, ned, vaerksted, indUd]);
-    var linjer = [{ navn: 'Opbygning, ind- og udbæring, nedtagning og pakning', pris: iv.gang(timer, m.timepris),
-                    note: 'anslået ' + Math.round(timer[0]) + '–' + Math.round(timer[1]) + ' mandtimer med ' + montoerer + ' montører' }];
+    var linjer = [{ navn: tx('montage.opbygning'), pris: iv.gang(timer, m.timepris),
+                    note: tx('montage.opbygningNote', { fra: Math.round(timer[0]), til: Math.round(timer[1]), montoerer: montoerer }) }];
 
     /* Uden for Europa kører vi ikke selv — der er kun én vej */
     if (s.messe.oversoeisk) {
-      linjer.push({ navn: 'Oversøisk fragt', pris: m.oversoeiskFragt.slice(),
-        note: 'hele standen i én forsendelse — aftales konkret med speditøren' });
-      linjer.push({ navn: 'Montørernes rejse', pris: iv.tal(m.oversoeiskFlybillet * montoerer),
-        note: montoerer + ' mand tur/retur' });
-      linjer.push({ navn: 'Ophold og fortæring',
+      linjer.push({ navn: tx('montage.oversoeiskFragt'), pris: m.oversoeiskFragt.slice(),
+        note: tx('montage.oversoeiskNote') });
+      linjer.push({ navn: tx('montage.rejse'), pris: iv.tal(m.oversoeiskFlybillet * montoerer),
+        note: tx('montage.rejseNote', { montoerer: montoerer }) });
+      linjer.push({ navn: tx('montage.ophold'),
         pris: iv.tal(m.overnatning * montoerer * m.oversoeiskNaetter + m.fortaering * montoerer * m.oversoeiskDage) });
-      linjer.push({ navn: 'Forsikring af transporten', pris: iv.tal(m.forsikring) });
+      linjer.push({ navn: tx('montage.forsikring'), pris: iv.tal(m.forsikring) });
       return linjer;
     }
 
     var speditoer = {
       pris: [km * m.fragtPrKm[0] + m.flybillet * montoerer,
              km * m.fragtPrKm[1] + m.flybillet * montoerer],
-      navn: 'Fragt og montørernes rejse',
-      note: 'hele standen i én lastbil, ' + nf.format(km) + ' km med speditør · fly til ' + montoerer + ' mand'
+      navn: tx('montage.fragt'),
+      note: tx('montage.fragtNote', { km: nf.format(km), montoerer: montoerer })
     };
     var koeretimer = (km / m.kmPrTime) * m.ture;
     var udlaeg = km * m.lastbilPrKm * m.ture + km * m.kmPengePrKm * m.ture +
@@ -279,8 +300,8 @@
     var egen = {
       pris: [koeretimer * m.koeretidMontoerer[0] * m.timepris + udlaeg,
              koeretimer * m.koeretidMontoerer[1] * m.timepris + udlaeg],
-      navn: 'Kørsel og køretid',
-      note: nf.format(km) + ' km hver vej, ca. ' + Math.round(koeretimer) + ' timer på vejen'
+      navn: tx('montage.koersel'),
+      note: tx('montage.koerselNote', { km: nf.format(km), timer: Math.round(koeretimer) })
     };
     var valgt = transportmaade() === 'speditoer' ? speditoer : egen;
     linjer.push(valgt);
@@ -288,15 +309,15 @@
     /* Tomgods: kører vi selv, tager kasserne turen hjem med bilen.
        Sender vi med speditør, skal de opbevares, mens messen kører. */
     if (valgt === speditoer) {
-      linjer.push({ navn: 'Tomgods under messen', pris: m.tomgodsPrLaes.slice(),
-        note: 'opbevaring af de tomme kasser' });
+      linjer.push({ navn: tx('montage.tomgods'), pris: m.tomgodsPrLaes.slice(),
+        note: tx('montage.tomgodsNote') });
     }
 
     var naetter = km <= 200 ? 0 : (km <= 600 ? 1 : 2);
     var dage = km <= 200 ? 2 : 3;
-    linjer.push({ navn: 'Ophold og fortæring',
+    linjer.push({ navn: tx('montage.ophold'),
       pris: iv.tal(m.overnatning * montoerer * naetter + m.fortaering * montoerer * dage) });
-    linjer.push({ navn: 'Forsikring af transporten', pris: iv.tal(m.forsikring) });
+    linjer.push({ navn: tx('montage.forsikring'), pris: iv.tal(m.forsikring) });
     return linjer;
   }
 
@@ -322,26 +343,27 @@
     var mont = montage();
     var montSum = iv.sum(mont.map(function (l) { return l.pris; }));
 
+    var meter = dec(Math.round(g.vaegLbm * 10) / 10);
     var standNote = [
-      dec(Math.round(g.vaegLbm * 10) / 10) + ' meter ' + (s.stand.vaegtype === 'pixlip' ? 'lysvæg' : 'væg'),
-      v.print ? Math.round(g.vaegAreal * P.grafikdaekning[s.stand.grafik]) + ' m² tryk' : null,
-      ga.timer[1] ? 'grafisk arbejde ' + Math.round(ga.timer[0]) + '\u2013' + Math.round(ga.timer[1]) + ' timer' : null,
-      C.gulv[s.stand.gulv].titel.toLowerCase() + (s.stand.haevet ? ', hævet' : ''),
+      tx(s.stand.vaegtype === 'pixlip' ? 'standnote.lysvaeg' : 'standnote.vaeg', { meter: meter }),
+      v.print ? tx('standnote.tryk', { areal: Math.round(g.vaegAreal * P.grafikdaekning[s.stand.grafik]) }) : null,
+      ga.timer[1] ? tx('standnote.grafik', { fra: Math.round(ga.timer[0]), til: Math.round(ga.timer[1]) }) : null,
+      s.stand.haevet ? tx('standnote.haevet', { gulv: C.gulv[s.stand.gulv].titel.toLowerCase() })
+                     : C.gulv[s.stand.gulv].titel.toLowerCase(),
       C.belysning[s.stand.belysning].titel.toLowerCase(),
-      'strøm'
+      tx('standnote.stroem')
     ].filter(Boolean).join(' · ');
 
     var omraadeNote = omr.concat(tilk).map(function (l) {
       return (l.antal && l.antal > 1 ? l.antal + ' × ' : '') + l.navn.toLowerCase();
-    }).join(' · ') || 'ingen områder valgt';
+    }).join(' · ') || tx('post.omraaderTom');
 
     var wiebenLinjer = [
-      { navn: 'Design og projektledelse', pris: iv.tal(projektstyring()),
-        note: 'tegning, møder, bestillinger og koordinering med messearrangøren' },
-      { navn: 'Stand, grafik og materialer', pris: iv.tal(standDele), note: standNote },
-      { navn: 'Indretning og udstyr', pris: iv.tal(omraadeSum), note: omraadeNote },
-      { navn: 'Transport og opbygning', pris: montSum,
-        note: 'opbygning, ind- og udbæring, tomgods, nedtagning, kørsel og forsikring — vi står for det hele' }
+      { navn: tx('post.projektstyring'), pris: iv.tal(projektstyring()),
+        note: tx('post.projektstyringNote') },
+      { navn: tx('post.stand'), pris: iv.tal(standDele), note: standNote },
+      { navn: tx('post.omraader'), pris: iv.tal(omraadeSum), note: omraadeNote },
+      { navn: tx('post.transport'), pris: montSum, note: tx('post.transportNote') }
     ].filter(function (l) { return l.pris[1] > 0; });
 
     var wieben = iv.sum(wiebenLinjer.map(function (l) { return l.pris; }));
@@ -422,16 +444,11 @@
 
   function anbefal() {
     var p = s.profil, m2 = s.stand.m2;
-    var tekst = {
-      leads: 'I skal hjem med leads. Det betyder mange korte samtaler: hold facaden åben, sæt disken tilbage i standen og brug ståborde frem for lounge — folk der sidder ned, optager pladsen længere end de bidrager.',
-      brand: 'I skal ses. Prioritér grafikhøjde og lys frem for møbler. Det, der virker på tyve meters afstand, er store flader, klare budskaber og bevægelse — ikke detaljer.',
-      lancering: 'I lancerer. Byg standen om ét brændpunkt: ét belyst produkt, én skærm, én sætning. Alt andet på standen skal pege derhen.',
-      relationer: 'I skal holde møder. Prioritér siddepladser, afskærmning og servering. Det er ikke standens facade, der afgør succesen — det er hvor længe folk bliver.'
-    }[p.formaal] || '';
-    var niveau = { basis: 'Vi holder det rent og funktionelt.', plus: 'Vi giver den et niveau mere på grafik og lys.', signatur: 'Vi går efter en stand, der bliver husket — det koster på grafik, lys og materialer.' }[p.ambition] || '';
-    var stoerrelse = m2 < 12 ? 'På under 12 m² er disciplin vigtigere end idéer: ét budskab, ét produkt, plads til to mennesker.'
-      : m2 < 30 ? 'På ' + m2 + ' m² har I plads til en disk, et par ståborde og et lille depot — ikke meget mere.'
-      : 'På ' + m2 + ' m² kan standen bære flere zoner: mødeplads, demo og depot hver for sig.';
+    var tekst = p.formaal ? tx('raad.' + p.formaal) : '';
+    var niveau = p.ambition ? tx('raad.' + p.ambition) : '';
+    var stoerrelse = m2 < 12 ? tx('raad.lille')
+      : m2 < 30 ? tx('raad.mellem', { m2: m2 })
+      : tx('raad.stor', { m2: m2 });
     return { tekst: tekst, niveau: niveau, stoerrelse: stoerrelse };
   }
 
@@ -474,8 +491,7 @@
   function hvorforLaast(n) {
     for (var i = 0; i < n; i++) {
       if (trinUdfyldt(i)) continue;
-      return i === 1 ? 'Svar på de tre spørgsmål om jeres messeprofil først'
-                     : 'Vælg først, om I vil bruge vores forslag eller bygge standen selv';
+      return i === 1 ? tx('laastProfil') : tx('laastOmraader');
     }
     return '';
   }
@@ -541,7 +557,7 @@
   function visAnbefaling() {
     var a = anbefal();
     document.getElementById('anbefaling').innerHTML =
-      '<span class="mrk">Vores råd til jer</span>' +
+      '<span class="mrk">' + esc(tx('raad.mrk')) + '</span>' +
       '<p>' + esc(a.tekst) + '</p>' +
       '<p class="anb-sub">' + esc(a.stoerrelse) + ' ' + esc(a.niveau) + '</p>';
   }
@@ -581,7 +597,7 @@
     });
     var anden = document.createElement('option');
     anden.value = '__anden__';
-    anden.textContent = l.byer.length ? C.andenBy : 'Angiv afstanden herunder';
+    anden.textContent = l.byer.length ? C.andenBy : tx('sted.andenBy');
     bv.appendChild(anden);
     bv.value = s.messe.ukendt ? '__anden__' : s.messe.by;
     bv.disabled = !l.byer.length;
@@ -590,18 +606,17 @@
 
     var h = document.getElementById('by-hjaelp');
     if (l.oversoeisk) {
-      h.textContent = 'Uden for Europa sender vi standen med speditør, og montørerne flyver. ' +
-        'Vi har lagerfaciliteter i både Danmark og USA og erfaring fra messer i mere end 70 lande — den præcise fragt aftaler vi konkret.';
+      h.textContent = tx('sted.oversoeisk');
       return;
     }
     if (s.messe.ukendt && !s.messe.km) {
-      h.textContent = 'Skriv cirka hvor langt der er fra vores værksted i Støvring, så regner vi transporten ud fra det.';
+      h.textContent = tx('sted.skrivKm');
       return;
     }
-    h.textContent = 'Ca. ' + nf.format(s.messe.km) + ' km fra vores værksted i Støvring. ' +
+    h.textContent = tx('sted.afstand', { km: nf.format(s.messe.km) }) + ' ' +
       (transportmaade() === 'speditoer'
-        ? 'På den afstand er det billigere at sende standen med speditør og flyve montørerne derned — så det regner vi med.'
-        : 'Vi kører selv derned med standen.' + (s.messe.bro ? ' Broafgift er regnet med.' : ''));
+        ? tx('sted.viaSpeditoer')
+        : tx('sted.egenKoersel') + (s.messe.bro ? ' ' + tx('sted.broMed') : ''));
   }
 
   function visAabneSider() {
@@ -618,9 +633,11 @@
     });
     var g = geometri();
     document.getElementById('vaeg-hjaelp').textContent =
-      'Det giver ca. ' + dec(Math.round(g.vaegLbm * 10) / 10) + ' meter væg — ' +
-      Math.round(g.vaegAreal) + ' m² vægflade i ' + String(s.stand.vaeghoejde).replace('.', ',') + ' meters højde.' +
-      (g.lukkede ? '' : ' En fritliggende stand har ingen nabovægge, så vi regner med en fritstående vægblok til depot, grafik og teknik.');
+      tx('standen.vaegflade', {
+        meter: dec(Math.round(g.vaegLbm * 10) / 10),
+        areal: Math.round(g.vaegAreal),
+        hoejde: String(s.stand.vaeghoejde).replace('.', ',')
+      }) + (g.lukkede ? '' : ' ' + tx('standen.oeStand'));
   }
 
   function visVaegtyper() {
@@ -635,7 +652,7 @@
       v.appendChild(kort({
         fokus: 'vaegtype:' + id,
         svg: C.svg[id], titel: t.titel, tekst: t.tekst, valgt: s.stand.vaegtype === id,
-        meta: '<span class="card-pris">' + fmtKort(spaend(iv.tal(pris.konstruktion + pris.print))) + ' kr.</span> for jeres stand' +
+        meta: '<span class="card-pris">' + fmtKort(spaend(iv.tal(pris.konstruktion + pris.print))) + ' kr.</span> ' + esc(tx('standen.forStanden')) +
               '<span class="card-teknik">' + esc(t.teknik) + '</span>',
         klik: function () {
           s.stand.vaegtype = id;
@@ -656,7 +673,7 @@
       var b = el('<button type="button" class="seg-btn">' + esc(o.titel) + '</button>');
       b.setAttribute('data-fokus', id + ':' + o.vaerdi);
       if (o.vaerdi === aktiv) b.classList.add('valgt');
-      if (o.laast) { b.disabled = true; b.title = 'Findes ikke som lysvæg'; }
+      if (o.laast) { b.disabled = true; b.title = tx('standen.ikkeLysvaeg'); }
       else b.onclick = function () { klik(o.vaerdi); };
       v.appendChild(b);
     });
@@ -670,16 +687,18 @@
     var valgtHoejde = hoejde();
     hh.classList.toggle('advarsel', !!valgtHoejde.hoej);
     hh.textContent = valgtHoejde.hoej
-      ? 'Over ' + P.friHoejde + ' meter skal messen sige god for højden. Grænsen står i udstillerhåndbogen og ligger typisk mellem 3 og 6 meter — vi tjekker den, før vi tegner.'
+      ? tx('standen.hoejOver', { fri: P.friHoejde })
       : (s.stand.vaegtype === 'pixlip'
-          ? 'Lysvægge fås op til 4 meter. Skal I højere op, skal væggene være almindelige.'
-          : 'Op til ' + P.friHoejde + ' meter kan I regne med, at det er tilladt. Derover afhænger det af messens regler.');
+          ? tx('standen.hoejPixlip')
+          : tx('standen.hoejFri', { fri: P.friHoejde }));
 
     seg('grafik', Object.keys(C.grafikdaekning).map(function (k) {
       return { vaerdi: k, titel: C.grafikdaekning[k].titel };
     }), s.stand.grafik, function (v) { s.stand.grafik = v; opdater(); });
     document.getElementById('grafik-hjaelp').textContent = C.grafikdaekning[s.stand.grafik].tekst +
-      (vaegpris().print ? ' · ' + fmtKort(spaend(iv.tal(vaegpris().print))) + ' kr. for trykket' : '');
+      (vaegpris().print
+        ? ' · ' + tx('standen.forTrykket', { pris: fmtKort(spaend(iv.tal(vaegpris().print))) })
+        : '');
 
     var gab = document.getElementById('grafikarbejde-blok');
     gab.hidden = s.stand.grafik === 'ingen';
@@ -695,8 +714,8 @@
         gav.appendChild(kort({
           fokus: 'grafikarbejde:' + id,
           titel: t.titel, tekst: t.tekst, valgt: s.grafikarbejde === id,
-          meta: '<span class="card-pris">' + fmtKort(spaend(ga2.pris)) + ' kr.</span> · anslået ' +
-                Math.round(ga2.timer[0]) + '–' + Math.round(ga2.timer[1]) + ' timer',
+          meta: '<span class="card-pris">' + fmtKort(spaend(ga2.pris)) + ' kr.</span> · ' +
+                esc(tx('standen.anslaaetTimer', { fra: Math.round(ga2.timer[0]), til: Math.round(ga2.timer[1]) })),
           klik: function () { s.grafikarbejde = id; opdater(); }
         }));
       });
@@ -710,7 +729,7 @@
         fokus: 'gulv:' + id,
         titel: t.titel, tekst: t.tekst, valgt: s.stand.gulv === id,
         meta: '<span class="card-pris">' + fmtKort(spaend(iv.tal(P.gulv[id] * s.stand.m2))) + ' kr.</span> · ' +
-              nf.format(P.gulv[id]) + ' kr./m²',
+              esc(tx('standen.prM2', { pris: nf.format(P.gulv[id]) })),
         klik: function () { s.stand.gulv = id; opdater(); }
       }));
     });
@@ -722,8 +741,8 @@
         fokus: 'haevet:' + par[0],
         titel: t.titel, tekst: t.tekst, valgt: s.stand.haevet === par[1],
         meta: par[1]
-          ? '<span class="card-pris">' + fmtKort(spaend(iv.tal(P.haevetGulv * s.stand.m2))) + ' kr.</span> oveni gulvet'
-          : 'Ingen ekstra udgift',
+          ? '<span class="card-pris">' + fmtKort(spaend(iv.tal(P.haevetGulv * s.stand.m2))) + ' kr.</span> ' + esc(tx('standen.oveniGulvet'))
+          : esc(tx('standen.ingenUdgift')),
         klik: function () { s.stand.haevet = par[1]; opdater(); }
       }));
     });
@@ -738,7 +757,7 @@
         titel: t.titel, tekst: t.tekst, valgt: s.stand.belysning === id,
         meta: '<span class="card-pris">' +
               fmtKort(spaend(iv.tal(Math.ceil(s.stand.m2 / def.m2PrSpot) * def.prSpot))) + ' kr.</span> · ' +
-              Math.ceil(s.stand.m2 / def.m2PrSpot) + ' spots',
+              esc(tx('standen.spots', { antal: Math.ceil(s.stand.m2 / def.m2PrSpot) })),
         klik: function () { s.stand.belysning = id; opdater(); }
       }));
     });
@@ -789,11 +808,11 @@
           (beskrivelse ? ' · ' + esc(beskrivelse) : '') + ' · ' + vr.m2 + ' m²</span>'));
 
         var st = el('<span class="stepper"></span>');
-        var minus = el('<button type="button" aria-label="Færre">−</button>');
+        var minus = el('<button type="button" aria-label="' + esc(tx('omraade.faerre')) + '">−</button>');
         minus.setAttribute('data-fokus', 'minus:' + id);
         minus.disabled = !valgt.antal;
         minus.onclick = function () { saetAntal(id, valgt.antal - 1); };
-        var plus = el('<button type="button" aria-label="Flere">+</button>');
+        var plus = el('<button type="button" aria-label="' + esc(tx('omraade.flere')) + '">+</button>');
         plus.setAttribute('data-fokus', 'plus:' + id);
         plus.onclick = function () { saetAntal(id, valgt.antal + 1); };
         st.appendChild(minus);
@@ -810,15 +829,11 @@
     var ah = document.getElementById('areal-hjaelp');
     ah.classList.toggle('advarsel', andel > 75);
     ah.textContent = !brugt
-      ? 'Vælg de områder, standen skal have. Vi holder øje med, om der er plads til dem.'
+      ? tx('omraade.vaelg')
       : andel > 100
-        ? 'Områderne fylder ca. ' + dec(brugt) + ' m² — mere end de ' + s.stand.m2 +
-          ' m², I har. Noget må ud, vælges mindre, eller også skal standen være større.'
-        : andel > 75
-          ? 'Områderne fylder ca. ' + dec(brugt) + ' m² af jeres ' + s.stand.m2 + ' m² — omkring ' + andel +
-            ' %. Det bliver trangt: gæsterne skal også kunne bevæge sig rundt.'
-          : 'Områderne fylder ca. ' + dec(brugt) + ' m² af jeres ' + s.stand.m2 + ' m² — omkring ' + andel +
-            ' %. Resten er plads at gå på.';
+        ? tx('omraade.forMeget', { brugt: dec(brugt), m2: s.stand.m2 })
+        : tx(andel > 75 ? 'omraade.trangt' : 'omraade.passer',
+             { brugt: dec(brugt), m2: s.stand.m2, andel: andel });
 
   }
 
@@ -837,16 +852,16 @@
       var kort2 = el('<div class="cards cards-2"></div>');
       kort2.appendChild(kort({
         fokus: 'startvalg:forslag',
-        titel: 'Brug vores forslag', valgt: false,
-        tekst: 'Vi sætter ' + antal + ' områder op ud fra jeres formål og standens størrelse. Bagefter kan I rette i det hele — det er kun et udgangspunkt.',
-        meta: '<span class="card-pris">' + fmtKort(spaend(iv.tal(pris))) + ' kr.</span> for hele messen',
+        titel: tx('omraade.brugForslag'), valgt: false,
+        tekst: tx('omraade.brugForslagTekst', { antal: antal }),
+        meta: '<span class="card-pris">' + fmtKort(spaend(iv.tal(pris))) + ' kr.</span> ' + esc(tx('omraade.forHeleMessen')),
         klik: function () { s.omraader = foreslaaOmraader(); s.omraadeValg = 'forslag'; opdater(); }
       }));
       kort2.appendChild(kort({
         fokus: 'startvalg:selv',
-        titel: 'Jeg bygger selv', valgt: false,
-        tekst: 'Start med en tom stand og vælg områderne én for én. Vi holder øje med, om der er plads til dem.',
-        meta: 'Tager et par minutter mere',
+        titel: tx('omraade.byggSelv'), valgt: false,
+        tekst: tx('omraade.byggSelvTekst'),
+        meta: esc(tx('omraade.byggSelvMeta')),
         klik: function () { s.omraader = {}; s.omraadeValg = 'selv'; s.omraaderRoert = true; opdater(); }
       }));
       v.appendChild(kort2);
@@ -857,21 +872,21 @@
     var sum = linjer.reduce(function (a, l) { return a + l.pris; }, 0);
     var bar = el('<div class="forslag"></div>');
     bar.appendChild(el('<div class="forslag-tekst"><strong>' +
-      (s.omraadeValg === 'forslag' ? 'I bygger videre på vores forslag' : 'I bygger selv standen op') + '</strong>' +
-      '<span>' + (linjer.length
-        ? linjer.length + ' valg til ' + fmtKort(spaend(iv.tal(sum))) + ' kr. for hele messen. Rul ned og ret frit i det.'
-        : 'Ingen områder valgt endnu. Rul ned og vælg dem, standen skal have.') + '</span></div>'));
+      esc(tx(s.omraadeValg === 'forslag' ? 'omraade.paaForslag' : 'omraade.paaSelv')) + '</strong>' +
+      '<span>' + esc(linjer.length
+        ? tx('omraade.valgtSum', { antal: linjer.length, pris: fmtKort(spaend(iv.tal(sum))) })
+        : tx('omraade.ingenValgt')) + '</span></div>'));
     var knapper = el('<div class="forslag-knapper"></div>');
     if (s.omraadeValg === 'forslag') {
-      var nulstil = el('<button type="button" class="btn">Hent forslaget igen</button>');
+      var nulstil = el('<button type="button" class="btn">' + esc(tx('omraade.hentForslag')) + '</button>');
       nulstil.onclick = function () { s.omraader = foreslaaOmraader(); opdater(); };
       knapper.appendChild(nulstil);
     } else {
-      var brug = el('<button type="button" class="btn">Brug vores forslag alligevel</button>');
+      var brug = el('<button type="button" class="btn">' + esc(tx('omraade.brugAlligevel')) + '</button>');
       brug.onclick = function () { s.omraader = foreslaaOmraader(); s.omraadeValg = 'forslag'; opdater(); };
       knapper.appendChild(brug);
     }
-    var skift = el('<button type="button" class="btn btn-tekst">Start forfra</button>');
+    var skift = el('<button type="button" class="btn btn-tekst">' + esc(tx('omraade.startForfra')) + '</button>');
     skift.onclick = function () { s.omraader = {}; s.omraadeValg = null; opdater(); };
     knapper.appendChild(skift);
     bar.appendChild(knapper);
@@ -912,9 +927,9 @@
       P.ledStoerrelser.forEach(function (l) {
         lv.appendChild(kort({
           fokus: 'led:' + l.id,
-          titel: l.navn, tekst: dec(l.m2) + ' m² skærm · ' + l.fliser + ' moduler',
+          titel: l.navn, tekst: tx('omraade.ledTekst', { areal: dec(l.m2), fliser: l.fliser }),
           valgt: s.led === l.id,
-          meta: '<span class="card-pris">' + fmtKort(spaend(iv.tal(ledPris(l)))) + ' kr.</span> inkl. styring',
+          meta: '<span class="card-pris">' + fmtKort(spaend(iv.tal(ledPris(l)))) + ' kr.</span> ' + esc(tx('omraade.ledMeta')),
           klik: function () { s.led = l.id; opdater(); }
         }));
       });
@@ -939,7 +954,7 @@
     if (!v) return;
     v.innerHTML = '';
     indsigter(antal).forEach(function (i) {
-      v.appendChild(el('<div class="indsigt"><span class="indsigt-mrk">Fagligt tip</span>' +
+      v.appendChild(el('<div class="indsigt"><span class="indsigt-mrk">' + esc(tx('tipMrk')) + '</span>' +
         '<h4>' + esc(i.titel) + '</h4><p>' + esc(i.tekst) + '</p></div>'));
     });
   }
@@ -949,24 +964,26 @@
     var v = document.getElementById('budget');
     v.innerHTML = '';
     var k = el('<div class="bkol"></div>');
-    k.appendChild(el('<span class="bkol-badge">Estimat</span>'));
-    k.appendChild(el('<h3>Det koster hos os</h3>'));
-    k.appendChild(el('<p class="bkol-hvem">Leje af hele standen for hele messen, ekskl. moms</p>'));
+    k.appendChild(el('<span class="bkol-badge">' + esc(tx('budget.badge')) + '</span>'));
+    k.appendChild(el('<h3>' + esc(tx('budget.titel')) + '</h3>'));
+    k.appendChild(el('<p class="bkol-hvem">' + esc(tx('budget.hvem')) + '</p>'));
     var ul = el('<ul></ul>');
     r.wiebenLinjer.forEach(function (l) {
       ul.appendChild(el('<li><span>' + esc(l.navn) + '<em>' + esc(l.note) + '</em></span><span>' +
         fmtKort(spaend(l.pris)) + '</span></li>'));
     });
     k.appendChild(ul);
-    k.appendChild(el('<div class="bkol-sum"><span>I alt</span><span>' + fmtKort(r.vist) + ' kr.</span></div>'));
-    k.appendChild(el('<p class="bkol-fod">Hver post er et spænd, ikke en fast pris. Vi lægger os først fast, når der ligger en godkendt tegning.</p>'));
+    k.appendChild(el('<div class="bkol-sum"><span>' + esc(tx('post.ialt')) + '</span><span>' + fmtKort(r.vist) + ' kr.</span></div>'));
+    k.appendChild(el('<p class="bkol-fod">' + esc(tx('budget.fod')) + '</p>'));
     v.appendChild(k);
 
     document.getElementById('samlet').innerHTML =
-      '<h3>Cirka ' + fmtKort(r.vist) + ' kr. for standen</h3>' +
-      '<p>Med ' + s.stand.m2 + ' m² og ' + s.team.dage + ' messedage er et realistisk mål ' +
-      r.leads[0] + '–' + r.leads[1] + ' kvalificerede leads — ' + fmtKort(r.prLead) + ' kr. pr. lead i standomkostning.</p>' +
-      '<p class="disclaimer">Beløbet dækker standen: materiel, grafik, opbygning, transport og vores arbejde. Messearrangørens egne gebyrer er ikke med — dem aftaler I direkte med messen.</p>';
+      '<h3>' + esc(tx('budget.samlet', { pris: fmtKort(r.vist) })) + '</h3>' +
+      '<p>' + esc(tx('budget.leads', {
+        m2: s.stand.m2, dage: s.team.dage,
+        leadFra: r.leads[0], leadTil: r.leads[1], prLead: fmtKort(r.prLead)
+      })) + '</p>' +
+      '<p class="disclaimer">' + esc(tx('budget.daekker')) + '</p>';
   }
 
   function visTidslinje() {
@@ -983,8 +1000,9 @@
         d.setDate(d.getDate() - t.uger * 7);
         naar = d.toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' });
       } else {
-        naar = t.uger > 0 ? t.uger + (t.uger === 1 ? ' uge før' : ' uger før')
-                          : (t.uger === 0 ? 'Messeugen' : 'Ugen efter');
+        naar = t.uger > 0
+          ? tx(t.uger === 1 ? 'tidslinje.ugeFoer' : 'tidslinje.ugerFoer', { uger: t.uger })
+          : tx(t.uger === 0 ? 'tidslinje.messeugen' : 'tidslinje.ugenEfter');
       }
       if (t.uger <= 6) p.classList.add('naer');
       p.appendChild(el('<div class="tl-dato">' + esc(naar) +
@@ -1003,25 +1021,31 @@
 
     document.getElementById('opsummering').innerHTML =
       '<dl class="ops-grid">' +
-      linje('Sted', (s.messe.by || land().navn) + (s.messe.by ? ', ' + land().navn : '') +
-        (s.messe.dato ? ' · ' + new Date(s.messe.dato).toLocaleDateString('da-DK') : '')) +
-      linje('Formål', (C.profilSpoergsmaal[0].valg.filter(function (x) { return x.id === s.profil.formaal; })[0] || {}).titel || '—') +
-      linje('Areal', s.stand.m2 + ' m²') +
-      linje('Åbne sider', s.stand.aabneSider) +
-      linje('Vægge', C.vaegtyper[s.stand.vaegtype].titel + ', ' + dec(Math.round(g.vaegLbm * 10) / 10) + ' meter i ' + String(s.stand.vaeghoejde).replace('.', ',') + ' m højde') +
-      linje('Tryk på væggene', C.grafikdaekning[s.stand.grafik].titel +
+      linje(tx('oplaeg.sted'), (s.messe.by || land().navn) + (s.messe.by ? ', ' + land().navn : '') +
+        (s.messe.dato ? ' · ' + new Date(s.messe.dato).toLocaleDateString(T.locale) : '')) +
+      linje(tx('oplaeg.formaal'), (C.profilSpoergsmaal[0].valg.filter(function (x) { return x.id === s.profil.formaal; })[0] || {}).titel || tx('oplaeg.intet')) +
+      linje(tx('oplaeg.areal'), tx('enhed.m2', { tal: s.stand.m2 })) +
+      linje(tx('oplaeg.aabneSider'), s.stand.aabneSider) +
+      linje(tx('oplaeg.vaegge'), tx('oplaeg.vaeggeVaerdi', {
+        type: C.vaegtyper[s.stand.vaegtype].titel,
+        meter: dec(Math.round(g.vaegLbm * 10) / 10),
+        hoejde: String(s.stand.vaeghoejde).replace('.', ',')
+      })) +
+      linje(tx('oplaeg.tryk'), C.grafikdaekning[s.stand.grafik].titel +
         (s.stand.grafik !== 'ingen' ? ' · ' + C.grafikarbejde[s.grafikarbejde].titel.toLowerCase() : '')) +
-      linje('Gulv', C.gulv[s.stand.gulv].titel + (s.stand.haevet ? ', hævet' : '')) +
-      linje('Belysning', C.belysning[s.stand.belysning].titel) +
-      linje('Forventede leads', r.leads[0] + '–' + r.leads[1]) +
+      linje(tx('oplaeg.gulv'), s.stand.haevet
+        ? tx('standnote.haevet', { gulv: C.gulv[s.stand.gulv].titel })
+        : C.gulv[s.stand.gulv].titel) +
+      linje(tx('oplaeg.belysning'), C.belysning[s.stand.belysning].titel) +
+      linje(tx('oplaeg.leads'), r.leads[0] + '–' + r.leads[1]) +
       '</dl>' +
-      '<div class="ops-inventar"><dt>Områder og udstyr</dt><dd>' +
-      esc(inv.length ? inv.map(function (l) { return (l.antal > 1 ? l.antal + ' × ' : '') + l.navn; }).join(' · ') : 'Ingen valgt') +
+      '<div class="ops-inventar"><dt>' + esc(tx('oplaeg.omraader')) + '</dt><dd>' +
+      esc(inv.length ? inv.map(function (l) { return (l.antal > 1 ? l.antal + ' × ' : '') + l.navn; }).join(' · ') : tx('oplaeg.ingenValgt')) +
       '</dd></div>' +
-      '<div class="ops-pris"><span>Estimat hos os — leje for hele messen, ekskl. moms</span>' +
+      '<div class="ops-pris"><span>' + esc(tx('oplaeg.estimatLabel')) + '</span>' +
       '<strong>' + fmt(r.vist) + '</strong>' +
-      '<span>Beløbet dækker standen. Messearrangørens egne gebyrer er ikke med.</span></div>' +
-      '<p class="forbehold">Det er et estimat, ikke et tilbud. Når vi har set standen tegnet, er der typisk noget der skal justeres — måske passer ti stole ikke til pladsen, måske skal væggen stå et andet sted. Det finder vi ud af sammen.</p>';
+      '<span>' + esc(tx('oplaeg.estimatNote')) + '</span></div>' +
+      '<p class="forbehold">' + esc(tx('oplaeg.forbehold')) + '</p>';
   }
 
   function visPrintark() {
@@ -1030,18 +1054,24 @@
     var sted = (s.messe.by || land().navn) + (s.messe.by ? ', ' + land().navn : '');
     document.getElementById('pa-undertitel').textContent =
       sted + (dato && !isNaN(dato) ? ' · ' + dato.toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' }) : '') +
-      ' · udarbejdet ' + new Date().toLocaleDateString('da-DK');
+      ' · ' + tx('ark.udarbejdet', { dato: new Date().toLocaleDateString(T.locale) });
 
     var omr = r.omraader.concat(r.tilkoeb);
     var rk = [
-      ['Areal', s.stand.m2 + ' m² med ' + s.stand.aabneSider + (s.stand.aabneSider === 1 ? ' åben side' : ' åbne sider')],
-      ['Vægge', C.vaegtyper[s.stand.vaegtype].titel + ', ' + dec(Math.round(g.vaegLbm * 10) / 10) + ' meter i ' + String(s.stand.vaeghoejde).replace('.', ',') + ' meters højde'],
-      ['Tryk på væggene', C.grafikdaekning[s.stand.grafik].titel +
-        (s.stand.grafik !== 'ingen' ? ' \u00b7 ' + C.grafikarbejde[s.grafikarbejde].titel.toLowerCase() : '')],
-      ['Gulv', C.gulv[s.stand.gulv].titel + (s.stand.haevet ? ', hævet' : '')],
-      ['Belysning', C.belysning[s.stand.belysning].titel],
-      ['Områder', omr.length ? omr.map(function (l) { return (l.antal > 1 ? l.antal + ' × ' : '') + l.navn; }).join(', ') : 'Ingen valgt'],
-      ['Messedage', s.team.dage]
+      [tx('oplaeg.areal'), tx(s.stand.aabneSider === 1 ? 'ark.arealEn' : 'ark.areal', { m2: s.stand.m2, sider: s.stand.aabneSider })],
+      [tx('oplaeg.vaegge'), tx('ark.vaegge', {
+        type: C.vaegtyper[s.stand.vaegtype].titel,
+        meter: dec(Math.round(g.vaegLbm * 10) / 10),
+        hoejde: String(s.stand.vaeghoejde).replace('.', ',')
+      })],
+      [tx('oplaeg.tryk'), C.grafikdaekning[s.stand.grafik].titel +
+        (s.stand.grafik !== 'ingen' ? ' · ' + C.grafikarbejde[s.grafikarbejde].titel.toLowerCase() : '')],
+      [tx('oplaeg.gulv'), s.stand.haevet
+        ? tx('standnote.haevet', { gulv: C.gulv[s.stand.gulv].titel })
+        : C.gulv[s.stand.gulv].titel],
+      [tx('oplaeg.belysning'), C.belysning[s.stand.belysning].titel],
+      [tx('oplaeg.omraader'), omr.length ? omr.map(function (l) { return (l.antal > 1 ? l.antal + ' × ' : '') + l.navn; }).join(', ') : tx('oplaeg.ingenValgt')],
+      [tx('ark.messedage'), s.team.dage]
     ];
     document.getElementById('pa-konfiguration').innerHTML = rk.map(function (par) {
       return '<dt>' + esc(par[0]) + '</dt><dd>' + esc(String(par[1])) + '</dd>';
@@ -1051,7 +1081,7 @@
       r.wiebenLinjer.map(function (l) {
         return '<tr><td>' + esc(l.navn) + '<span>' + esc(l.note) + '</span></td><td>' + fmtKort(spaend(l.pris)) + ' kr.</td></tr>';
       }).join('') +
-      '<tr class="pa-sum"><td>I alt</td><td>' + fmtKort(r.vist) + ' kr.</td></tr>';
+      '<tr class="pa-sum"><td>' + esc(tx('post.ialt')) + '</td><td>' + fmtKort(r.vist) + ' kr.</td></tr>';
 
     document.getElementById('pa-tidslinje-intro').textContent = C.tidslinjeIntro;
     document.getElementById('pa-tidslinje').innerHTML = C.tidslinje.map(function (t) {
@@ -1061,8 +1091,9 @@
         d.setDate(d.getDate() - t.uger * 7);
         naar = d.toLocaleDateString('da-DK', { day: 'numeric', month: 'short', year: 'numeric' });
       } else {
-        naar = t.uger > 0 ? t.uger + (t.uger === 1 ? ' uge før' : ' uger før')
-                          : (t.uger === 0 ? 'Messeugen' : 'Ugen efter');
+        naar = t.uger > 0
+          ? tx(t.uger === 1 ? 'tidslinje.ugeFoer' : 'tidslinje.ugerFoer', { uger: t.uger })
+          : tx(t.uger === 0 ? 'tidslinje.messeugen' : 'tidslinje.ugenEfter');
       }
       return '<tr><td class="pa-naar">' + esc(naar) + '</td><td>' + esc(t.titel) +
              '<span>' + esc(t.tekst) + '</span></td><td class="pa-hvem">' + esc(C.hvemLabels[t.hvem]) + '</td></tr>';
@@ -1080,8 +1111,8 @@
       h += '<li><span>' + esc(l.navn) + (l.note ? '<em>' + esc(l.note) + '</em>' : '') +
         '</span><span>' + fmtKort(spaend(l.pris)) + '</span></li>';
     });
-    h += '<li class="sum"><span>I alt</span><span>' + fmtKort(r.vist) + ' kr.</span></li></ul>' +
-      '<p class="disclaimer">Leje for hele messen, ekskl. moms. Hver post er et spænd, fordi den endelige opbygning først ligger fast på en godkendt tegning. Messearrangørens egen pris for pladsen ligger uden for beløbet.</p>';
+    h += '<li class="sum"><span>' + esc(tx('post.ialt')) + '</span><span>' + fmtKort(r.vist) + ' kr.</span></li></ul>' +
+      '<p class="disclaimer">' + esc(tx('prisbar.forbehold')) + '</p>';
     document.getElementById('prisbar-detalje').innerHTML = h;
   }
 
@@ -1099,13 +1130,15 @@
 
     s.omraadeAreal = omraadeAreal();
     s.ugerTilMesse = ugerTilMesse();
-    document.getElementById('m2-ud').textContent = s.stand.m2 + ' m²';
-    document.getElementById('dage-ud').textContent = s.team.dage + (s.team.dage === 1 ? ' dag' : ' dage');
+    document.getElementById('m2-ud').textContent = tx('enhed.m2', { tal: s.stand.m2 });
+    document.getElementById('dage-ud').textContent = tx(s.team.dage === 1 ? 'enhed.dag' : 'enhed.dage', { tal: s.team.dage });
 
     var sider = Math.max(2, Math.round(Math.sqrt(s.stand.m2 * 1.5)));
-    document.getElementById('m2-hjaelp').textContent =
-      'Ca. ' + sider + ' × ' + Math.max(2, Math.round(s.stand.m2 / sider)) + ' meter · plads til omkring ' +
-      Math.max(1, Math.round(s.stand.m2 / 8)) + ' samtidige samtaler.';
+    document.getElementById('m2-hjaelp').textContent = tx('standen.maal', {
+      bredde: sider,
+      dybde: Math.max(2, Math.round(s.stand.m2 / sider)),
+      samtaler: Math.max(1, Math.round(s.stand.m2 / 8))
+    });
     visTrin();
     visProfil();
     visAnbefaling();
@@ -1359,13 +1392,13 @@
       var d = document.getElementById('prisbar-detalje');
       d.hidden = !d.hidden;
       toggle.setAttribute('aria-expanded', String(!d.hidden));
-      toggle.textContent = d.hidden ? 'Se specifikation' : 'Skjul specifikation';
+      toggle.textContent = tx(d.hidden ? 'prisbar.seSpec' : 'prisbar.skjulSpec');
     });
 
     document.getElementById('print').addEventListener('click', function () { window.print(); });
     document.getElementById('nulstil').addEventListener('click', function () {
       /* Et fejlklik her koster hele udfyldningen */
-      if (!window.confirm('Sletter alle jeres valg og starter forfra. Er I sikre?')) return;
+      if (!window.confirm(tx('send.nulstilSpoergsmaal'))) return;
       try { localStorage.removeItem(GEM); } catch (e) { /* ignorer */ }
       location.reload();
     });
@@ -1398,7 +1431,8 @@
         vaeghoejde: s.stand.vaeghoejde,
         tryk: C.grafikdaekning[s.stand.grafik].titel,
         grafiskArbejde: s.stand.grafik === 'ingen' ? 'Ingen' : C.grafikarbejde[s.grafikarbejde].titel,
-        gulv: C.gulv[s.stand.gulv].titel + (s.stand.haevet ? ', hævet' : ''),
+        gulv: s.stand.haevet ? tx('standnote.haevet', { gulv: C.gulv[s.stand.gulv].titel })
+                             : C.gulv[s.stand.gulv].titel,
         belysning: C.belysning[s.stand.belysning].titel
       },
       omraader: r.omraader.concat(r.tilkoeb).map(function (l) {
@@ -1420,14 +1454,14 @@
 
     /* Uden endpoint kører modulet videre som prototype */
     if (!K.endpoint) {
-      console.log('Oplæg klar til afsendelse:', data);
+      console.log(tx('send.konsol'), data);
       kvittering(f, data, 'prototype');
       return;
     }
 
     knap.disabled = true;
     var oprindelig = knap.textContent;
-    knap.textContent = 'Sender …';
+    knap.textContent = tx('send.sender');
     var fejlbesked = f.querySelector('.sendefejl');
     if (fejlbesked) fejlbesked.remove();
 
@@ -1438,30 +1472,28 @@
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(data)
     }).then(function (svar) {
-      if (!svar.ok) throw new Error('Serveren svarede ' + svar.status);
+      if (!svar.ok) throw new Error(tx('send.serverSvar', { status: svar.status }));
       return svar.json();
     }).then(function (svar) {
-      if (svar && svar.ok === false) throw new Error(svar.fejl || 'Ukendt fejl');
+      if (svar && svar.ok === false) throw new Error(svar.fejl || tx('send.ukendtFejl'));
       kvittering(f, data, 'sendt');
     }).catch(function (fejl) {
       knap.disabled = false;
       knap.textContent = oprindelig;
       f.querySelector('.form-row').insertAdjacentElement('afterend', el(
-        '<p class="sendefejl">Oplægget kunne ikke sendes lige nu. Prøv igen om et øjeblik, ' +
-        'eller ring til os på 70 23 11 11 — vi har tallene klar.<em>' + esc(fejl.message) + '</em></p>'));
+        '<p class="sendefejl">' + esc(tx('send.fejl')) + '<em>' + esc(fejl.message) + '</em></p>'));
     });
   }
 
   function kvittering(f, data, tilstand) {
     var boks = el('<div class="kvittering"></div>');
-    boks.appendChild(el('<strong>Tak — oplægget er på vej til ' + esc(data.kontakt.email) + '</strong>'));
-    boks.appendChild(el('<span>Vi kigger det igennem og vender tilbage om, hvad der kan lade sig gøre ' +
-      'på jeres plads. Vil I hellere selv tage fat, er vi på 70 23 11 11.</span>'));
+    boks.appendChild(el('<strong>' + esc(tx('send.tak', { email: data.kontakt.email })) + '</strong>'));
+    boks.appendChild(el('<span>' + esc(tx('send.viVenderTilbage')) + '</span>'));
     if (tilstand === 'prototype') {
-      boks.appendChild(el('<span class="kvit-note">Prototype — der er ikke sat et endpoint op endnu, så mailen bliver ikke sendt. Oplægget ligger i browserens konsol.</span>'));
+      boks.appendChild(el('<span class="kvit-note">' + esc(tx('send.prototype')) + '</span>'));
     }
     var knapper = el('<div class="form-row" style="margin-top:14px"></div>');
-    var pdf = el('<button type="button" class="btn">Hent oplægget som PDF</button>');
+    var pdf = el('<button type="button" class="btn">' + esc(tx('send.hentPdf')) + '</button>');
     pdf.onclick = function () { window.print(); };
     knapper.appendChild(pdf);
     boks.appendChild(knapper);
