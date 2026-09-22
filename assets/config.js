@@ -9,7 +9,7 @@ window.WD_CONFIG = {
   /* Adressen på Apps Script-endpointet, der modtager oplæggene.
      Se integration/OPSAETNING.md. Står den tom, kører modulet videre
      som prototype: intet bliver sendt, men flowet virker. */
-  endpoint: '',
+  endpoint: 'https://script.google.com/macros/s/AKfycbwe07_aK7JnXTRXTk9pXaUGwvB2l5MOz8YnuR3_P8RzxnbEyfqpGx1tUI6ba2SNKNF6aw/exec',
 
   /* Faste adresser pr. sprog. Sæt dem, når beregneren ligger på
      wiebendesign.dk med samme opdeling som sitet:
