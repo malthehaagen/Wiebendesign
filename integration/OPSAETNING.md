@@ -84,10 +84,17 @@ Tryk *Verify* i Resend. Står der stadig *Pending*, så vent og prøv igen.
 Det tager som regel under en time, men kan tage op til et døgn.
 **I kan roligt gå videre imens** — se *Mens I venter* nedenfor.
 
-**5. Lav en API-nøgle**
+**5. Lav en API-nøgle — på resend.com**
 *API Keys → Create API Key*. Giv den et navn, I kan kende igen, f.eks.
 `standberegner`. Vælg **Sending access**, ikke Full access. Kopiér nøglen —
 den vises kun én gang.
+
+> **Nøglen skal kun ét sted hen: Apps Script (trin 6).** Har I andre værktøjer
+> med en liste over API-legitimationsoplysninger pr. værtsnavn, skal
+> beregnerens nøgle **ikke** ind der. Sådan en liste kan kun holde én post pr.
+> vært, så en ekstra post på `api.resend.com` bliver ignoreret — og risikerer
+> at forstyrre det projekt, der bruger den i forvejen. Beregneren kalder
+> Resend fra Apps Script og henter nøglen fra scriptets egne egenskaber.
 
 **6. Læg nøglen i Apps Script**
 Åbn scriptet → **Projektindstillinger** (tandhjulet) → rul ned til
