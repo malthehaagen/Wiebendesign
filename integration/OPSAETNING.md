@@ -113,10 +113,26 @@ Send et oplæg fra beregneren til jer selv. Tjek derefter:
 
 ### Mens I venter på DNS
 
-**Der går ikke noget galt, hvis I sætter nøglen ind, før domænet er
-verificeret.** Scriptet opdager, at Resend afviser (typisk 403 *domain not
-verified*), og sender mailen gennem Google i stedet. Kunden mærker intet,
-leadet gemmes, og årsagen står i scriptets **Udførsler**-log.
+**I kan lave trin 5–7, mens I venter.** API-nøgler hører til kontoen, ikke til
+domænet. Scriptet prøver Resend ved hver afsendelse, får et afslag, og sender
+gennem Google i stedet. Kunden mærker intet, og leadet gemmes. Når domænet
+bliver verificeret, skifter det **af sig selv ved næste indsendelse** — I skal
+ikke udrulle igen.
+
+Årsagen står i scriptets **Udførsler**-log, og den er nyttig: står der
+„Resend svarede 403…“, beviser det, at nøglen bliver læst korrekt. Står der
+intet om Resend overhovedet, bliver nøglen ikke læst — tjek navnet
+`RESEND_API_KEY` og om der er lavet en ny udrulning.
+
+> **Kør trin 8 med det samme efter trin 7.** Faldbakken bygger på, at Resend
+> *afviser* et uverificeret domæne. Skulle de i stedet tage imod kaldet og
+> bare lade være med at levere, udløses faldbakken ikke, og mailen forsvinder
+> i stilhed. Testen afgør det:
+>
+> - **kommer der en mail fra en gmail-adresse** → faldbakken virker, lad
+>   nøglen sidde
+> - **kommer der slet ingen mail** → tag nøglen ud igen, og sæt den først ind,
+>   når Resend siger *Verified*
 
 Det samme gælder, hvis Resend er nede eller nøglen er forkert. De tre
 situationer er afprøvet:
