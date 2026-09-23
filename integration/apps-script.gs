@@ -18,6 +18,14 @@ var SVAR_TIL      = 'wd@wiebendesign.dk';
 var ARK           = 'Leads';                      // fanen i regnearket
 var ARK_STAT      = 'Statistik';                  // fanen med de anonyme besøg
 
+/* Et stempel, der følger med i ethvert svar. At gemme koden i Apps Script
+   ændrer ikke, hvad adressen svarer — det gør først en NY VERSION under
+   Administrer udrulninger. Uden et stempel kan man ikke se forskel
+   udefra, og så leder man efter fejlen alle de forkerte steder.
+   Diagnosesiden (?diag=1) viser, hvad der kommer tilbage. Sig derfor
+   altid stemplet frem, når scriptet ændres. */
+var UDGAVE        = '2026-09-23 · måling';
+
 /* ---------- Værn mod misbrug ----------
    Endpointet er åbent — det skal det være, for browseren kalder det, og
    adressen står i sidens JavaScript. Derfor kan enhver sende data ind:
@@ -236,6 +244,7 @@ function doGet() {
 }
 
 function svar(objekt) {
+  objekt.udgave = UDGAVE;
   return ContentService.createTextOutput(JSON.stringify(objekt))
     .setMimeType(ContentService.MimeType.JSON);
 }
