@@ -273,7 +273,13 @@ window.WD_PRIS = {
     skilt:       { type: 'omkreds' },
     /* Projektører hængt i riggen, ca. én pr. 6 m² */
     rigLys:      { type: 'perM2', prSpot: 329, m2PrSpot: 6 },
-    beplantning: { type: 'fast', pris: 2800 }
+    /* Beplantning er ikke ét indkøb. Nogle vil have tre planter ved
+       disken, andre en grøn væg langs hele standen, og begge dele hedder
+       "beplantning" i et tilbud. Derfor et interval frem for ét tal —
+       ellers ser den mindste løsning ud til at koste det samme som den
+       største. AFLEDT: intervallet er skønnet omkring den gamle faste
+       pris på 2.800 og bør bekræftes. */
+    beplantning: { type: 'interval', fra: 1400, til: 3400 }
   },
 
   /* LED-vægge i faste størrelser. Fliser er 50 × 50 cm, og styringen

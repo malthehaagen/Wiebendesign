@@ -82,6 +82,7 @@ window.WD_TEKST.en = {
     oversoeisk:   'Outside Europe we ship the stand by freight forwarder and the installers fly. We have warehouse facilities in both Denmark and the United States and experience from exhibitions in more than 70 countries — the exact freight cost is agreed case by case.',
     skrivKm:      'Enter roughly how far it is from our workshop in Støvring, Denmark, and we will calculate the transport from that.',
     afstand:      'About {km} km from our workshop in Støvring, Denmark.',
+    afstandMidt:  'About {km} km from our workshop in Støvring, Denmark — measured to the middle of {land}. If you know the distance, you can correct it below.',
     viaSpeditoer: 'At that distance it is cheaper to ship the stand by freight forwarder and fly the installers out — so that is what we have assumed.',
     egenKoersel:  'We drive the stand there ourselves.',
     broMed:       'Bridge tolls are included.'
@@ -100,8 +101,7 @@ window.WD_TEKST.en = {
     prM2:          'DKK {pris} per m²',
     oveniGulvet:   'on top of the flooring',
     ingenUdgift:   'No extra cost',
-    spots:         '{antal} spots',
-    anslaaetTimer: 'an estimated {fra}–{til} hours'
+    spots:         '{antal} spots'
   },
 
   omraade: {
@@ -212,7 +212,6 @@ window.WD_TEKST.en = {
     videre:  'Continue',
 
     profilTitel: 'Your exhibition profile',
-    profilIntro: 'The stand is a means. We start with the goal.',
 
     standenTitel:   'The stand',
     hvorMesse:      'Where is the show held?',

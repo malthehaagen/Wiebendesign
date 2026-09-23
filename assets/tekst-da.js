@@ -85,6 +85,7 @@ window.WD_TEKST.da = {
     oversoeisk:  'Uden for Europa sender vi standen med speditør, og montørerne flyver. Vi har lagerfaciliteter i både Danmark og USA og erfaring fra messer i mere end 70 lande — den præcise fragt aftaler vi konkret.',
     skrivKm:     'Skriv cirka hvor langt der er fra vores værksted i Støvring, så regner vi transporten ud fra det.',
     afstand:     'Ca. {km} km fra vores værksted i Støvring.',
+    afstandMidt: 'Ca. {km} km fra vores værksted i Støvring — regnet til midten af {land}. Kender I afstanden bedre, kan I rette den herunder.',
     viaSpeditoer: 'På den afstand er det billigere at sende standen med speditør og flyve montørerne derned — så det regner vi med.',
     egenKoersel: 'Vi kører selv derned med standen.',
     broMed:      'Broafgift er regnet med.'
@@ -104,8 +105,7 @@ window.WD_TEKST.da = {
     prM2:        '{pris} kr./m²',
     oveniGulvet: 'oveni gulvet',
     ingenUdgift: 'Ingen ekstra udgift',
-    spots:       '{antal} spots',
-    anslaaetTimer: 'anslået {fra}–{til} timer'
+    spots:       '{antal} spots'
   },
 
   /* ---------------- Områder (trin 3) ---------------- */
@@ -220,15 +220,14 @@ window.WD_TEKST.da = {
     heroTitel:    'Hvad skal jeres messestand kunne?',
     heroLead:     'Svar på nogle få spørgsmål om jeres brand, produkter og mål. Undervejs får I vores erfaring med, hvad der virker på en stand — og til sidst en sammensat løsning, en pris og en plan frem mod messedagen.',
     heroPunkt1:   '<strong>4 minutter</strong> fra start til færdigt estimat',
-    heroPunkt2:   '<strong>Vores egne priser</strong> — beregnet på det materiel, vi rent faktisk lejer ud',
-    heroPunkt3:   '<strong>Hele standen</strong> — materiel, grafik, opbygning og transport i ét tal',
+    heroPunkt2:   '<strong>Vores egne priser</strong> — beregnet på det, vi rent faktisk lejer ud',
+    heroPunkt3:   '<strong>Hele standen</strong> — materialer, grafik, opbygning og transport i ét tal',
     heroKnap:     'Kom i gang',
 
     tilbage:      'Tilbage',
     videre:       'Videre',
 
     profilTitel:  'Jeres messeprofil',
-    profilIntro:  'Standen er et middel. Vi starter med målet.',
 
     standenTitel: 'Standen',
     hvorMesse:    'Hvor holdes messen?',
@@ -269,7 +268,7 @@ window.WD_TEKST.da = {
 
     oplaegTitel:  'Jeres oplæg',
     formTitel:    'Lad os se på mulighederne',
-    formIntro:    'Fortæl os kort, hvem I er. Så kigger vi oplægget igennem og vender tilbage med, hvad der kan lade sig gøre på præcis jeres plads — og I får det hele som PDF med pris, indhold og tidslinje, I kan tage med videre internt. Det forpligter jer ikke til noget.',
+    formIntro:    'Fortæl os kort, hvem I er. Så kigger vi oplægget igennem og vender tilbage med, hvad der kan lade sig gøre på præcis jeres plads — og I får det hele som PDF med prisestimat, indhold og tidslinje, I kan tage med videre internt. Det forpligter jer ikke til noget.',
     navn:         'Navn',
     virksomhed:   'Virksomhed',
     email:        'E-mail',

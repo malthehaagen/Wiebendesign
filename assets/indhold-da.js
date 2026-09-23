@@ -564,7 +564,7 @@ window.WD_TEKST.da.indhold = {
     },
     "bar": {
       "titel": "Bar og servering",
-      "tekst": "Kaffe holder folk stående. Fire minutter mere er forskellen på en hilsen og et lead.",
+      "tekst": "Kaffe holder folk stående. Fire minutter mere kan være forskellen på en hilsen og et lead.",
       "ikon": "kaffe",
       "stoerrelser": {
         "lille": "Kaffe ved disken",

@@ -292,10 +292,16 @@
       ud.push({ id: 'led', navn: C.tilkoeb.led.titel + ', ' + v.navn, pris: ledPris(v) });
     }
     if (s.tilkoeb.beplantning) {
-      ud.push({ id: 'beplantning', navn: C.tilkoeb.beplantning.titel, pris: P.tilkoeb.beplantning.pris });
+      var b = P.tilkoeb.beplantning;
+      ud.push({ id: 'beplantning', navn: C.tilkoeb.beplantning.titel,
+                pris: (b.fra + b.til) / 2, interval: [b.fra, b.til] });
     }
     return ud;
   }
+
+  /* De fleste poster er ét beløb. Har en post sit eget interval, er det
+     dét, der skal regnes og vises med. */
+  function beloeb(l) { return l.interval || iv.tal(l.pris); }
 
   function elTavle() {
     /* Kun de områder, der er med i prisen — et område, standen er blevet
@@ -389,8 +395,14 @@
      lejepriser, men montagetimer og standens endelige opbygning flytter sig,
      indtil der ligger en tegning — prisen er et udgangspunkt, ikke et tilbud. */
   function spaend(a) {
-    var midt = (a[0] + a[1]) / 2 * (P.meta.prisniveau || 1);
-    return [midt * (1 - P.meta.spaendNed), midt * (1 + P.meta.spaendOp)];
+    var n = P.meta.prisniveau || 1;
+    var fra = a[0] * n, til = a[1] * n, midt = (fra + til) / 2;
+    /* For et fast beløb er min/max uden betydning — så er fra og til ens,
+       og resultatet er midtpunktet ± spændet som før. Har posten sit eget
+       interval (beplantning), er det bredere end usikkerheden, og så skal
+       det stå, som det er, i stedet for at blive klappet sammen om midten. */
+    return [Math.min(fra, midt * (1 - P.meta.spaendNed)),
+            Math.max(til, midt * (1 + P.meta.spaendOp))];
   }
 
   function beregn() {
@@ -402,8 +414,7 @@
     var ga = grafikarbejde();
     var standDele = v.konstruktion + v.print + gulvpris() + belysningspris() + tavle.leje +
                     (ga.pris[0] + ga.pris[1]) / 2;
-    var omraadeSum = omr.reduce(function (a, l) { return a + l.pris; }, 0) +
-                     tilk.reduce(function (a, l) { return a + l.pris; }, 0);
+    var omraadeSum = iv.sum(omr.concat(tilk).map(beloeb));
     var mont = montage();
     var montSum = iv.sum(mont.map(function (l) { return l.pris; }));
 
@@ -426,7 +437,7 @@
       { navn: tx('post.projektstyring'), pris: iv.tal(projektstyring()),
         note: tx('post.projektstyringNote') },
       { navn: tx('post.stand'), pris: iv.tal(standDele), note: standNote },
-      { navn: tx('post.omraader'), pris: iv.tal(omraadeSum), note: omraadeNote },
+      { navn: tx('post.omraader'), pris: omraadeSum, note: omraadeNote },
       { navn: tx('post.transport'), pris: montSum, note: tx('post.transportNote') }
     ].filter(function (l) { return l.pris[1] > 0; });
 
@@ -638,6 +649,18 @@
   /* Skriver kunden selv afstanden ind, kender vi ikke ruten. Men skal man
      over en bro til hver by i landet, skal man det også til den, kunden
      nævner — så tages broafgiften med. Ved „Et andet land“ ved vi intet. */
+  /* Vælger kunden „en anden by“, gætter vi ikke på nul. Gennemsnittet af
+     landets messebyer lander tæt på landets midte — 740 km for Tyskland,
+     2.430 for Spanien — og det er et bedre udgangspunkt end et tomt felt,
+     kunden skal udfylde rigtigt. Feltet bliver stående, så afstanden kan
+     rettes af den, der kender den. */
+  function midtILandet() {
+    var byer = land().byer;
+    if (!byer.length) return 0;
+    var sum = byer.reduce(function (a, b) { return a + b.km; }, 0);
+    return Math.round(sum / byer.length / 10) * 10;
+  }
+
   function broForLand() {
     var byer = land().byer;
     return byer.length > 0 && byer.every(function (b) { return b.bro; });
@@ -683,7 +706,11 @@
       h.textContent = tx('sted.skrivKm');
       return;
     }
-    h.textContent = tx('sted.afstand', { km: nf.format(s.messe.km) }) + ' ' +
+    /* „Regnet til midten af Tyskland“ må kun stå, så længe tallet er vores
+       eget gæt. Retter kunden det, er det kundens tal. */
+    var gaettet = s.messe.ukendt && s.messe.km === midtILandet();
+    h.textContent = tx(gaettet ? 'sted.afstandMidt' : 'sted.afstand',
+      { km: nf.format(s.messe.km), land: landNavn() }) + ' ' +
       (transportmaade() === 'speditoer'
         ? tx('sted.viaSpeditoer')
         : tx('sted.egenKoersel') + (s.messe.bro ? ' ' + tx('sted.broMed') : ''));
@@ -784,8 +811,9 @@
         gav.appendChild(kort({
           fokus: 'grafikarbejde:' + id,
           titel: t.titel, tekst: t.tekst, valgt: s.grafikarbejde === id,
-          meta: '<span class="card-pris">' + medValuta(fmtKort(spaend(ga2.pris))) + '</span> · ' +
-                esc(tx('standen.anslaaetTimer', { fra: Math.round(ga2.timer[0]), til: Math.round(ga2.timer[1]) })),
+          /* Timerne stod her før. De hører hjemme i specifikationen, hvor
+             man undersøger prisen — ikke på et kort, hvor man vælger. */
+          meta: '<span class="card-pris">' + medValuta(fmtKort(spaend(ga2.pris))) + '</span>',
           klik: function () { s.grafikarbejde = id; opdater(); }
         }));
       });
@@ -939,12 +967,12 @@
     }
 
     var linjer = omraadeLinjer().concat(tilkoebLinjer());
-    var sum = linjer.reduce(function (a, l) { return a + l.pris; }, 0);
+    var sum = iv.sum(linjer.map(beloeb));
     var bar = el('<div class="forslag"></div>');
     bar.appendChild(el('<div class="forslag-tekst"><strong>' +
       esc(tx(s.omraadeValg === 'forslag' ? 'omraade.paaForslag' : 'omraade.paaSelv')) + '</strong>' +
       '<span>' + esc(linjer.length
-        ? tx('omraade.valgtSum', { antal: linjer.length, pris: fmtKort(spaend(iv.tal(sum))) })
+        ? tx('omraade.valgtSum', { antal: linjer.length, pris: fmtKort(spaend(sum)) })
         : tx('omraade.ingenValgt')) + '</span></div>'));
     var knapper = el('<div class="forslag-knapper"></div>');
     if (s.omraadeValg === 'forslag') {
@@ -967,7 +995,7 @@
     var v = document.getElementById('tilkoeb');
     v.innerHTML = '';
     var priser = {};
-    tilkoebLinjer().forEach(function (l) { priser[l.id] = l.pris; });
+    tilkoebLinjer().forEach(function (l) { priser[l.id] = beloeb(l); });
     Object.keys(C.tilkoeb).forEach(function (id) {
       var t = C.tilkoeb[id];
       var til = s.tilkoeb[id];
@@ -976,13 +1004,13 @@
       if (pris === undefined) {
         var gemt = s.tilkoeb[id];
         s.tilkoeb[id] = true;
-        tilkoebLinjer().forEach(function (l) { if (l.id === id) pris = l.pris; });
+        tilkoebLinjer().forEach(function (l) { if (l.id === id) pris = beloeb(l); });
         s.tilkoeb[id] = gemt;
       }
       v.appendChild(kort({
         fokus: 'tilkoeb:' + id,
         svg: D.svg[t.ikon], titel: t.titel, tekst: t.tekst, valgt: til,
-        meta: '<span class="card-pris">' + medValuta(fmtKort(spaend(iv.tal(pris || 0)))) + '</span>' +
+        meta: '<span class="card-pris">' + medValuta(fmtKort(spaend(pris || iv.nul()))) + '</span>' +
               (id === 'led' ? ' · ' + esc(ledValgt().navn) : ''),
         klik: function () { s.tilkoeb[id] = !s.tilkoeb[id]; opdater(); }
       }));
@@ -1432,8 +1460,9 @@
       if (e.target.value === '__anden__') {
         /* Den gamle bys afstand skal væk, ellers regner vi videre på den
            og skriver „Ca. 130 km“ under et felt, kunden lige har tømt. */
-        s.messe.ukendt = true; s.messe.by = ''; s.messe.bro = broForLand(); s.messe.km = 0;
-        document.getElementById('km').value = '';
+        s.messe.ukendt = true; s.messe.by = ''; s.messe.bro = broForLand();
+        s.messe.km = midtILandet();
+        document.getElementById('km').value = s.messe.km || '';
       } else {
         var b = by(e.target.value);
         s.messe.by = e.target.value;
