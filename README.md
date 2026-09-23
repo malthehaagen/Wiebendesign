@@ -15,10 +15,12 @@ Det, der står tilbage, er ikke kode.
 | Målingen | **Virker** — fanen *Statistik* fylder sig selv op | — |
 | Priserne bekræftet | Mangler — se *Hvad der mangler før produktion* | Wieben Design |
 | Teksterne gennemlæst af chefen | Mangler | Wieben Design |
-| Mails fra eget domæne | **Virker** — Resend sender fra `oplaeg@mail.wiebendesign.dk`, svar lander på `wd@wiebendesign.dk` | — |
+| Mails fra eget domæne | **Klar** — Resend sender fra `oplaeg@mail.wiebendesign.dk`, svar lander på `wd@wiebendesign.dk`. Kunderne får den afsender, så snart en ny version er udrullet | Wieben Design |
 
 ### Sidste tjekliste før lancering
 
+- [ ] Ny version udrullet i Apps Script, så `AFSENDER` når kunderne —
+      tjek i *Udførelser*, at `doPost` står med det nye versionsnummer
 - [ ] Priserne bekræftet, og transportformen afklaret
 - [ ] Teksten læst igennem af Wieben Design
 - [ ] `MODTAGER` i `apps-script.gs` tilbage til `wd@wiebendesign.dk`

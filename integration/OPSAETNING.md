@@ -218,6 +218,9 @@ Det er med vilje — et lead må ikke gå tabt, fordi en mailtjeneste driller
 2. **Resend afviser** — domænet er ikke verificeret endnu, eller nøglen
    hører til en anden Resend-konto end den, domænet ligger i
 3. **Resend kan ikke nås**
+4. **Adressen kører en gammel version** af koden, hvor `AFSENDER` stadig
+   var forkert. Se afsnittet lige nedenfor — det er den, der narrer folk,
+   fordi `tjekResend` siger VIRKER samtidig
 
 Vælg **`tjekResend`** i funktionslisten øverst i Apps Script-editoren og
 tryk **Kør**. Den prøver at sende én testmail til `MODTAGER` gennem
@@ -233,6 +236,28 @@ under **Udførelser**:
 
 Den falder med vilje **ikke** tilbage til Google — så ville den skjule
 netop det, den leder efter.
+
+### Testen virker, men kunden får stadig gmail
+
+Så kører I to forskellige koder, og kun den ene er kundens.
+
+Åbn **Udførelser** og se kolonnen **Implementering**. Den funktion, I selv
+kørte fra editoren, står som **Primær** — det er koden, som den er gemt lige
+nu. Kundens kald står som **Version 5**, **Version 6** og så videre — det er
+den frosne kopi, web-adressen kører.
+
+Står der `Primær` på jeres test og et versionsnummer på `doPost`, beviser en
+vellykket test ingenting om, hvad kunden fik. Alt, der står i koden —
+`AFSENDER`, `MODTAGER`, teksterne i mailen, priserne i oplægget — når først
+kunden, når I udruller en ny version.
+
+`Udrul` → `Administrer udrulninger` → blyanten → `Version: Ny version` → `Udrul`
+
+Send et oplæg bagefter og se i **Udførelser**, at `doPost` nu står med det
+nye versionsnummer. Gør den ikke det, gik udrulningen ikke igennem.
+
+Kun `RESEND_API_KEY` og de andre scriptegenskaber er fælles for alle
+versioner — dem behøver I ikke udrulle for at ændre.
 
 **Afsenderen skal ligge på det verificerede domæne.** Er det
 `mail.wiebendesign.dk`, der står som verified i Resend, skal `AFSENDER`
