@@ -234,6 +234,20 @@ under **Udførelser**:
 Den falder med vilje **ikke** tilbage til Google — så ville den skjule
 netop det, den leder efter.
 
+**Afsenderen skal ligge på det verificerede domæne.** Er det
+`mail.wiebendesign.dk`, der står som verified i Resend, skal `AFSENDER`
+i `apps-script.gs` være `oplaeg@mail.wiebendesign.dk` — ikke
+`oplaeg@wiebendesign.dk`. Roddomænet og underdomænet er to forskellige
+domæner for Resend, og sender man fra det forkerte, svarer den 403.
+
+Underdomænet er samtidig det tryggeste valg: går der noget galt med
+udsendelserne, rammer det ikke firmamailens omdømme på roddomænet. Og
+det undgår at skulle redigere SPF-posten på `wiebendesign.dk`, som
+jeres Outlook-mail afhænger af.
+
+`SVAR_TIL` behøver ingen verificering — svarene kan roligt lande på
+`wd@wiebendesign.dk`.
+
 **Hvilken adgang skal nøglen have:** kun **Sending access**. Scriptet
 sender mails og laver ikke andet, og en nøgle, der slipper ud, skal ikke
 kunne oprette domæner eller læse kontoens andre nøgler.

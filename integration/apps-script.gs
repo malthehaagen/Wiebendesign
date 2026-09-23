@@ -13,7 +13,13 @@
 
 /* ---------- Indstillinger ---------- */
 var MODTAGER      = 'wd@wiebendesign.dk';        // hvem hos jer får leadet
-var AFSENDER      = 'Wieben Design <oplaeg@wiebendesign.dk>';  // kræver verificeret domæne i Resend
+/* Afsenderen SKAL ligge på det domæne, der er verificeret i Resend. Her er
+   det underdomænet mail.wiebendesign.dk — ikke wiebendesign.dk. Sender man
+   fra roddomænet, svarer Resend 403, og mailen går gennem Google i stedet.
+   Underdomænet er i øvrigt det tryggeste valg: går der noget galt med
+   udsendelserne, rammer det ikke firmamailens omdømme på wiebendesign.dk. */
+var AFSENDER      = 'Wieben Design <oplaeg@mail.wiebendesign.dk>';
+/* Svarene skal stadig lande hos jer selv — reply-to kræver ingen verificering */
 var SVAR_TIL      = 'wd@wiebendesign.dk';
 var ARK           = 'Leads';                      // fanen i regnearket
 var ARK_STAT      = 'Statistik';                  // fanen med de anonyme besøg
@@ -24,7 +30,7 @@ var ARK_STAT      = 'Statistik';                  // fanen med de anonyme besøg
    udefra, og så leder man efter fejlen alle de forkerte steder.
    Diagnosesiden (?diag=1) viser, hvad der kommer tilbage. Sig derfor
    altid stemplet frem, når scriptet ændres. */
-var UDGAVE        = '2026-09-23 · måling + mailtjek 2';
+var UDGAVE        = '2026-09-23 · afsender på mail.wiebendesign.dk';
 
 /* ---------- Værn mod misbrug ----------
    Endpointet er åbent — det skal det være, for browseren kalder det, og
