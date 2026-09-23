@@ -24,7 +24,7 @@ var ARK_STAT      = 'Statistik';                  // fanen med de anonyme besøg
    udefra, og så leder man efter fejlen alle de forkerte steder.
    Diagnosesiden (?diag=1) viser, hvad der kommer tilbage. Sig derfor
    altid stemplet frem, når scriptet ændres. */
-var UDGAVE        = '2026-09-23 · måling';
+var UDGAVE        = '2026-09-23 · måling + mailtjek';
 
 /* ---------- Værn mod misbrug ----------
    Endpointet er åbent — det skal det være, for browseren kalder det, og
@@ -365,7 +365,14 @@ function sendTilOs(d) {
  */
 function sendMail(til, emne, html) {
   var noegle = PropertiesService.getScriptProperties().getProperty('RESEND_API_KEY');
-  if (!noegle) { viaGoogle(til, emne, html); return; }
+  if (!noegle) {
+    /* Stod her tavst før. En mail, der går gennem Google uden at nogen
+       kan se hvorfor, er svær at opdage — især fordi den kommer frem. */
+    console.warn('RESEND_API_KEY er ikke sat — mailen gik gennem Google. ' +
+                 'Se Projektindstillinger → Scriptegenskaber.');
+    viaGoogle(til, emne, html);
+    return;
+  }
 
   var svar;
   try {
@@ -389,6 +396,51 @@ function sendMail(til, emne, html) {
     console.error('Resend svarede ' + svar.getResponseCode() + ': ' + svar.getContentText());
     viaGoogle(til, emne, html);
   }
+}
+
+/* ---------- Værktøj ----------
+   Kommer mailen fra en gmail-adresse i stedet for fra jeres eget domæne,
+   er der tre mulige årsager, og de ser ens ud udefra. Vælg tjekResend i
+   funktionslisten øverst i editoren og tryk Kør. Svaret står under
+   Udførelser og siger præcis hvilken af dem det er.
+
+   Den sender ingenting. Den spørger kun Resend, hvad den ved. */
+function tjekResend() {
+  var noegle = PropertiesService.getScriptProperties().getProperty('RESEND_API_KEY');
+  if (!noegle) {
+    console.log('1. INGEN NØGLE. RESEND_API_KEY står ikke under ' +
+                'Projektindstillinger → Scriptegenskaber. Derfor sender Google.');
+    return;
+  }
+  console.log('Nøgle fundet: ' + noegle.slice(0, 8) + '… · Afsender i scriptet: ' + AFSENDER);
+
+  var svar;
+  try {
+    svar = UrlFetchApp.fetch('https://api.resend.com/domains', {
+      method: 'get',
+      headers: { Authorization: 'Bearer ' + noegle },
+      muteHttpExceptions: true
+    });
+  } catch (fejl) {
+    console.log('3. RESEND KUNNE IKKE NÅS: ' + fejl);
+    return;
+  }
+
+  var kode = svar.getResponseCode();
+  if (kode === 401 || kode === 403) {
+    console.log('2. NØGLEN AFVISES (' + kode + '). Den hører sandsynligvis til en ' +
+                'anden Resend-konto end den, wiebendesign.dk er oprettet i.');
+    return;
+  }
+  if (kode >= 300) {
+    console.log('2. RESEND SVARER ' + kode + ': ' + svar.getContentText());
+    return;
+  }
+
+  console.log('Kontoens domæner: ' + svar.getContentText());
+  console.log('Afsenderen i AFSENDER skal ligge på et domæne, der står som ' +
+              '"verified" herover. Gør den ikke det, afviser Resend hver mail, ' +
+              'og Google sender i stedet.');
 }
 
 function viaGoogle(til, emne, html) {

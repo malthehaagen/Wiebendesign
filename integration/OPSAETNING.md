@@ -208,6 +208,33 @@ en fejl i den ene stopper ikke den anden.
 
 Alt hvad scriptet fanger, står under **Udførsler** i Apps Script. Start der.
 
+### Mailen kommer stadig fra en gmail-adresse
+
+Scriptet falder altid tilbage til Google frem for at vise kunden en fejl.
+Det er med vilje — et lead må ikke gå tabt, fordi en mailtjeneste driller
+— men det betyder også, at årsagen er tavs. Der er tre af dem:
+
+1. **Nøglen er ikke sat** under Projektindstillinger → Scriptegenskaber
+2. **Resend afviser** — domænet er ikke verificeret endnu, eller nøglen
+   hører til en anden Resend-konto end den, domænet ligger i
+3. **Resend kan ikke nås**
+
+Vælg **`tjekResend`** i funktionslisten øverst i Apps Script-editoren og
+tryk **Kør**. Den sender ingenting — den spørger kun Resend, hvad kontoen
+ved, og skriver svaret under **Udførelser**. Der står, hvilken af de tre
+det er, og hvilke domæner kontoen kender med hvilken status.
+
+Afsenderen i `AFSENDER` skal ligge på et domæne, der står som
+`verified`. Gør den ikke det, afvises hver eneste mail.
+
+**Deler I Resend med et andet projekt:** den gratis plan tillader tre
+domæner pr. konto, så wiebendesign.dk kan ligge i samme konto som et
+andet projekt. To adskilte konti er dog renere — så kan det ene projekts
+nøgle ikke sende som det andets domæne. Vælger I to konti, skal nøglen i
+Scriptegenskaber være fra **den konto, wiebendesign.dk er verificeret
+i**. Er det den forkerte, afvises mailen med 401 eller 403, og Google
+sender i stedet.
+
 ### To sprog
 
 Beregneren findes på dansk og engelsk, og kundens valg følger med i feltet
