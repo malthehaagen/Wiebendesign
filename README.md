@@ -223,8 +223,10 @@ skal ned.
   `wd@wiebendesign.dk`. Se `integration/OPSAETNING.md`
 - **`MODTAGER` i `apps-script.gs`** står midlertidigt på en privat adresse,
   mens der testes. Den skal tilbage til `wd@wiebendesign.dk`
-- **Hosting**: hvordan modulet lægges på wiebendesign.dk. Derefter skal
-  `sprogStier` i `config.js` udfyldes
+- **Hosting**: beregneren lægges op som én fil ved siden af WordPress hos
+  Simply.com — se [`integration/HOSTING.md`](integration/HOSTING.md). Når den
+  flytter fra testmappen til sine rigtige adresser, skal `sprogStier` i
+  `config.js` udfyldes
 - **Linkene til privatlivspolitik og handelsbetingelser** i `tekst-da.js` og
   `tekst-en.js` peger på `wiebendesign.dk/privatlivspolitik/` og
   `/handelsbetingelser/`. De er ikke kontrolleret — findes siderne ikke på de

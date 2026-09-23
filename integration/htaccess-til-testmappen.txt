@@ -1,0 +1,12 @@
+# Læg denne fil i testmappen ved siden af index.html, og kald den
+# præcis  .htaccess  — med punktum foran og uden .txt til sidst.
+#
+# Den gør to ting: beder søgemaskiner om at holde sig væk, og sørger
+# for, at ingen kan liste mappens indhold. Den skal SLETTES, når
+# beregneren flyttes til sin rigtige adresse og skal kunne findes.
+
+<IfModule mod_headers.c>
+  Header set X-Robots-Tag "noindex, nofollow, noarchive"
+</IfModule>
+
+Options -Indexes
