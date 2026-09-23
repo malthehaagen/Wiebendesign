@@ -220,12 +220,23 @@ Det er med vilje — et lead må ikke gå tabt, fordi en mailtjeneste driller
 3. **Resend kan ikke nås**
 
 Vælg **`tjekResend`** i funktionslisten øverst i Apps Script-editoren og
-tryk **Kør**. Den sender ingenting — den spørger kun Resend, hvad kontoen
-ved, og skriver svaret under **Udførelser**. Der står, hvilken af de tre
-det er, og hvilke domæner kontoen kender med hvilken status.
+tryk **Kør**. Den prøver at sende én testmail til `MODTAGER` gennem
+Resend — nøjagtig den vej, en kundes oplæg tager — og skriver svaret
+under **Udførelser**:
 
-Afsenderen i `AFSENDER` skal ligge på et domæne, der står som
-`verified`. Gør den ikke det, afvises hver eneste mail.
+| Svar | Hvad der er galt |
+|---|---|
+| `INGEN NØGLE` | `RESEND_API_KEY` står ikke under Scriptegenskaber |
+| `NØGLEN AFVISES (401)` | Nøglen er forkert, slettet, eller fra en anden konto end den, afsenderdomænet ligger i |
+| `AFVIST (403)` | Domænet er ikke verificeret endnu. DNS kan være timer om at slå igennem |
+| `VIRKER` | Resend tog imod. Tjek at mailen lander med den rigtige afsender |
+
+Den falder med vilje **ikke** tilbage til Google — så ville den skjule
+netop det, den leder efter.
+
+**Hvilken adgang skal nøglen have:** kun **Sending access**. Scriptet
+sender mails og laver ikke andet, og en nøgle, der slipper ud, skal ikke
+kunne oprette domæner eller læse kontoens andre nøgler.
 
 **Deler I Resend med et andet projekt:** den gratis plan tillader tre
 domæner pr. konto, så wiebendesign.dk kan ligge i samme konto som et

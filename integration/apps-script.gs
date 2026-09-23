@@ -24,7 +24,7 @@ var ARK_STAT      = 'Statistik';                  // fanen med de anonyme besøg
    udefra, og så leder man efter fejlen alle de forkerte steder.
    Diagnosesiden (?diag=1) viser, hvad der kommer tilbage. Sig derfor
    altid stemplet frem, når scriptet ændres. */
-var UDGAVE        = '2026-09-23 · måling + mailtjek';
+var UDGAVE        = '2026-09-23 · måling + mailtjek 2';
 
 /* ---------- Værn mod misbrug ----------
    Endpointet er åbent — det skal det være, for browseren kalder det, og
@@ -400,47 +400,69 @@ function sendMail(til, emne, html) {
 
 /* ---------- Værktøj ----------
    Kommer mailen fra en gmail-adresse i stedet for fra jeres eget domæne,
-   er der tre mulige årsager, og de ser ens ud udefra. Vælg tjekResend i
+   er der flere mulige årsager, og de ser ens ud udefra. Vælg tjekResend i
    funktionslisten øverst i editoren og tryk Kør. Svaret står under
-   Udførelser og siger præcis hvilken af dem det er.
+   Udførelser og siger præcis hvad der er galt.
 
-   Den sender ingenting. Den spørger kun Resend, hvad den ved. */
+   Den prøver at sende én testmail til MODTAGER gennem Resend — altså
+   nøjagtig den vej, en kundes oplæg tager. Den falder IKKE tilbage til
+   Google, for så ville den skjule netop det, vi leder efter.
+
+   Hvorfor den sender frem for at slå domænerne op: nøglen bør kun have
+   Sending access, og en nøgle med den adgang må ikke læse kontoens
+   domæner. Et opslag ville derfor blive afvist på en nøgle, der er
+   fuldkommen i orden. */
 function tjekResend() {
   var noegle = PropertiesService.getScriptProperties().getProperty('RESEND_API_KEY');
   if (!noegle) {
-    console.log('1. INGEN NØGLE. RESEND_API_KEY står ikke under ' +
+    console.log('INGEN NØGLE. RESEND_API_KEY står ikke under ' +
                 'Projektindstillinger → Scriptegenskaber. Derfor sender Google.');
     return;
   }
-  console.log('Nøgle fundet: ' + noegle.slice(0, 8) + '… · Afsender i scriptet: ' + AFSENDER);
+  console.log('Nøgle fundet: ' + noegle.slice(0, 8) + '… · Afsender: ' + AFSENDER +
+              ' · Sender en testmail til ' + MODTAGER);
 
   var svar;
   try {
-    svar = UrlFetchApp.fetch('https://api.resend.com/domains', {
-      method: 'get',
+    svar = UrlFetchApp.fetch('https://api.resend.com/emails', {
+      method: 'post',
+      contentType: 'application/json',
       headers: { Authorization: 'Bearer ' + noegle },
+      payload: JSON.stringify({
+        from: AFSENDER,
+        to: [MODTAGER],
+        subject: 'Testmail fra standberegneren',
+        html: '<p>Denne mail er sendt af tjekResend i Apps Script. ' +
+              'Kommer den frem med ' + AFSENDER + ' som afsender, virker Resend.</p>'
+      }),
       muteHttpExceptions: true
     });
   } catch (fejl) {
-    console.log('3. RESEND KUNNE IKKE NÅS: ' + fejl);
+    console.log('RESEND KUNNE IKKE NÅS: ' + fejl);
     return;
   }
 
   var kode = svar.getResponseCode();
-  if (kode === 401 || kode === 403) {
-    console.log('2. NØGLEN AFVISES (' + kode + '). Den hører sandsynligvis til en ' +
-                'anden Resend-konto end den, wiebendesign.dk er oprettet i.');
-    return;
-  }
-  if (kode >= 300) {
-    console.log('2. RESEND SVARER ' + kode + ': ' + svar.getContentText());
-    return;
-  }
+  var krop = svar.getContentText();
 
-  console.log('Kontoens domæner: ' + svar.getContentText());
-  console.log('Afsenderen i AFSENDER skal ligge på et domæne, der står som ' +
-              '"verified" herover. Gør den ikke det, afviser Resend hver mail, ' +
-              'og Google sender i stedet.');
+  if (kode < 300) {
+    console.log('VIRKER. Resend tog imod mailen (' + kode + '). ' +
+                'Tjek at den lander hos ' + MODTAGER + ' med ' + AFSENDER +
+                ' som afsender. Svar: ' + krop);
+    return;
+  }
+  if (kode === 401) {
+    console.log('NØGLEN AFVISES (401). Den er forkert, slettet, eller hører til ' +
+                'en anden Resend-konto end den, ' + AFSENDER + ' ligger i.');
+    return;
+  }
+  if (kode === 403) {
+    console.log('AFVIST (403). Næsten altid fordi domænet i ' + AFSENDER +
+                ' ikke er verificeret endnu i den konto, nøglen hører til. ' +
+                'DNS kan være timer om at slå igennem. Svar: ' + krop);
+    return;
+  }
+  console.log('RESEND SVARER ' + kode + ': ' + krop);
 }
 
 function viaGoogle(til, emne, html) {
