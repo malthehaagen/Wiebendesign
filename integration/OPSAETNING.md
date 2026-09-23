@@ -57,6 +57,29 @@ komme fra wiebendesign.dk, så fortsæt.
 > den gamle version videre. Vælg *Administrer udrulninger* og rediger den
 > eksisterende, så beholder I den samme adresse.
 
+### Når koden skal opdateres senere
+
+Det her er stedet, hvor det går galt, og det gør det lydløst:
+
+> **Udrul → Administrer udrulninger → blyanten → Version: Ny version → Udrul**
+
+Brug **ikke** *Ny udrulning*. Den laver en udrulning mere med sin **egen
+adresse** — og så bliver den gamle adresse ved med at svare med den
+gamle kode. Beregneren ringer videre til den gamle, alt ser normalt ud,
+og rettelsen kommer bare aldrig frem.
+
+At gemme koden i editoren er heller ikke nok. Adressen svarer med den
+version, udrulningen peger på, ikke med det, der står i editoren.
+
+**Sådan tjekker I, at det lykkedes:** åbn beregneren med `?diag=1` og
+tryk på knappen. Svaret indeholder `udgave` — det stempel står øverst i
+`apps-script.gs`. Er det ikke skiftet, er versionen ikke skiftet.
+
+**Er der kommet flere udrulninger ved et uheld:** behold den, `config.js`
+peger på, og **arkivér** resten under Administrer udrulninger. Hver
+udrulning er et åbent endpoint, der kører sin egen kode — og der skal
+kun være ét.
+
 ## 4. Resend
 
 Uden Resend kommer mailen fra jeres Google-konto. Det virker, men afsenderen er

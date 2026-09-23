@@ -8,8 +8,15 @@ window.WD_CONFIG = {
 
   /* Adressen på Apps Script-endpointet, der modtager oplæggene.
      Se integration/OPSAETNING.md. Står den tom, kører modulet videre
-     som prototype: intet bliver sendt, men flowet virker. */
-  endpoint: 'https://script.google.com/macros/s/AKfycbwe07_aK7JnXTRXTk9pXaUGwvB2l5MOz8YnuR3_P8RzxnbEyfqpGx1tUI6ba2SNKNF6aw/exec',
+     som prototype: intet bliver sendt, men flowet virker.
+
+     BEMÆRK: adressen hører til én bestemt udrulning. Laver man en NY
+     UDRULNING i Apps Script i stedet for en ny version af den, der er,
+     får man en ny adresse — og så ringer beregneren videre til den
+     gamle kode, uden at noget ser forkert ud. Skal koden opdateres, er
+     det Udrul → Administrer udrulninger → blyanten → Version: Ny
+     version. Så bliver adressen her stående. */
+  endpoint: 'https://script.google.com/macros/s/AKfycbwSTGB486jvAjUk7QAauGbOTz2zyKdGoZiS9zjNEnLM0SZekF02CCvAQE6IatZgYlyk7Q/exec',
 
   /* Faste adresser pr. sprog. Sæt dem, når beregneren ligger på
      wiebendesign.dk med samme opdeling som sitet:
