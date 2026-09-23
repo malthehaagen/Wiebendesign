@@ -2,20 +2,34 @@
 
 ## Status
 
-**Den danske version er færdigbygget (21. september 2026).** Beregneren er
-gennemtestet og godkendt til gennemgang. Herfra venter fire ting, og ingen af
-dem er kode:
+**Begge sprog er bygget, gennemgået og godkendt (23. september 2026), og
+beregneren kører på en testadresse hos Simply.com.** Alt teknisk er på plads.
+Det, der står tilbage, er ikke kode.
 
 | | Status | Hvem |
 |---|---|---|
-| Dansk version | **Færdig** | — |
+| Dansk version | **Færdig og godkendt** | — |
+| Engelsk version | **Færdig og godkendt** | — |
+| Hosting | **Kører** på en skjult testadresse — se [`integration/HOSTING.md`](integration/HOSTING.md) | — |
+| Leads og mails | **Virker** — regnearket får rækken, kunden og I får hver jeres mail | — |
+| Målingen | **Virker** — fanen *Statistik* fylder sig selv op | — |
 | Priserne bekræftet | Mangler — se *Hvad der mangler før produktion* | Wieben Design |
-| Teksterne gennemlæst | Mangler — hver sætning er skrevet til lejligheden | Wieben Design |
-| Mailsystemet | Endpointet er sat op og står i `config.js`. Mangler verificeret Resend-domæne — indtil da sender Google mailene | `integration/OPSAETNING.md` |
-| Hosting på wiebendesign.dk | Ikke besluttet | Wieben Design |
-| Engelsk version | **Færdig.** Se [`docs/engelsk-version.md`](docs/engelsk-version.md) | — |
+| Teksterne gennemlæst af chefen | Mangler | Wieben Design |
+| Resend-domænet verificeret | Mangler — indtil da sender Google mailene | Wieben Design |
 
+### Sidste tjekliste før lancering
 
+- [ ] Priserne bekræftet, og transportformen afklaret
+- [ ] Teksten læst igennem af Wieben Design
+- [ ] Resend-domænet verificeret
+- [ ] `MODTAGER` i `apps-script.gs` tilbage til `wd@wiebendesign.dk`
+- [ ] Den gamle udrulning i Apps Script arkiveret — der skal kun være ét endpoint
+- [ ] Prøvet i Firefox og i Safari på en Mac
+- [ ] De to links i bunden kontrolleret på begge sprog
+- [ ] Besluttet hvem der følger op på et lead, hvor hurtigt og med hvad
+- [ ] Flyttet til `/standberegner/` og `/en/stand-calculator/`, `sprogStier` sat,
+      testmappen og dens `.htaccess` slettet
+- [ ] Links sat ind fra sitet
 
 > ## Om prisdata i dette repo
 >
