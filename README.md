@@ -11,17 +11,16 @@ Det, der står tilbage, er ikke kode.
 | Dansk version | **Færdig og godkendt** | — |
 | Engelsk version | **Færdig og godkendt** | — |
 | Hosting | **Kører** på en skjult testadresse — se [`integration/HOSTING.md`](integration/HOSTING.md) | — |
-| Leads og mails | **Virker** — regnearket får rækken, kunden og I får hver jeres mail | — |
+| Leads | **Virker** — regnearket får rækken, kunden og I får hver jeres mail | — |
 | Målingen | **Virker** — fanen *Statistik* fylder sig selv op | — |
 | Priserne bekræftet | Mangler — se *Hvad der mangler før produktion* | Wieben Design |
 | Teksterne gennemlæst af chefen | Mangler | Wieben Design |
-| Resend-domænet verificeret | Mangler — indtil da sender Google mailene | Wieben Design |
+| Mails fra eget domæne | **Virker** — Resend sender fra `oplaeg@mail.wiebendesign.dk`, svar lander på `wd@wiebendesign.dk` | — |
 
 ### Sidste tjekliste før lancering
 
 - [ ] Priserne bekræftet, og transportformen afklaret
 - [ ] Teksten læst igennem af Wieben Design
-- [ ] Resend-domænet verificeret
 - [ ] `MODTAGER` i `apps-script.gs` tilbage til `wd@wiebendesign.dk`
 - [ ] Den gamle udrulning i Apps Script arkiveret — der skal kun være ét endpoint
 - [ ] Prøvet i Firefox og i Safari på en Mac
