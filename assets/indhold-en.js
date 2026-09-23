@@ -61,7 +61,7 @@ window.WD_TEKST.en.indhold = {
   },
   grafikdaekning: {
     ingen:  { titel: 'Nothing',      tekst: 'Plain white walls, no print.' },
-    delvis: { titel: 'The key ones', tekst: 'Print where people look — about half the walls.' },
+    delvis: { titel: 'Where it counts', tekst: 'Print where people look — about half the walls.' },
     fuld:   { titel: 'All of it',    tekst: 'Print on every wall surface.' }
   },
   grafikarbejde: {

@@ -202,7 +202,7 @@ window.WD_TEKST.en = {
 
     heroEyebrow: 'Over 30 years of trade show experience · exhibitions in more than 70 countries',
     heroTitel:   'What does your exhibition stand need to do?',
-    heroLead:    'Answer a few questions about your brand, products, and goals. Along the way you get our experience of what works on a stand — and at the end a complete solution, a price and a plan leading up to the show.',
+    heroLead:    'Answer a few questions about your brand, products, and goals. Along the way you get our experience of what works on a stand — and at the end a complete solution, a price estimate, and a plan leading up to the show.',
     heroPunkt1:  '<strong>4 minutes</strong> from start to finished estimate',
     heroPunkt2:  '<strong>Our own prices</strong> — calculated on the equipment we actually rent out',
     heroPunkt3:  '<strong>The whole stand</strong> — materials, graphics, installation and transport in one figure',
@@ -252,7 +252,7 @@ window.WD_TEKST.en = {
 
     oplaegTitel: 'Your summary',
     formTitel:   'Let us explore the possibilities',
-    formIntro:   'Tell us briefly who you are. Then we will look your summary over and come back to you with what is possible on your exact space — and you get all of it as a PDF with price, contents and timeline that you can take further internally. It does not commit you to anything.',
+    formIntro:   'Tell us briefly who you are. Then we will look your summary over and come back to you with what is possible on your exact space — and you get all of it as a PDF with the price estimate, contents and timeline that you can take further internally. It does not commit you to anything.',
     navn:        'Name',
     virksomhed:  'Company',
     email:       'Email',
@@ -268,7 +268,7 @@ window.WD_TEKST.en = {
     besked:      'Anything we should know?',
     samtykkeMrk: 'When you send',
     samtykke:    'you get the summary as a PDF in your inbox, and <strong>we will come back to you about your show</strong> — an email or a call about what is possible on your space.',
-    persondata:  'We use your details only for that, and we do not pass them on. You can always ask us to delete them. Read more in our <a href="https://wiebendesign.dk/privatlivspolitik/" target="_blank" rel="noopener">privacy policy</a>.',
+    persondata:  'We use your details only for that, and we do not pass them on. You can always ask us to delete them. Read more in our <a href="https://wiebendesign.dk/en/privacy-policy/" target="_blank" rel="noopener">privacy policy</a>.',
     sendKnap:    'Send me the summary',
     selvFoerst:  'Would you rather look at it yourself first?',
     prototypeNote: 'Prototype — the form does not send data anywhere yet.',
@@ -287,7 +287,7 @@ window.WD_TEKST.en = {
     adresse:     '· Porsborgparken 8 B, 9530 Støvring, Denmark · CVR 20099607',
     arkFod:      '+45 70 23 11 11 · wd@wiebendesign.dk · From idea to finished exhibition stand — in Denmark and at shows around the world',
     bundAdresse: '· Porsborgparken 8 B, 9530 Støvring, Denmark · +45 70 23 11 11 · wd@wiebendesign.dk · CVR 20099607',
-    bundNote:    'The amounts are non-binding estimates calculated on Wieben Design’s own rental prices and are replaced by a specific quote. <a href="https://wiebendesign.dk/privatlivspolitik/" target="_blank" rel="noopener">Privacy policy</a> · <a href="https://wiebendesign.dk/handelsbetingelser/" target="_blank" rel="noopener">Terms and conditions</a>'
+    bundNote:    'The amounts are non-binding estimates calculated on Wieben Design’s own rental prices and are replaced by a specific quote. <a href="https://wiebendesign.dk/en/privacy-policy/" target="_blank" rel="noopener">Privacy policy</a> · <a href="https://wiebendesign.dk/en/terms-and-conditions/" target="_blank" rel="noopener">Terms and conditions</a>'
   },
 
   /* English puts the currency in front of the figure */
