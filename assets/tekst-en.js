@@ -197,7 +197,6 @@ window.WD_TEKST.en = {
     titel:    'Stand calculator — Wieben Design',
     logoAlt:  'Wieben Design',
     brandSub: 'Stand calculator',
-    prototype: 'Prototype',
     trinNav:  'Steps',
 
     heroEyebrow: 'Over 30 years of trade show experience · exhibitions in more than 70 countries',

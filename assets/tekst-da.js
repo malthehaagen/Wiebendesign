@@ -213,7 +213,6 @@ window.WD_TEKST.da = {
     titel:        'Standberegner — Wieben Design',
     logoAlt:      'Wieben Design',
     brandSub:     'Standberegner',
-    prototype:    'Prototype',
     trinNav:      'Trin',
 
     heroEyebrow:  'Mere end 30 års erfaring · messer i mere end 70 lande',

@@ -15,9 +15,6 @@ dem er kode:
 | Hosting på wiebendesign.dk | Ikke besluttet | Wieben Design |
 | Engelsk version | **Færdig.** Se [`docs/engelsk-version.md`](docs/engelsk-version.md) | — |
 
-Overskriften „Prototype“ står stadig i sidens header (`index.html`, `.top-note`).
-Den bør blive der, indtil priserne er bekræftet — det er én linje at fjerne
-på lanceringsdagen.
 
 
 > ## Om prisdata i dette repo
@@ -227,7 +224,7 @@ skal ned.
 - **`MODTAGER` i `apps-script.gs`** står midlertidigt på en privat adresse,
   mens der testes. Den skal tilbage til `wd@wiebendesign.dk`
 - **Hosting**: hvordan modulet lægges på wiebendesign.dk. Derefter skal
-  `sprogStier` i `config.js` udfyldes, og „Prototype“ fjernes fra headeren
+  `sprogStier` i `config.js` udfyldes
 - **Linkene til privatlivspolitik og handelsbetingelser** i `tekst-da.js` og
   `tekst-en.js` peger på `wiebendesign.dk/privatlivspolitik/` og
   `/handelsbetingelser/`. De er ikke kontrolleret — findes siderne ikke på de
