@@ -1292,7 +1292,7 @@
     /* Spring aldrig længere frem, end der er udfyldt til */
     while (n > 0 && !kanGaaTil(n)) n--;
     s.trin = n;
-    if (n > naaetTrin) naaetTrin = n;
+    if (n > naaetTrin) { naaetTrin = n; maalSnart(); }
     var aktiv = null;
     Array.prototype.forEach.call(document.querySelectorAll('.step'), function (sec) {
       sec.hidden = Number(sec.dataset.step) !== s.trin;
@@ -1610,58 +1610,91 @@
   }
 
   /* ---------- Måling ----------
-     Én anonym linje pr. besøg, sendt når den besøgende forlader siden.
-     Den skal svare på ét spørgsmål: hvor falder folk fra? Derfor hvor
-     langt de nåede, hvad de var i gang med at bygge, og hvor længe de
-     var om det — og intet, der kan pege på en person. Ingen cookie,
-     intet id, ingen IP: vi kan ikke se, om to linjer er samme menneske,
-     og det har vi heller ikke brug for.
+     Én anonym linje pr. besøg. Den skal svare på ét spørgsmål: hvor
+     falder folk fra? Derfor hvor langt de nåede, hvad de var i gang med
+     at bygge, og hvor længe de var om det.
 
-     Den sendes med sendBeacon, som browseren afleverer, selv om fanen
-     lukkes i samme sekund. Går det galt, går det stille galt — en
-     måling må aldrig kunne vælte siden for kunden. */
+     Linjen sendes undervejs — hver gang den besøgende når et nyt trin —
+     og ikke først, når fanen lukkes. Det var den første udgave, og den
+     var for skrøbelig: en browser er ikke forpligtet til at aflevere
+     noget i det sekund, en fane lukker, og telefoner gør det tit ikke.
+     Nu er rækken der allerede, og lukningen opdaterer den bare.
+
+     For at scriptet kan opdatere den rigtige række frem for at lægge en
+     ny til, følger et tilfældigt besøgsnummer med. Det er ikke et
+     id på et menneske: det laves om ved hver genindlæsning, gemmes
+     ingen steder, og to besøg fra samme person får hvert sit. Ud over
+     det er der intet i linjen — intet navn, ingen mail, ingen IP.
+
+     Går noget galt i målingen, går det stille galt. En måling er aldrig
+     vigtigere end siden. */
   var naaetTrin = 0;
   var startet = Date.now();
-  var maaltAlt = false;
+  var besoeg = Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+  var sidsteMaaling = '';
+  var maaleUr = null;
+
+  function maalKrop() {
+    var r = beregn();
+    return {
+      type: 'statistik',
+      besoeg: besoeg,
+      modtaget: new Date().toISOString(),
+      sprog: SPROG,
+      naaetTrin: naaetTrin,
+      sekunder: Math.round((Date.now() - startet) / 1000),
+      sendt: !!s.sendt,
+      enhed: window.matchMedia('(max-width: 720px)').matches ? 'mobil' : 'computer',
+      formaal: s.profil.formaal,
+      erfaring: s.profil.erfaring,
+      ambition: s.profil.ambition,
+      m2: s.stand.m2,
+      dage: s.team.dage,
+      land: s.messe.land,
+      omraader: omraadeLinjer().length,
+      fra: afrund(r.vist[0]),
+      til: afrund(r.vist[1])
+    };
+  }
 
   function maal() {
-    if (maaltAlt || !K.endpoint) return;
-    maaltAlt = true;
+    if (!K.endpoint) return;
     try {
-      var r = beregn();
-      var krop = JSON.stringify({
-        type: 'statistik',
-        modtaget: new Date().toISOString(),
-        sprog: SPROG,
-        naaetTrin: naaetTrin,
-        sekunder: Math.round((Date.now() - startet) / 1000),
-        sendt: !!s.sendt,
-        enhed: window.matchMedia('(max-width: 720px)').matches ? 'mobil' : 'computer',
-        formaal: s.profil.formaal,
-        erfaring: s.profil.erfaring,
-        ambition: s.profil.ambition,
-        m2: s.stand.m2,
-        dage: s.team.dage,
-        land: s.messe.land,
-        omraader: omraadeLinjer().length,
-        fra: afrund(r.vist[0]),
-        til: afrund(r.vist[1])
-      });
-      if (navigator.sendBeacon) {
-        navigator.sendBeacon(K.endpoint, new Blob([krop], { type: 'text/plain;charset=utf-8' }));
-      } else {
-        fetch(K.endpoint, { method: 'POST', keepalive: true, body: krop,
-                            headers: { 'Content-Type': 'text/plain;charset=utf-8' } });
-      }
+      var d = maalKrop();
+      /* Sekunderne tæller altid op, så de holdes udenfor. Ellers ville
+         hver lukning og hver genåbning sende en ny, ens linje. */
+      var aftryk = JSON.stringify([d.naaetTrin, d.sendt, d.m2, d.dage, d.land,
+                                   d.omraader, d.formaal, d.ambition, d.fra, d.til]);
+      if (aftryk === sidsteMaaling) return;
+      sidsteMaaling = aftryk;
+
+      var krop = JSON.stringify(d);
+      if (navigator.sendBeacon &&
+          navigator.sendBeacon(K.endpoint, new Blob([krop], { type: 'text/plain;charset=utf-8' }))) return;
+      /* sendBeacon siger fra, når køen er fuld — så tager vi den anden vej */
+      fetch(K.endpoint, { method: 'POST', keepalive: true, body: krop,
+                          headers: { 'Content-Type': 'text/plain;charset=utf-8' } });
     } catch (fejl) { /* en måling er aldrig vigtigere end siden */ }
   }
 
-  /* pagehide fyrer, hvor unload ikke gør på telefoner. visibilitychange
-     fanger den, der skifter app og aldrig kommer tilbage. */
+  /* Den, der klikker sig hurtigt gennem tre trin, skal ikke sende tre
+     gange. Vi venter, til der er gået fem sekunder uden et nyt trin. */
+  function maalSnart() {
+    if (maaleUr) clearTimeout(maaleUr);
+    maaleUr = setTimeout(maal, 5000);
+  }
+
+  /* Og når fanen lukkes eller skjules, sendes den sidste stilling med
+     det samme — nu som en opdatering af en række, der allerede findes. */
   window.addEventListener('pagehide', maal);
   document.addEventListener('visibilitychange', function () {
     if (document.visibilityState === 'hidden') maal();
   });
+
+  /* Den, der lander på forsiden og går igen uden at klikke, tæller også.
+     Tyve sekunder skiller et menneske fra en robot, der henter siden og
+     forsvinder i samme åndedrag. */
+  setTimeout(maal, 20000);
 
   fyldTekster();
   visSprogvalg();

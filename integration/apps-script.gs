@@ -33,8 +33,9 @@ var ARK_STAT      = 'Statistik';                  // fanen med de anonyme besøg
    ------------------------------------------------------------------- */
 var MAKS_PR_MAIL   = 3;    // samme adresse pr. time
 var MAKS_I_ALT     = 40;   // alle indsendelser pr. time
-var MAKS_STAT      = 400;  // anonyme besøgslinjer pr. time — egen tæller,
-                           // så målingen aldrig kan spise leadenes loft
+var MAKS_STAT      = 1200; // målingskald pr. time — egen tæller, så målingen
+                           // aldrig kan spise leadenes loft. Et besøg sender
+                           // nogle få kald: ét pr. trin plus ét ved lukning
 var MAKS_TEGN      = { navn: 120, virksomhed: 160, email: 200, telefon: 60,
                        budget: 60, besked: 2000 };
 
@@ -45,7 +46,12 @@ var KOLONNER = ['Modtaget', 'Sprog', 'Navn', 'Virksomhed', 'E-mail', 'Telefon', 
 
 var STAT_KOLONNER = ['Tidspunkt', 'Sprog', 'Nåede trin', 'Sekunder', 'Sendte oplæg', 'Enhed',
                      'Formål', 'Erfaring', 'Ambition', 'm²', 'Messedage', 'Land',
-                     'Områder', 'Estimat fra', 'Estimat til'];
+                     'Områder', 'Estimat fra', 'Estimat til', 'Besøg'];
+
+/* Hvor langt tilbage vi leder efter et besøg, der skal opdateres. Et
+   besøg varer minutter, ikke dage, så rækken ligger altid tæt på bunden.
+   Uden loftet ville opslaget vokse med regnearket. */
+var STAT_SOEG = 300;
 
 /* Trinnene som de hedder i beregneren — så regnearket kan læses uden at
    skulle slå tallene op. */
@@ -268,8 +274,10 @@ function gemStatistik(d) {
     ark.getRange(1, 1, 1, STAT_KOLONNER.length).setFontWeight('bold').setBackground('#F4F7F8');
     ark.setFrozenRows(1);
   }
+
   var trin = Number(d.naaetTrin) || 0;
-  ark.appendRow([
+  var besoeg = tekst(d.besoeg, 24);
+  var raekke = [
     new Date(), String(d.sprog || 'da').toUpperCase(),
     TRINNAVNE[trin] || trin,
     Number(d.sekunder) || 0,
@@ -278,8 +286,38 @@ function gemStatistik(d) {
     tekst(d.formaal, 20), tekst(d.erfaring, 20), tekst(d.ambition, 20),
     Number(d.m2) || 0, Number(d.dage) || 0, tekst(d.land, 10),
     Number(d.omraader) || 0,
-    Number(d.fra) || 0, Number(d.til) || 0
-  ]);
+    Number(d.fra) || 0, Number(d.til) || 0,
+    besoeg
+  ];
+
+  /* Beregneren sender undervejs, ikke kun til sidst. Første gang lægger
+     vi rækken til; derefter opdaterer vi den samme række, så ét besøg
+     bliver til én linje og ikke til fem. Låsen er der, fordi to kald fra
+     samme besøg kan lande i samme sekund og ellers ville lægge to
+     rækker til. */
+  var laas = LockService.getScriptLock();
+  var laast = true;
+  try { laas.waitLock(8000); } catch (fejl) { laast = false; }
+  try {
+    var linje = besoeg ? findStatLinje(ark, besoeg) : 0;
+    if (linje) ark.getRange(linje, 1, 1, raekke.length).setValues([raekke]);
+    else ark.appendRow(raekke);
+  } finally {
+    if (laast) laas.releaseLock();
+  }
+}
+
+/* Rækkenummeret for et besøg, eller 0 hvis det ikke er set før. */
+function findStatLinje(ark, besoeg) {
+  var sidste = ark.getLastRow();
+  var kolonne = STAT_KOLONNER.length;
+  var foerste = Math.max(2, sidste - STAT_SOEG + 1);
+  if (sidste < foerste) return 0;
+  var vaerdier = ark.getRange(foerste, kolonne, sidste - foerste + 1, 1).getValues();
+  for (var i = vaerdier.length - 1; i >= 0; i--) {
+    if (String(vaerdier[i][0]) === besoeg) return foerste + i;
+  }
+  return 0;
 }
 
 /* Målingen har sit eget loft. Rammer det, taber vi en linje statistik —
