@@ -249,6 +249,7 @@ Chromium under udviklingen. Det, der er kontrolleret:
 | Tallene | 32 konfigurationer: totalen skal være den samme i prisbjælken, dens specifikation, på trin 4, i samlet-boksen, i opsummeringen og i PDF-arket — og posterne skal summere til den |
 | Formularen | Seks slags ondsindet input (script-tags, billed-handlers, SVG-onload, 600 tegn), tom formular, ugyldig e-mail, dobbeltklik på afsend |
 | Værnet mod misbrug | Lokkefeltet (robot kasseres, kunden ikke), ugyldig mailadresse, samme adresse otte gange i træk, tres forskellige adresser, 50.000 tegn i hvert felt |
+| Målingen | Én linje pr. besøg og kun én, også når siden lukkes to gange; at intet personligt slipper med; at 60 målingslinjer ikke spærrer for et rigtigt lead; at målingens eget loft holder ved 400; at skrald i en linje ikke vælter kaldet |
 | Gemt tilstand | Genindlæsning på hvert trin, 78 ødelagte tilstande (gammelt format, håndredigeret, tilfældigt skrald), localStorage slået fra, spring til låste trin |
 | Tastatur | Hele forløbet fra forside til afsendt oplæg uden mus — fokus må aldrig falde til `<body>` |
 | HTML | Dublerede id, links uden tekst, billeder uden alt, knapper uden navn, felter uden label, overskriftsorden |
@@ -264,6 +265,12 @@ Firefox og desktop-Safari er ikke prøvet. Beregneren bruger `aspect-ratio`,
 kræver Safari 15.4 / iOS 15.4 (marts 2022) eller nyere.
 
 ## Efter lancering
+
+**Læs statistikken.** Fanen *Statistik* i regnearket fylder sig selv op fra
+første besøg. Når der er et par hundrede linjer, er det kolonnen *Nåede trin*,
+der skal læses først: det trin, flest forlader beregneren på, er det, der skal
+rettes i næste version. *Sendte oplæg* delt med antallet af linjer er
+konverteringsraten — den er tallet at holde alt andet op imod.
 
 **Rigtige fotos på valgkortene.** Besluttet udskudt til efter lancering: arbejdet
 med at finde, beskære og godkende billeder vejer for nu tungere end det, de

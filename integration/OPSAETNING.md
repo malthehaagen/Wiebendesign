@@ -247,6 +247,36 @@ tilbage til at vise prisen uden at sende noget.
 
 ---
 
+## 7. Målingen
+
+Beregneren sender én linje pr. besøg til fanen **Statistik** i det samme
+regneark. Den sendes, når den besøgende forlader siden, og den svarer på
+ét spørgsmål: **hvor falder folk fra?**
+
+| Kolonne | Hvad den siger |
+|---|---|
+| Nåede trin | Det vigtigste tal. Falder halvdelen fra på „2 Standen“, er det dér, der skal rettes |
+| Sekunder | Hvor længe de var i gang. To sekunder er en, der kom forkert ind; fire minutter er en, der gjorde arbejdet |
+| Sendte oplæg | Ja/Nej. Antallet af Ja delt med antallet af linjer er jeres konverteringsrate |
+| Enhed | Mobil eller computer. Falder mobilbrugerne fra ét bestemt sted, er det et layoutproblem |
+| Sprog, Formål, m², Messedage, Land, Områder, Estimat | Hvad de var i gang med at bygge, da de forlod siden |
+
+**Der er ingen personoplysninger i den.** Intet navn, ingen mail, ingen
+IP-adresse og intet id — vi kan ikke se, om to linjer er det samme
+menneske, og det har vi ikke brug for. Derfor er der heller ingen cookie
+og ingen samtykkeboks på beregneren. Det er et bevidst valg: en
+samtykkeboks er det første, en besøgende møder, og den koster
+konverteringer på netop denne slags side.
+
+Målingen har sin egen tæller på 400 linjer i timen, adskilt fra leadenes
+loft. En travl dag på siden kan altså aldrig spærre for et rigtigt lead —
+i værste fald taber vi en linje statistik.
+
+Fanen bliver oprettet af sig selv, første gang nogen besøger beregneren.
+I skal ikke gøre noget.
+
+---
+
 ## Hvad I kan skrue på
 
 I `assets/config.js`:
@@ -264,6 +294,7 @@ I `assets/config.js`:
 | `MODTAGER` | Hvem den interne besked går til. Skal stå på `wd@wiebendesign.dk`, før I linker til beregneren. |
 | `MAKS_PR_MAIL` | Hvor mange oplæg samme mailadresse må sende pr. time. Står på `3`. |
 | `MAKS_I_ALT` | Hvor mange oplæg der i alt tages imod pr. time. Står på `40`. Hæv det, hvis en kampagne giver mere trafik, end I regnede med. |
+| `MAKS_STAT` | Hvor mange målingslinjer der tages imod pr. time. Står på `400`. |
 | `MAKS_TEGN` | Hvor lange felterne må være, før de klippes af. |
 
 ## Persondata
@@ -272,3 +303,6 @@ Før modulet går live skal formularen have en samtykketekst og et link til jere
 privatlivspolitik. I samler navn, firma, mail og telefon, og det skal fremgå,
 hvad I bruger oplysningerne til, og hvor længe I gemmer dem. Regnearket er jeres
 databehandling — husk at rydde op i det med jævne mellemrum.
+
+Det gælder fanen **Leads**. Fanen **Statistik** indeholder ingen
+personoplysninger og er derfor ikke omfattet.

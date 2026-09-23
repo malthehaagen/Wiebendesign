@@ -1292,6 +1292,7 @@
     /* Spring aldrig længere frem, end der er udfyldt til */
     while (n > 0 && !kanGaaTil(n)) n--;
     s.trin = n;
+    if (n > naaetTrin) naaetTrin = n;
     var aktiv = null;
     Array.prototype.forEach.call(document.querySelectorAll('.step'), function (sec) {
       sec.hidden = Number(sec.dataset.step) !== s.trin;
@@ -1607,6 +1608,60 @@
     s.sendt = true;
     opdater();
   }
+
+  /* ---------- Måling ----------
+     Én anonym linje pr. besøg, sendt når den besøgende forlader siden.
+     Den skal svare på ét spørgsmål: hvor falder folk fra? Derfor hvor
+     langt de nåede, hvad de var i gang med at bygge, og hvor længe de
+     var om det — og intet, der kan pege på en person. Ingen cookie,
+     intet id, ingen IP: vi kan ikke se, om to linjer er samme menneske,
+     og det har vi heller ikke brug for.
+
+     Den sendes med sendBeacon, som browseren afleverer, selv om fanen
+     lukkes i samme sekund. Går det galt, går det stille galt — en
+     måling må aldrig kunne vælte siden for kunden. */
+  var naaetTrin = 0;
+  var startet = Date.now();
+  var maaltAlt = false;
+
+  function maal() {
+    if (maaltAlt || !K.endpoint) return;
+    maaltAlt = true;
+    try {
+      var r = beregn();
+      var krop = JSON.stringify({
+        type: 'statistik',
+        modtaget: new Date().toISOString(),
+        sprog: SPROG,
+        naaetTrin: naaetTrin,
+        sekunder: Math.round((Date.now() - startet) / 1000),
+        sendt: !!s.sendt,
+        enhed: window.matchMedia('(max-width: 720px)').matches ? 'mobil' : 'computer',
+        formaal: s.profil.formaal,
+        erfaring: s.profil.erfaring,
+        ambition: s.profil.ambition,
+        m2: s.stand.m2,
+        dage: s.team.dage,
+        land: s.messe.land,
+        omraader: omraadeLinjer().length,
+        fra: afrund(r.vist[0]),
+        til: afrund(r.vist[1])
+      });
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon(K.endpoint, new Blob([krop], { type: 'text/plain;charset=utf-8' }));
+      } else {
+        fetch(K.endpoint, { method: 'POST', keepalive: true, body: krop,
+                            headers: { 'Content-Type': 'text/plain;charset=utf-8' } });
+      }
+    } catch (fejl) { /* en måling er aldrig vigtigere end siden */ }
+  }
+
+  /* pagehide fyrer, hvor unload ikke gør på telefoner. visibilitychange
+     fanger den, der skifter app og aldrig kommer tilbage. */
+  window.addEventListener('pagehide', maal);
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'hidden') maal();
+  });
 
   fyldTekster();
   visSprogvalg();

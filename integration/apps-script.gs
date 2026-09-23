@@ -16,6 +16,7 @@ var MODTAGER      = 'wd@wiebendesign.dk';        // hvem hos jer får leadet
 var AFSENDER      = 'Wieben Design <oplaeg@wiebendesign.dk>';  // kræver verificeret domæne i Resend
 var SVAR_TIL      = 'wd@wiebendesign.dk';
 var ARK           = 'Leads';                      // fanen i regnearket
+var ARK_STAT      = 'Statistik';                  // fanen med de anonyme besøg
 
 /* ---------- Værn mod misbrug ----------
    Endpointet er åbent — det skal det være, for browseren kalder det, og
@@ -32,6 +33,8 @@ var ARK           = 'Leads';                      // fanen i regnearket
    ------------------------------------------------------------------- */
 var MAKS_PR_MAIL   = 3;    // samme adresse pr. time
 var MAKS_I_ALT     = 40;   // alle indsendelser pr. time
+var MAKS_STAT      = 400;  // anonyme besøgslinjer pr. time — egen tæller,
+                           // så målingen aldrig kan spise leadenes loft
 var MAKS_TEGN      = { navn: 120, virksomhed: 160, email: 200, telefon: 60,
                        budget: 60, besked: 2000 };
 
@@ -39,6 +42,14 @@ var KOLONNER = ['Modtaget', 'Sprog', 'Navn', 'Virksomhed', 'E-mail', 'Telefon', 
                 'By', 'Land', 'Messedato', 'Messedage', 'Formål', 'Erfaring', 'Ambition',
                 'm²', 'Åbne sider', 'Vægge', 'Tryk', 'Grafisk arbejde', 'Gulv', 'Belysning',
                 'Områder', 'Estimat fra', 'Estimat til', 'Forventede leads', 'Besked'];
+
+var STAT_KOLONNER = ['Tidspunkt', 'Sprog', 'Nåede trin', 'Sekunder', 'Sendte oplæg', 'Enhed',
+                     'Formål', 'Erfaring', 'Ambition', 'm²', 'Messedage', 'Land',
+                     'Områder', 'Estimat fra', 'Estimat til'];
+
+/* Trinnene som de hedder i beregneren — så regnearket kan læses uden at
+   skulle slå tallene op. */
+var TRINNAVNE = ['Forside', '1 Profil', '2 Standen', '3 Områder', '4 Messeklar', '5 Oplæg'];
 
 /* ---------- Sprog ----------
    Beregneren findes på dansk og engelsk, og kundens valg følger med i
@@ -129,6 +140,15 @@ function flet(skabelon, v) {
 function doPost(e) {
   try {
     var data = JSON.parse(e.postData.contents);
+
+    /* Målingen er ikke et lead. Den har ingen kontaktoplysninger, udløser
+       ingen mails og har sin egen tæller, så et travlt døgn på siden ikke
+       kan spærre for et rigtigt lead. */
+    if (data && data.type === 'statistik') {
+      if (harPladsStat()) proev(function () { gemStatistik(data); }, 'statistiklinje');
+      return svar({ ok: true });
+    }
+
     if (!data || !data.kontakt || !data.kontakt.email) {
       return svar({ ok: false, fejl: 'Mangler kontaktoplysninger' });
     }
@@ -235,6 +255,47 @@ function gemILead(d) {
     d.leads.fra + '–' + d.leads.til,
     d.kontakt.besked
   ]);
+}
+
+/* Én linje pr. besøg. Ingen navn, ingen mail, ingen IP og intet id —
+   vi kan ikke se, om to linjer er det samme menneske, og det skal vi
+   heller ikke. Linjen svarer på ét spørgsmål: hvor falder folk fra? */
+function gemStatistik(d) {
+  var bog = SpreadsheetApp.getActiveSpreadsheet();
+  var ark = bog.getSheetByName(ARK_STAT) || bog.insertSheet(ARK_STAT);
+  if (ark.getLastRow() === 0) {
+    ark.appendRow(STAT_KOLONNER);
+    ark.getRange(1, 1, 1, STAT_KOLONNER.length).setFontWeight('bold').setBackground('#F4F7F8');
+    ark.setFrozenRows(1);
+  }
+  var trin = Number(d.naaetTrin) || 0;
+  ark.appendRow([
+    new Date(), String(d.sprog || 'da').toUpperCase(),
+    TRINNAVNE[trin] || trin,
+    Number(d.sekunder) || 0,
+    d.sendt ? 'Ja' : 'Nej',
+    tekst(d.enhed, 20),
+    tekst(d.formaal, 20), tekst(d.erfaring, 20), tekst(d.ambition, 20),
+    Number(d.m2) || 0, Number(d.dage) || 0, tekst(d.land, 10),
+    Number(d.omraader) || 0,
+    Number(d.fra) || 0, Number(d.til) || 0
+  ]);
+}
+
+/* Målingen har sit eget loft. Rammer det, taber vi en linje statistik —
+   aldrig et lead. */
+function harPladsStat() {
+  var cache = CacheService.getScriptCache();
+  var antal = Number(cache.get('stat_i_alt') || 0);
+  if (antal >= MAKS_STAT) return false;
+  cache.put('stat_i_alt', String(antal + 1), 3600);
+  return true;
+}
+
+/* Kort tekst uden overraskelser — statistikken skal aldrig kunne bruges
+   til at skrive noget langt eller mærkeligt ind i regnearket. */
+function tekst(v, maks) {
+  return String(v === undefined || v === null ? '' : v).slice(0, maks);
 }
 
 /* ---------- Mails ---------- */
