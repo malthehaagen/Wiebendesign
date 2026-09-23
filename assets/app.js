@@ -1668,13 +1668,28 @@
       if (aftryk === sidsteMaaling) return;
       sidsteMaaling = aftryk;
 
-      var krop = JSON.stringify(d);
-      if (navigator.sendBeacon &&
-          navigator.sendBeacon(K.endpoint, new Blob([krop], { type: 'text/plain;charset=utf-8' }))) return;
-      /* sendBeacon siger fra, når køen er fuld — så tager vi den anden vej */
-      fetch(K.endpoint, { method: 'POST', keepalive: true, body: krop,
-                          headers: { 'Content-Type': 'text/plain;charset=utf-8' } });
+      sendMaaling(JSON.stringify(d));
     } catch (fejl) { /* en måling er aldrig vigtigere end siden */ }
+  }
+
+  /* Præcis samme vej som oplægget, og af præcis den grund: oplægget
+     kommer frem. Første udgave brugte sendBeacon, fordi den er lavet til
+     at overleve en fane, der lukker — men den kom aldrig frem til Apps
+     Script, og en måling, der ikke kommer frem, er ingen måling.
+
+     fetch med keepalive gør det samme: browseren afleverer kaldet
+     færdigt, selv om siden lukker under det. Forskellen er, at det er
+     den vej, vi ved virker her. */
+  function sendMaaling(krop) {
+    return fetch(K.endpoint, {
+      method: 'POST',
+      keepalive: true,
+      body: krop,
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+    /* Uden denne bliver et mislykket kald til en fejl i konsollen hos en
+       kunde, der sidder uden forbindelse. En måling skal fejle i
+       stilhed — også når den fejler. */
+    }).catch(function () {});
   }
 
   /* Den, der klikker sig hurtigt gennem tre trin, skal ikke sende tre
@@ -1690,6 +1705,53 @@
   document.addEventListener('visibilitychange', function () {
     if (document.visibilityState === 'hidden') maal();
   });
+
+  /* ---------- Diagnose ----------
+     Kun med ?diag=1 i adressen. Den er til jer, ikke til kunderne, og
+     derfor kun på dansk. Den svarer på de to spørgsmål, man ellers ikke
+     kan svare på udefra: kører den udgave af filen, jeg lige lagde op,
+     og kommer et kald overhovedet frem til Apps Script? */
+  function visDiagnose() {
+    var boks = document.createElement('div');
+    boks.id = 'wd-diag';
+    boks.setAttribute('style', 'position:fixed; z-index:9999; right:12px; bottom:12px; ' +
+      'max-width:min(460px, calc(100vw - 24px)); background:#111; color:#eee; ' +
+      'font:12px/1.5 ui-monospace, Menlo, Consolas, monospace; padding:14px 16px; ' +
+      'border-radius:8px; box-shadow:0 8px 32px rgba(0,0,0,.4); white-space:pre-wrap; ' +
+      'word-break:break-word; max-height:70vh; overflow:auto');
+    function linje(t) {
+      var e = document.createElement('div');
+      e.textContent = t;
+      boks.appendChild(e);
+      return e;
+    }
+    linje('DIAGNOSE — standberegner');
+    linje('Bygget:   ' + (window.WD_BYGGET || '(udviklingsudgave, ikke bygget)'));
+    linje('Sprog:    ' + SPROG);
+    linje('Besøg:    ' + besoeg);
+    linje('Endpoint: ' + (K.endpoint || '(ingen)'));
+    var svarlinje = linje('Kald:     tryk på knappen');
+
+    var knap = document.createElement('button');
+    knap.textContent = 'Send en testmåling nu';
+    knap.setAttribute('style', 'margin-top:10px; font:inherit; cursor:pointer; ' +
+      'background:#3D8A95; color:#fff; border:0; border-radius:6px; padding:7px 12px');
+    knap.onclick = function () {
+      knap.disabled = true;
+      svarlinje.textContent = 'Kald:     sender …';
+      var d = maalKrop();
+      d.besoeg = 'DIAG-' + besoeg;
+      fetch(K.endpoint, { method: 'POST', body: JSON.stringify(d),
+                          headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
+        .then(function (r) { return r.text().then(function (t) { return r.status + ' ' + t; }); })
+        .then(function (t) { svarlinje.textContent = 'Kald:     SVAR ' + t; })
+        .catch(function (f) { svarlinje.textContent = 'Kald:     FEJLEDE — ' + f.message; })
+        .then(function () { knap.disabled = false; });
+    };
+    boks.appendChild(knap);
+    document.body.appendChild(boks);
+  }
+  if (/[?&]diag=1/.test(location.search)) visDiagnose();
 
   /* Den, der lander på forsiden og går igen uden at klikke, tæller også.
      Tyve sekunder skiller et menneske fra en robot, der henter siden og

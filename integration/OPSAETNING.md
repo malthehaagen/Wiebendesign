@@ -275,6 +275,30 @@ i værste fald taber vi en linje statistik.
 Fanen bliver oprettet af sig selv, første gang nogen besøger beregneren.
 I skal ikke gøre noget.
 
+### Hvis noget ser forkert ud
+
+Læg `?diag=1` bag adressen:
+
+```
+https://wiebendesign.dk/beregner-k7f2/?diag=1
+```
+
+Så kommer der en sort boks i nederste hjørne med to svar, man ellers
+ikke kan få udefra:
+
+- **Bygget** — hvornår den fil, browseren faktisk viser, blev bygget.
+  Står der et ældre tidspunkt, end da I lagde filen op, er det en gammel
+  udgave, I ser på, og så er det cachen og ikke koden, der driller.
+- **Send en testmåling nu** — knappen sender et rigtigt kald til Apps
+  Script og viser svaret, som det kommer tilbage. `SVAR 200 {"ok":true}`
+  betyder, at vejen ud er i orden, og at fejlen i så fald er i
+  regnearket. `FEJLEDE` betyder, at kaldet slet ikke kommer frem.
+
+Testmålingen havner i regnearket med `DIAG-` foran besøgsnummeret, så
+den er let at kende og slette igen.
+
+Boksen vises kun med `?diag=1` i adressen. En kunde ser den aldrig.
+
 ---
 
 ## Hvad I kan skrue på

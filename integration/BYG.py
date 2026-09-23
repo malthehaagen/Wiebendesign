@@ -8,6 +8,7 @@ js-filer og logoet i ét dokument uden eksterne henvisninger. Det er den
 fil, der skal ligge på webhotellet — se HOSTING.md.
 """
 import base64
+import datetime
 import pathlib
 
 R = pathlib.Path(__file__).resolve().parent.parent
@@ -27,6 +28,11 @@ for f in FILER:
     h = h.replace(tag, '<script>\n' + (R / 'assets' / f).read_text(encoding='utf-8') + '\n</script>')
 
 assert 'src="assets/' not in h and 'href="assets/' not in h, 'der er stadig en ekstern henvisning'
+
+# Et stempel, så man udefra kan se, om det er den nyeste fil, der bliver
+# serveret. Læses af diagnosesiden, ?diag=1.
+stempel = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
+h = h.replace('</head>', '<script>window.WD_BYGGET=%r;</script>\n</head>' % stempel, 1)
 ud = R / 'standberegner.html'
 ud.write_text(h, encoding='utf-8')
-print('skrevet %s · %d tegn' % (ud.name, len(h)))
+print('skrevet %s · %d tegn · stemplet %s' % (ud.name, len(h), stempel))
