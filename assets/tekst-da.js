@@ -42,6 +42,8 @@ window.WD_TEKST.da = {
     lysvaeg:   '{meter} meter lysvæg',
     tryk:      '{areal} m² tryk',
     grafik:    'grafisk arbejde {fra}–{til} timer',
+    grafikEn:  'grafisk arbejde 1 time',
+    grafikEt:  'grafisk arbejde {timer} timer',
     haevet:    '{gulv}, hævet',
     stroem:    'strøm'
   },

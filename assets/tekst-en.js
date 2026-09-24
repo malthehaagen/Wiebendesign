@@ -41,7 +41,9 @@ window.WD_TEKST.en = {
     vaeg:    '{meter} meters of wall',
     lysvaeg: '{meter} meters of backlit wall',
     tryk:    '{areal} m² of print',
-    grafik:  'graphic work {fra}–{til} hours',
+    grafik:   'graphic work {fra}–{til} hours',
+    grafikEn: 'graphic work 1 hour',
+    grafikEt: 'graphic work {timer} hours',
     haevet:  '{gulv}, raised',
     stroem:  'power'
   },

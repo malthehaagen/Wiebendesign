@@ -32,8 +32,11 @@ window.WD_PRIS = {
        1 = modellens egne tal. 0,85 = 15 % under. 1,1 = 10 % over.
        Brug den, mens I finder ud af, hvor beregneren skal lande —
        og husk, at en lavere værdi ikke gør standen billigere at bygge,
-       kun billigere at love bort. */
-    prisniveau: 1
+       kun billigere at love bort.
+
+       0,95 er sat efter Wieben Designs gennemgang 24-09-2026: beregneren
+       skal lande 5 % under modellens egne tal. */
+    prisniveau: 0.95
   },
 
   /* -------------------------------------------------------------------
@@ -67,11 +70,16 @@ window.WD_PRIS = {
       { m: 4.5, frame: 487, pvc: 286, pixlip: null, hoej: true },
       { m: 5,   frame: 500, pvc: 312, pixlip: null, hoej: true }
     ],
-    /* Print på banner, kr. pr. m² — AFLEDT af bannerpriserne i arket
-       (5.600 kr. for 12 m², 2.800 for 6 m², 1.400 for 3 m²) */
-    printPrM2: 465,
-    /* Backlit-print til Pixlip — samme metode på Pixlip-bannerne */
-    pixlipPrintPrM2: 520,
+    /* Print på banner, kr. pr. m². Oplyst af Wieben Design 24-09-2026:
+       al print koster det samme, uanset hvad det sidder på. Var før
+       afledt af bannerpriserne i arket (5.600 kr. for 12 m², 2.800 for
+       6 m², 1.400 for 3 m²), hvilket gav 465. */
+    printPrM2: 450,
+    /* Backlit-print til Pixlip. Samme sats — oplyst sammen med den
+       ovenfor. Bannerpriserne i arket pegede på 520 for backlit, så hvis
+       der sidder noget i en backlit-flade, som prisen på 450 ikke dækker,
+       er det her, det skal rettes. */
+    pixlipPrintPrM2: 450,
     /* Dør i væg: b62 Frame Door + PVC-sæt */
     doer: 881 + 156
   },
@@ -83,9 +91,16 @@ window.WD_PRIS = {
      GRAFISK ARBEJDE — timerne, ikke produktionen.
      Står IKKE i tilbudsarket. Arkets eneste timesats er 652 kr., og den
      dækker montørarbejde: værksted, kørsel, rejse, opbygning.
-     Timeprisen på 750 kr. er oplyst af Wieben Design. Normtallene
-     (timer pr. m²) er derimod stadig et skøn og skal holdes op mod
-     registrerede timer på rigtige projekter.
+     Timeprisen på 750 kr. er oplyst af Wieben Design. Det samme er
+     normtallet: hele det grafiske arbejde ligger tættere på 0,1 time
+     pr. m² print (Wieben Design 24-09-2026). Modellen lå før på
+     0,20–0,35 for `alt`; alle tre niveauer og deres minimumstimer er
+     skaleret ned med samme faktor, så forholdet mellem dem er bevaret.
+
+     `klar` er de timer, der bliver tilbage, når kunden selv leverer
+     100 % trykklart materiale: filerne skal stadig måles op mod den
+     enkelte ramme, og trykket skal bestilles og godkendes. Skal det
+     være gratis, sættes minTimer til [0, 0] — så forsvinder posten.
 
      Sitet siger: "I kan få hjælp til hele det grafiske arbejde eller blot
      den del, der mangler." Derfor tre niveauer efter, hvad kunden selv
@@ -95,9 +110,9 @@ window.WD_PRIS = {
   grafikarbejde: {
     timepris: 750,
     niveauer: {
-      klar:   { timerPrM2: [0, 0],          minTimer: [1, 2] },
-      delvis: { timerPrM2: [0.10, 0.18],    minTimer: [3, 4] },
-      alt:    { timerPrM2: [0.20, 0.35],    minTimer: [6, 8] }
+      klar:   { timerPrM2: [0, 0],          minTimer: [0.5, 1] },
+      delvis: { timerPrM2: [0.04, 0.06],    minTimer: [1, 1.5] },
+      alt:    { timerPrM2: [0.08, 0.12],    minTimer: [2, 3] }
     }
   },
 

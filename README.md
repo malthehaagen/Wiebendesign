@@ -133,12 +133,14 @@ Aflæst direkte fra prisgrundlaget:
 - Hele inventarkataloget: diske, møbler, skærme, kaffe, køleskabe, eltavler
 - Montørtimepris 652 kr., overnatning 900 kr., fortæring 625 kr., forsikring
   1.750 kr., lastbil 6,75 kr./km, km-penge 4 kr./km, broafgift 410 kr., fly 3.900 kr.
+- **Print, 450 kr./m²** — al print, også backlit, koster det samme (oplyst
+  24-09-2026). Lå før på 465 og 520, regnet ud fra bannerpriserne i arket
+- **Grafiktimer, 0,1 time pr. m² tryk** for hele arbejdet (oplyst 24-09-2026),
+  til 750 kr. i timen. De to lettere niveauer er skaleret ned i samme forhold
+- **Prisniveau 0,95** — beregneren lander 5 % under modellens egne tal
 
 Afledt og markeret som sådan i `pricing.js` — bør bekræftes af Wieben Design:
 
-- **Print, 465 kr./m²** — regnet ud fra bannerpriserne i arket (5.600 kr. for 12 m²,
-  2.800 for 6 m², 1.400 for 3 m² giver alle 466 kr./m²)
-- **Backlit-print, 520 kr./m²** — samme metode på Pixlip-bannerne
 - **Truss-rig, 130 kr. pr. løbende meter** — afledt af TX Truss-elementpriserne
 - **Montagenormer** — 0,45–0,65 mandtimer pr. m² til opbygning, nedtagning som
   40 % heraf, pakning 0,15 timer pr. m², én montør pr. 25 m² (minimum to).
@@ -147,10 +149,10 @@ Afledt og markeret som sådan i `pricing.js` — bør bekræftes af Wieben Desig
   (oplyst af Wieben Design), så standens størrelse afgør ikke transportformen.
   Under 600 km kører vi altid selv; derover tager beregneren den billigste af
   egen kørsel og speditør med fly til montørerne. Fragt 22–34 kr./km tur/retur
-- **Timenormer for grafisk arbejde** — 0,10–0,18 time pr. m² tryk, når kunden
-  leverer logo og billeder, 0,20–0,35 når vi laver det hele fra bunden.
-  Selve timeprisen, **750 kr.**, er oplyst af Wieben Design — den står ikke i
-  arket, hvor den eneste timesats er montørens 652 kr.
+- **Minimumstimerne på grafisk arbejde** — 0,5–1 time, når kunden selv leverer
+  trykklare filer, 2–3 timer når vi laver det hele. Selve normtallet er oplyst,
+  men gulvet under det er stadig et skøn, og det er gulvet, der bestemmer
+  prisen på alle stande under ca. 40 m² tryk
 
 Prisspændet er typisk ±4–5 %, fordi alt andet end montagetimerne er faste
 lejepriser.
@@ -214,10 +216,9 @@ Fonts hentes fra Google Fonts i `index.html`. Skal de selvhostes, er det den ene
 
 ## Hvad der mangler før produktion
 
-**Tallene skal bekræftes.** Ni satser i `pricing.js` er afledte og markeret
-AFLEDT — montagenormerne, ind- og udbæring, tomgods, printprisen,
-backlit-prisen, truss-riggen, produktplatformen, 600 km-grænsen for altid at
-køre selv, fragtprisen og timenormerne for grafisk arbejde. Den hurtigste
+**Tallene skal bekræftes.** Syv satser i `pricing.js` er afledte og markeret
+AFLEDT — montagenormerne, ind- og udbæring, tomgods, truss-riggen,
+produktplatformen, 600 km-grænsen for altid at køre selv og fragtprisen. Den hurtigste
 kontrol er at køre tre afsluttede tilbud gennem beregneren og se, om den rammer
 inden for spændet.
 

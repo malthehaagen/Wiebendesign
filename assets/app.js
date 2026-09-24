@@ -405,6 +405,15 @@
             Math.max(til, midt * (1 + P.meta.spaendOp))];
   }
 
+  /* Timerne til grafisk arbejde er små tal, og efter afrunding kan de to
+     ender lande samme sted. Så skal der stå ét tal og ikke "1–1 timer". */
+  function grafikNote(timer) {
+    var fra = Math.round(timer[0]), til = Math.round(timer[1]);
+    if (!til) return null;
+    if (fra !== til) return tx('standnote.grafik', { fra: fra, til: til });
+    return til === 1 ? tx('standnote.grafikEn') : tx('standnote.grafikEt', { timer: til });
+  }
+
   function beregn() {
     var v = vaegpris(), g = geometri();
     var omr = omraadeLinjer(), tilk = tilkoebLinjer();
@@ -422,7 +431,7 @@
     var standNote = [
       tx(s.stand.vaegtype === 'pixlip' ? 'standnote.lysvaeg' : 'standnote.vaeg', { meter: meter }),
       v.print ? tx('standnote.tryk', { areal: Math.round(g.vaegAreal * P.grafikdaekning[s.stand.grafik]) }) : null,
-      ga.timer[1] ? tx('standnote.grafik', { fra: Math.round(ga.timer[0]), til: Math.round(ga.timer[1]) }) : null,
+      grafikNote(ga.timer),
       s.stand.haevet ? tx('standnote.haevet', { gulv: C.gulv[s.stand.gulv].titel.toLowerCase() })
                      : C.gulv[s.stand.gulv].titel.toLowerCase(),
       C.belysning[s.stand.belysning].titel.toLowerCase(),
